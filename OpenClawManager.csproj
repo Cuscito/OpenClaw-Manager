@@ -1,0 +1,42 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <AssemblyName>OpenClaw-Manager</AssemblyName>
+    <RootNamespace>OpenClawManager</RootNamespace>
+    <PublishSingleFile>false</PublishSingleFile>
+    <SelfContained>true</SelfContained>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <PublishDir>D:\OpenClaw-Manager\publish\</PublishDir>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <GenerateTargetFrameworkAttribute>false</GenerateTargetFrameworkAttribute>
+    <NoWarn>CS8632;CS0169;CS8321;CS0108;CS0105;CS0414;MSB3277;CS0219;CS0579</NoWarn>
+    <DefaultItemExcludes>$(DefaultItemExcludes);CodeGen\**;CodeGenGui\**;runtime\**;publish\**</DefaultItemExcludes>
+    <ApplicationIcon>app.ico</ApplicationIcon>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Chaos.NaCl.Standard" Version="1.0.0" />
+    <PackageReference Include="Microsoft.Web.WebView2" Version="1.0.3967.48" />
+    <PackageReference Include="NSec.Cryptography" Version="24.4.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="marked.min.js" />
+    <Content Include="marked.min.js">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+    <Content Include="apple-touch-icon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+
+  </ItemGroup>
+  <!-- .openclaw 数据由网关自行管理，发布时不备份/恢复，避免覆盖运行中文件。 -->
+  <!-- 发布后自动解压 runtime.zip 到发布目录，提供 Node.js + openclaw 及所有依赖 -->
+  <Target Name="UnzipRuntime" AfterTargets="AfterPublish">
+    <Message Importance="high" Text="解压 runtime.zip → $(PublishDir)..." />
+    <Exec Command="powershell -NoProfile -Command &quot;if (Test-Path '$(PublishDir)runtime') { Remove-Item -Recurse -Force '$(PublishDir)runtime' }; Expand-Archive -Path '$(MSBuildProjectDirectory)\runtime.zip' -DestinationPath '$(PublishDir)' -Force&quot;" />
+  </Target>
+</Project>

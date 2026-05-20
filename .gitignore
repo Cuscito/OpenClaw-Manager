@@ -1,0 +1,24 @@
+# VS
+.vs/
+*.user
+*.suo
+
+# 构建产物
+bin/
+obj/
+publish/
+
+# runtime.zip 太大不适合 git
+runtime.zip
+
+# 备份
+*.bak
+*.patch
+*.rar
+
+# 临时文件
+chat.js
+hide-sidebar.js
+test-ws.js
+start.bat
+整理说明.md
