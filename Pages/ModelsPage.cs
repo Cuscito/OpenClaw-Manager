@@ -270,7 +270,7 @@ public class ModelsPage
         var quick = Theme.ComboBox();
         quick.Location = new Point(Theme.S(16), yy);
         quick.Size = new Size(Theme.S(420), Theme.S(28));
-        quick.Items.AddRange(["-- 快速填入 --", "deepseek (DeepSeek)", "openai (OpenAI)", "anthropic (Anthropic)", "google (Google)", "xai (xAI Grok)", "mistral (Mistral)", "groq (Groq)", "ollama (本地Ollama)"]);
+        quick.Items.AddRange(["-- 快速填入 --", "deepseek (DeepSeek)", "openai (OpenAI)", "anthropic (Anthropic)", "google (Google)", "xai (xAI Grok)", "mistral (Mistral)", "groq (Groq)", "ollama (本地Ollama)", "azure-openai (Azure OpenAI)", "together (Together AI)", "replicate (Replicate)", "huggingface (Hugging Face)"]);
         quick.SelectedIndex = 0;
         dlg.Controls.Add(quick);
         yy += Theme.S(38);
@@ -285,7 +285,7 @@ public class ModelsPage
         var apiType = Theme.ComboBox();
         apiType.Location = new Point(Theme.S(120), yy);
         apiType.Size = new Size(Theme.S(316), Theme.S(28));
-        apiType.Items.AddRange(["openai-completions", "anthropic-messages", "google-generative", "ollama"]);
+        apiType.Items.AddRange(["openai-completions", "anthropic-messages", "google-generative", "ollama", "azure-openai-completions", "together-completions", "replicate-predictions"]);
         apiType.SelectedIndex = 0;
         dlg.Controls.Add(apiType);
         yy += Theme.S(46);
@@ -295,13 +295,17 @@ public class ModelsPage
             if (quick.SelectedIndex <= 0) return;
             var p = quick.SelectedItem?.ToString()?.Split('(')[0].Trim() ?? "";
             idBox.Text = p;
-            apiType.SelectedIndex = p switch { "anthropic" => 1, "google" => 2, "ollama" => 3, _ => 0 };
+            apiType.SelectedIndex = p switch { "anthropic" => 1, "google" => 2, "ollama" => 3, "azure-openai" => 4, "together" => 5, "replicate" => 6, _ => 0 };
             urlBox.Text = p switch
             {
                 "deepseek" => "https://api.deepseek.com", "openai" => "https://api.openai.com/v1",
                 "anthropic" => "https://api.anthropic.com/v1", "google" => "https://generativelanguage.googleapis.com/v1beta",
                 "xai" => "https://api.x.ai/v1", "mistral" => "https://api.mistral.ai/v1",
-                "groq" => "https://api.groq.com/openai/v1", "ollama" => "http://localhost:11434/v1", _ => ""
+                "groq" => "https://api.groq.com/openai/v1", "ollama" => "http://localhost:11434/v1",
+                "azure-openai" => "https://YOUR_RESOURCE_NAME.openai.azure.com",
+                "huggingface" => "https://api-inference.huggingface.co",
+                "replicate" => "https://api.replicate.com/v1",
+                "together" => "https://api.together.xyz/v1", _ => ""
             };
         };
 
@@ -466,7 +470,12 @@ public class ModelsPage
         var models = cfg["models"]!.AsObject();
         models["providers"] ??= new JsonObject();
         var prov = models["providers"]!.AsObject();
-        prov[id] = new JsonObject { ["baseUrl"] = url, ["api"] = api };
+        // 修复：添加 models 字段以确保与 OpenClaw 网关兼容
+        prov[id] = new JsonObject { 
+            ["baseUrl"] = url, 
+            ["api"] = api,
+            ["models"] = new JsonArray()  // 添加空的 models 数组
+        };
         if (!string.IsNullOrWhiteSpace(key)) prov[id]!["apiKey"] = key;
         OpenClawRuntime.SaveConfig(cfg);
     }

@@ -17,7 +17,7 @@ namespace OpenClawManager;
 
 public class DashboardPage
 {
-    static readonly HttpClient GatewayHealthClient = new() { Timeout = TimeSpan.FromSeconds(15) };
+    static readonly HttpClient GatewayHealthClient = new() { Timeout = TimeSpan.FromSeconds(30) };
     // ── 内建守护 + 实时控制台（静态字段跨 Build 存活）──
     static System.Windows.Forms.Timer? _healthTimer;
     static int _healthFailCount;
@@ -573,7 +573,7 @@ public class DashboardPage
     /// <summary>TCP 端口探测（<1s），判断网关进程是否存活</summary>
     bool GwTcpOk()
     {
-        try { using var tcp = new System.Net.Sockets.TcpClient(); var ar = tcp.BeginConnect("127.0.0.1", 18789, null, null); if (ar.AsyncWaitHandle.WaitOne(TimeSpan.FromSeconds(1))) { tcp.EndConnect(ar); return true; } return false; } catch { return false; }
+        try { using var tcp = new System.Net.Sockets.TcpClient(); var ar = tcp.BeginConnect("127.0.0.1", 18789, null, null); if (ar.AsyncWaitHandle.WaitOne(TimeSpan.FromSeconds(3))) { tcp.EndConnect(ar); return true; } return false; } catch { return false; }
     }
 
     /// <summary>TCP+HTTP 双重检测（必须在后台线程调用，不可在 UI 线程）</summary>
@@ -581,14 +581,22 @@ public class DashboardPage
     {
         // 先 TCP 检测，快
         if (!GwTcpOk()) return null; // 端口不通 → 真宕机
-        // TCP 通了，做 HTTP 检测
-        try
+        // TCP 通了，做 HTTP 检测，增加重试机制
+        for (int i = 0; i < 3; i++)
         {
-            using var req = new HttpRequestMessage(HttpMethod.Get, "http://127.0.0.1:18789/health");
-            using var resp = GatewayHealthClient.Send(req);
-            return resp.IsSuccessStatusCode ? true : false;
+            try
+            {
+                using var req = new HttpRequestMessage(HttpMethod.Get, "http://127.0.0.1:18789/health");
+                using var resp = GatewayHealthClient.Send(req);
+                return resp.IsSuccessStatusCode ? true : false;
+            }
+            catch 
+            { 
+                if (i < 2) Thread.Sleep(1000); // 重试前等待1秒
+                else return false; // HTTP 超时 → 繁忙
+            }
         }
-        catch { return false; } // HTTP 超时 → 繁忙
+        return false;
     }
 
     bool GwHttpOk()
@@ -860,11 +868,14 @@ public class DashboardPage
     void StartHealthTimer()
     {
         StopHealthTimer();
-        _healthTimer = new System.Windows.Forms.Timer { Interval = 60000 };
+        // 根据当前负载动态调整检测间隔
+        bool highLoad = _consoleLog.ToString().Contains("网关繁忙");
+        int interval = highLoad ? 120000 : 60000; // 高负载时2分钟检查一次
+        _healthTimer = new System.Windows.Forms.Timer { Interval = interval };
         _healthTimer.Tick += (_, _) => HealthCheck();
         _healthFailCount = 0;
         _healthTimer.Start();
-        if (!_healthLogged) { WriteConsole("守护已附加 (60s检测)"); _healthLogged = true; }
+        if (!_healthLogged) { WriteConsole($"守护已附加 ({interval/1000}s检测)"); _healthLogged = true; }
     }
 
     void StopHealthTimer()
