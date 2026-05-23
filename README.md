@@ -104,4 +104,10 @@ dotnet publish OpenClawManager.csproj -c Release -o D:\output --self-contained -
 
 ## License
 
-Proprietary. All rights reserved.
+MIT License. See [LICENSE.txt](License/LICENSE.txt) for details.
+
+## ❤️ 赞赏
+
+如果这个项目对你有帮助，欢迎请我喝杯咖啡~
+
+![微信赞赏](wechat-qr.png)
