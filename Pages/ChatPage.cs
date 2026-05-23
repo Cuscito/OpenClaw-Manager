@@ -440,7 +440,7 @@ function newChat(){{
   if(currentAssistant&&currentAssistant.streaming)return;
   curSessId='ocmgr_'+Math.random().toString(36).substr(2,12);sessKey=curSessId;
   window.chrome.webview.postMessage(JSON.stringify({{type:'set-sesskey',sessKey:curSessId}}));
-  sessCreated=false;messages.length=0;currentAssistant=null;currentToolCards={{}};streamBuf='';stopRequested=false;
+  sessCreated=true;messages.length=0;currentAssistant=null;currentToolCards={{}};streamBuf='';stopRequested=false;
   render();
   sessions.unshift({{id:curSessId,key:curSessId,title:'新对话',sub:'',time:new Date().toLocaleTimeString('zh-CN',{{hour:'2-digit',minute:'2-digit'}})}});
   collapseSidebar();
@@ -824,7 +824,7 @@ function newChat(){{
   if(currentAssistant&&currentAssistant.streaming)return;
   curSessId='ocmgr_'+Math.random().toString(36).substr(2,12);sessKey=curSessId;
   window.chrome.webview.postMessage(JSON.stringify({{type:'set-sesskey',sessKey:curSessId}}));
-  sessCreated=false;messages.length=0;currentAssistant=null;currentToolCards={{}};streamBuf='';stopRequested=false;
+  sessCreated=true;messages.length=0;currentAssistant=null;currentToolCards={{}};streamBuf='';stopRequested=false;
   render();
   sessions.unshift({{id:curSessId,key:curSessId,title:'新对话',sub:'',time:new Date().toLocaleTimeString('zh-CN',{{hour:'2-digit',minute:'2-digit'}})}});
   collapseSidebar();
@@ -1037,7 +1037,24 @@ document.addEventListener('keydown',e=>{{if(e.key==='Enter'&&!e.shiftKey&&docume
     string BuildPageHtml(string theme, string bodyBg, string aiName, string aiEmoji, string userName, string userEmoji, string aiAvatar, string sessKey)
     {
         var mk = string.IsNullOrEmpty(_markedJs) ? "<script>" + File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "marked.min.js"), Encoding.UTF8) + "</" + "script>" : "<script>" + _markedJs + "</" + "script>";
-        return string.Format(ChatTemplate, theme, bodyBg, aiName, aiEmoji, userName, userEmoji, aiAvatar, sessKey, "__default__", mk);
+        var html = string.Format(ChatTemplate, theme, bodyBg, aiName, aiEmoji, userName, userEmoji, aiAvatar, sessKey, "__default__", mk);
+        html = html.Replace("新对话", OpenClawManager.Properties.LanguageManager.GetString("ChatNewChat"))
+                   .Replace("📎 添加附件", OpenClawManager.Properties.LanguageManager.GetString("ChatAttach"))
+                   .Replace("＋ 新建会话", OpenClawManager.Properties.LanguageManager.GetString("ChatNewSess"))
+                   .Replace("⏹ 停止", OpenClawManager.Properties.LanguageManager.GetString("ChatStop"))
+                   .Replace("🗑 清屏", OpenClawManager.Properties.LanguageManager.GetString("ChatClear"))
+                   .Replace("输入消息...", OpenClawManager.Properties.LanguageManager.GetString("ChatInputPlaceholder"))
+                   .Replace(">复制<", ">" + OpenClawManager.Properties.LanguageManager.GetString("ChatCopy") + "<")
+                   .Replace("🤔 思考过程", OpenClawManager.Properties.LanguageManager.GetString("ChatThinking"))
+                   .Replace("'命令: '", "'" + OpenClawManager.Properties.LanguageManager.GetString("ChatCommand") + ": '")
+                   .Replace("'运行中'", "'" + OpenClawManager.Properties.LanguageManager.GetString("ChatRunning") + "'")
+                   .Replace("'输出'", "'" + OpenClawManager.Properties.LanguageManager.GetString("ChatOutput") + "'")
+                   .Replace("'结果'", "'" + OpenClawManager.Properties.LanguageManager.GetString("ChatResult") + "'")
+                   .Replace("发送...", OpenClawManager.Properties.LanguageManager.GetString("ChatSending"))
+                   .Replace("已发送", OpenClawManager.Properties.LanguageManager.GetString("ChatSent"))
+                   .Replace("发送失败", OpenClawManager.Properties.LanguageManager.GetString("ChatSendFailed"))
+                   .Replace("'AI 对话'", "'" + OpenClawManager.Properties.LanguageManager.GetString("NavChat") + "'");
+        return html;
     }
 
     void LoadMarkedJs()

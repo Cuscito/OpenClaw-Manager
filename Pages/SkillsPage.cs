@@ -89,7 +89,7 @@ public class SkillsPage
 
         body.Controls.Add(new Label
         {
-            Text = "技能管理",
+            Text = OpenClawManager.Properties.LanguageManager.GetString("SkillsTitle"),
             ForeColor = Theme.Fc,
             Font = Theme.Font(13f, FontStyle.Bold),
             AutoSize = true,
@@ -97,13 +97,13 @@ public class SkillsPage
             Location = new Point(pad, y)
         });
 
-        var refreshBtn = Theme.BtnWhite("刷新");
+        var refreshBtn = Theme.BtnWhite(OpenClawManager.Properties.LanguageManager.GetString("SkillsRefresh"));
         refreshBtn.Location = new Point(body.ClientSize.Width - pad - refreshBtn.PreferredSize.Width, y - 2);
         refreshBtn.Click += async (_, _) => await LoadAsync();
         body.Controls.Add(refreshBtn);
         y += Theme.S(34);
 
-        searchBox = Theme.TextBox(placeholder: "搜索 ClawHub 技能市场...");
+        searchBox = Theme.TextBox(placeholder: OpenClawManager.Properties.LanguageManager.GetString("SkillsSearchPlaceholder"));
         searchBox.Location = new Point(pad, y);
         searchBox.Size = new Size(Math.Max(220, width - Theme.S(92)), Theme.S(28));
         searchBox.KeyDown += (_, e) =>
@@ -116,7 +116,7 @@ public class SkillsPage
         };
         body.Controls.Add(searchBox);
 
-        var searchBtn = Theme.Btn("搜索");
+        var searchBtn = Theme.Btn(OpenClawManager.Properties.LanguageManager.GetString("SkillsSearch"));
         searchBtn.Location = new Point(pad + searchBox.Width + Theme.S(8), y - 1);
         searchBtn.Click += (_, _) =>
         {
@@ -130,12 +130,12 @@ public class SkillsPage
         grid.Location = new Point(pad, y);
         grid.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Bottom;
         grid.Size = new Size(width, body.ClientSize.Height - y - Theme.S(42));
-        grid.Columns.Add("name", "名称");
-        grid.Columns.Add("desc", "说明");
-        grid.Columns.Add("type", "类型");
-        grid.Columns.Add("status", "状态");
-        grid.Columns.Add("source", "来源");
-        grid.Columns.Add(new DataGridViewButtonColumn { Name = "action", HeaderText = "操作", UseColumnTextForButtonValue = false, FlatStyle = FlatStyle.Flat });
+        grid.Columns.Add("name", OpenClawManager.Properties.LanguageManager.GetString("SkillsColName"));
+        grid.Columns.Add("desc", OpenClawManager.Properties.LanguageManager.GetString("SkillsColDesc"));
+        grid.Columns.Add("type", OpenClawManager.Properties.LanguageManager.GetString("SkillsColType"));
+        grid.Columns.Add("status", OpenClawManager.Properties.LanguageManager.GetString("SkillsColStatus"));
+        grid.Columns.Add("source", OpenClawManager.Properties.LanguageManager.GetString("SkillsColSource"));
+        grid.Columns.Add(new DataGridViewButtonColumn { Name = "action", HeaderText = OpenClawManager.Properties.LanguageManager.GetString("SkillsColAction"), UseColumnTextForButtonValue = false, FlatStyle = FlatStyle.Flat });
         grid.Columns["name"].FillWeight = 16;
         grid.Columns["desc"].FillWeight = 34;
         grid.Columns["type"].FillWeight = 12;
@@ -152,7 +152,7 @@ public class SkillsPage
 
         statusBar = new Label
         {
-            Text = "正在加载...", ForeColor = Theme.Acc, Font = Theme.Font(9f),
+            Text = OpenClawManager.Properties.LanguageManager.GetString("SkillsLoading"), ForeColor = Theme.Acc, Font = Theme.Font(9f),
             AutoSize = false, BackColor = Color.Transparent, TextAlign = ContentAlignment.MiddleLeft,
             Location = new Point(pad, Theme.S(5))
         };
@@ -168,14 +168,14 @@ public class SkillsPage
 
         cancelBtn = new Button
         {
-            Text = "取消", AutoSize = true,
+            Text = OpenClawManager.Properties.LanguageManager.GetString("SkillsCancel"), AutoSize = true,
             FlatStyle = FlatStyle.Flat, BackColor = Theme.Red, ForeColor = Color.White,
             Font = Theme.Font(9f), Cursor = Cursors.Hand,
             FlatAppearance = { BorderSize = 0 }, UseVisualStyleBackColor = false,
             Visible = false
         };
         cancelBtn.Location = new Point(progressBar.Right + Theme.S(12), Theme.S(4));
-        cancelBtn.Click += (_, _) => { cts?.Cancel(); SetIdle("已取消当前操作"); };
+        cancelBtn.Click += (_, _) => { cts?.Cancel(); SetIdle(OpenClawManager.Properties.LanguageManager.GetString("SkillsCancelled")); };
         bottomBar.Controls.Add(cancelBtn);
 
         // Resize 自适应
@@ -192,7 +192,7 @@ public class SkillsPage
 
     async Task LoadAsync()
     {
-        SetBusy("正在读取插件与技能...");
+        SetBusy(OpenClawManager.Properties.LanguageManager.GetString("SkillsBusyLoading"));
         var pluginsTask = Task.Run(ListPlugins);
         var skillsTask = Task.Run(ListSkills);
         var configTask = Task.Run(OpenClawRuntime.ReadConfig);
@@ -203,7 +203,7 @@ public class SkillsPage
         body.BeginInvoke(() =>
         {
             PopulateGrid();
-            SetIdle($"就绪，共 {entries.Count} 项");
+            SetIdle(string.Format(OpenClawManager.Properties.LanguageManager.GetString("SkillsReady"), entries.Count));
         });
     }
 
@@ -225,10 +225,10 @@ public class SkillsPage
             entries.Add(new Entry
             {
                 Id = kv.Key, Name = name, Desc = desc,
-                Type = kv.Value.origin == "bundled" ? "内置插件" : "已安装插件",
-                Status = enabled ? "已启用" : "已停用",
-                Action = enabled ? "停用" : "启用",
-                Source = kv.Value.origin == "bundled" ? "官方内置" : "外部安装",
+                Type = kv.Value.origin == "bundled" ? OpenClawManager.Properties.LanguageManager.GetString("SkillsTypeBundled") : OpenClawManager.Properties.LanguageManager.GetString("SkillsTypeInstalled"),
+                Status = enabled ? OpenClawManager.Properties.LanguageManager.GetString("SkillsStatusEnabled") : OpenClawManager.Properties.LanguageManager.GetString("SkillsStatusDisabled"),
+                Action = enabled ? OpenClawManager.Properties.LanguageManager.GetString("SkillsActionDisable") : OpenClawManager.Properties.LanguageManager.GetString("SkillsActionEnable"),
+                Source = kv.Value.origin == "bundled" ? OpenClawManager.Properties.LanguageManager.GetString("SkillsSourceBundled") : OpenClawManager.Properties.LanguageManager.GetString("SkillsSourceExternal"),
                 Origin = kv.Value.origin, Detected = true,
                 Enabled = enabled, IsBundled = kv.Value.origin == "bundled"
             });
@@ -241,10 +241,10 @@ public class SkillsPage
             entries.Add(new Entry
             {
                 Id = skill.Name, Name = skill.Name, Desc = skill.Desc,
-                Type = skill.Eligible ? "技能" : "不可用",
-                Status = skill.Eligible ? (enabled ? "已启用" : "已停用") : skill.MissingReason,
-                Action = skill.Eligible ? "-" : "安装依赖",
-                Source = skill.IsBundled ? "官方内置" : "工作区",
+                Type = skill.Eligible ? OpenClawManager.Properties.LanguageManager.GetString("SkillsTypeSkill") : OpenClawManager.Properties.LanguageManager.GetString("SkillsTypeUnavailable"),
+                Status = skill.Eligible ? (enabled ? OpenClawManager.Properties.LanguageManager.GetString("SkillsStatusEnabled") : OpenClawManager.Properties.LanguageManager.GetString("SkillsStatusDisabled")) : skill.MissingReason,
+                Action = skill.Eligible ? "-" : OpenClawManager.Properties.LanguageManager.GetString("SkillsActionInstallDeps"),
+                Source = skill.IsBundled ? OpenClawManager.Properties.LanguageManager.GetString("SkillsSourceBundled") : OpenClawManager.Properties.LanguageManager.GetString("SkillsSourceWorkspace"),
                 Origin = "skill", Detected = true,
                 Enabled = enabled, IsSkill = true, IsBundled = skill.IsBundled
             });
@@ -256,7 +256,7 @@ public class SkillsPage
             entries.Add(new Entry
             {
                 Id = kv.Key, Name = kv.Value.name, Desc = kv.Value.desc,
-                Type = "可安装", Status = "未安装", Action = "安装", Source = "ClawHub",
+                Type = OpenClawManager.Properties.LanguageManager.GetString("SkillsTypeInstallable"), Status = OpenClawManager.Properties.LanguageManager.GetString("SkillsStatusNotInstalled"), Action = OpenClawManager.Properties.LanguageManager.GetString("SkillsActionInstall"), Source = "ClawHub",
                 Detected = false
             });
         }
@@ -280,8 +280,8 @@ public class SkillsPage
         if (grid.Columns[e.ColumnIndex].Name == "status")
         {
             var cell = grid.Rows[e.RowIndex].Cells[e.ColumnIndex];
-            if (entry.Status.Contains("已启用")) cell.Style.ForeColor = Theme.Grn;
-            else if (entry.Status.Contains("未安装") || entry.Status.Contains("不可用")) cell.Style.ForeColor = Theme.Warn;
+            if (entry.Status.Contains(OpenClawManager.Properties.LanguageManager.GetString("SkillsStatusEnabled"))) cell.Style.ForeColor = Theme.Grn;
+            else if (entry.Status.Contains(OpenClawManager.Properties.LanguageManager.GetString("SkillsStatusNotInstalled")) || entry.Status.Contains(OpenClawManager.Properties.LanguageManager.GetString("SkillsTypeUnavailable"))) cell.Style.ForeColor = Theme.Warn;
             else cell.Style.ForeColor = Theme.Fc2;
         }
 
@@ -289,8 +289,8 @@ public class SkillsPage
         {
             cellBtn.Style.BackColor = entry.Action switch
             {
-                "安装" or "启用" or "安装依赖" => Theme.Acc,
-                "停用" => Theme.Red,
+                var a when a == OpenClawManager.Properties.LanguageManager.GetString("SkillsActionInstall") || a == OpenClawManager.Properties.LanguageManager.GetString("SkillsActionEnable") || a == OpenClawManager.Properties.LanguageManager.GetString("SkillsActionInstallDeps") => Theme.Acc,
+                var a when a == OpenClawManager.Properties.LanguageManager.GetString("SkillsActionDisable") => Theme.Red,
                 _ => Theme.BgElevated
             };
             cellBtn.Style.ForeColor = entry.Action == "-" ? Theme.Fc2 : Theme.FcWhite;
@@ -302,10 +302,10 @@ public class SkillsPage
         if (e.RowIndex < 0 || grid.Columns[e.ColumnIndex].Name != "action") return;
         if (grid.Rows[e.RowIndex].Tag is not Entry entry || entry.Action == "-") return;
 
-        if (entry.Action == "安装") await InstallPluginAsync(entry);
-        else if (entry.Action == "启用") TogglePlugin(entry, true);
-        else if (entry.Action == "停用") TogglePlugin(entry, false);
-        else if (entry.Action == "安装依赖") await InstallDepsAsync(entry);
+        if (entry.Action == OpenClawManager.Properties.LanguageManager.GetString("SkillsActionInstall")) await InstallPluginAsync(entry);
+        else if (entry.Action == OpenClawManager.Properties.LanguageManager.GetString("SkillsActionEnable")) TogglePlugin(entry, true);
+        else if (entry.Action == OpenClawManager.Properties.LanguageManager.GetString("SkillsActionDisable")) TogglePlugin(entry, false);
+        else if (entry.Action == OpenClawManager.Properties.LanguageManager.GetString("SkillsActionInstallDeps")) await InstallDepsAsync(entry);
 
         await LoadAsync();
     }
@@ -317,13 +317,13 @@ public class SkillsPage
 
     async Task InstallPluginAsync(Entry entry)
     {
-        SetBusy($"正在安装 {entry.Name}...");
+        SetBusy(string.Format(OpenClawManager.Properties.LanguageManager.GetString("SkillsInstalling"), entry.Name));
         try
         {
             await Task.Run(() => OpenClawRuntime.RunOpenClawSync($"plugins install {entry.Id}", 30000));
-            SetIdle($"{entry.Name} 安装完成");
+            SetIdle(string.Format(OpenClawManager.Properties.LanguageManager.GetString("SkillsInstallDone"), entry.Name));
         }
-        catch (Exception ex) { SetError($"安装失败: {ex.Message}"); }
+        catch (Exception ex) { SetError(OpenClawManager.Properties.LanguageManager.GetString("SkillsInstallFailed") + ": " + ex.Message); }
     }
 
     async Task InstallDepsAsync(Entry entry)
@@ -338,7 +338,7 @@ public class SkillsPage
         int ok = 0, fail = 0;
         foreach (var bin in allBins)
         {
-            SetBusy($"安装 {bin} ...");
+            SetBusy(string.Format(OpenClawManager.Properties.LanguageManager.GetString("SkillsInstallingDep"), bin));
             try
             {
                 var result = await Task.Run(() => OpenClawRuntime.RunOpenClawSync($"skills install-deps {entry.Name}", 60000));
@@ -346,7 +346,7 @@ public class SkillsPage
             }
             catch { fail++; }
         }
-        SetIdle($"依赖安装完成: 成功 {ok}，失败 {fail}");
+        SetIdle(string.Format(OpenClawManager.Properties.LanguageManager.GetString("SkillsDepsDone"), ok, fail));
     }
 
     Dictionary<string, (string origin, bool enabled)> ListPlugins()
@@ -403,9 +403,9 @@ public class SkillsPage
                 info.MissingBins = ReadArray(missing, "bins");
                 info.MissingAnyBins = ReadArray(missing, "anyBins");
                 var parts = new List<string>();
-                if (info.MissingBins.Count > 0) parts.Add("需安装 " + string.Join(", ", info.MissingBins));
-                if (info.MissingAnyBins.Count > 0) parts.Add("需安装其一: " + string.Join(", ", info.MissingAnyBins));
-                info.MissingReason = parts.Count > 0 ? string.Join("; ", parts) : "不可用";
+                if (info.MissingBins.Count > 0) parts.Add(OpenClawManager.Properties.LanguageManager.GetString("SkillsNeedInstall") + " " + string.Join(", ", info.MissingBins));
+                if (info.MissingAnyBins.Count > 0) parts.Add(OpenClawManager.Properties.LanguageManager.GetString("SkillsNeedInstallOne") + ": " + string.Join(", ", info.MissingAnyBins));
+                info.MissingReason = parts.Count > 0 ? string.Join("; ", parts) : OpenClawManager.Properties.LanguageManager.GetString("SkillsUnavailable");
 
                 list.Add(info);
                 skillInfos[name] = info;

@@ -34,6 +34,9 @@ static class Program
     [STAThread]
     static void Main()
     {
+        // 初始化语言管理器
+        OpenClawManager.Properties.LanguageManager.Initialize();
+        
         Application.SetHighDpiMode(HighDpiMode.PerMonitorV2);
         ApplicationConfiguration.Initialize();
         Application.Run(new MainForm());

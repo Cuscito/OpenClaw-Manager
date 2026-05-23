@@ -8,7 +8,7 @@ namespace OpenClawManager;
 
 public class MainForm : Form
 {
-    Panel sidebar, body, themePanel;
+    Panel sidebar, body, themePanel, titlePanel;
     Label titleLbl, versionLbl;
     int _navEndY;
     NotifyIcon trayIcon;
@@ -20,7 +20,7 @@ public class MainForm : Form
 
     internal static string WindowTitle()
     {
-        var suffix = LicenseManager.IsPro ? " 专业版" : LicenseManager.IsTrialExpired ? " 试用已到期" : " 试用" + LicenseManager.TrialDaysRemaining + "天";
+        var suffix = LicenseManager.IsPro ? OpenClawManager.Properties.LanguageManager.GetString("MainFormPro") : LicenseManager.IsTrialExpired ? OpenClawManager.Properties.LanguageManager.GetString("MainFormTrialExpired") : string.Format(OpenClawManager.Properties.LanguageManager.GetString("MainFormTrial"), LicenseManager.TrialDaysRemaining);
         // 标题栏版本跟随 OpenClaw 真实版本
         var ver = AppVersion;
         if (_ocVersion == null)
@@ -44,17 +44,17 @@ public class MainForm : Form
         return $"OpenClaw v{ver}{suffix}";
     }
     static readonly string BuildDate = System.IO.File.GetLastWriteTime(System.Reflection.Assembly.GetExecutingAssembly().Location).ToString("yyyy-MM-dd");
-    readonly (string id, string label, string icon)[] navItems =
+    (string id, string label, string icon)[] GetNavItems() =>
     [
-        ("dashboard", "仪表盘", "■"),
-        ("setup", "初始化配置", "⚑"),
-        ("chat", "AI 对话", "●"),
-        ("models", "模型配置", "◆"),
-        ("skills", "技能管理", "★"),
-        ("channels", "频道设置", "◇"),
-        ("logs", "运行日志", "☰"),
-        ("settings", "系统设置", "⚙"),
-        ("guardian", "守护程序", "▲"),
+        ("dashboard", OpenClawManager.Properties.LanguageManager.GetString("NavDashboard"), "■"),
+        ("setup", OpenClawManager.Properties.LanguageManager.GetString("NavSetup"), "⚑"),
+        ("chat", OpenClawManager.Properties.LanguageManager.GetString("NavChat"), "●"),
+        ("models", OpenClawManager.Properties.LanguageManager.GetString("NavModels"), "◆"),
+        ("skills", OpenClawManager.Properties.LanguageManager.GetString("NavSkills"), "★"),
+        ("channels", OpenClawManager.Properties.LanguageManager.GetString("NavChannels"), "◇"),
+        ("logs", OpenClawManager.Properties.LanguageManager.GetString("NavLogs"), "☰"),
+        ("settings", OpenClawManager.Properties.LanguageManager.GetString("NavSettings"), "⚙"),
+        ("guardian", OpenClawManager.Properties.LanguageManager.GetString("NavGuardian"), "▲"),
     ];
 
     public static string CfgFullPath => Path.Combine(AppDomain.CurrentDomain.BaseDirectory, ".openclaw", "openclaw.json");
@@ -92,6 +92,29 @@ public class MainForm : Form
         try { var icoPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "apple-touch-icon.png"); if (File.Exists(icoPath)) { var bmp = new Bitmap(icoPath); Icon = Icon.FromHandle(bmp.GetHicon()); } } catch { }
         DpiChanged += (_, _) => { Theme.InitDpi(this); BuildSidebar(); ShowPanel(currentPanel); };
         Text = WindowTitle();
+        
+        // 订阅语言更改事件
+        OpenClawManager.Properties.LanguageManager.LanguageChanged += () => {
+            if (InvokeRequired)
+            {
+                Invoke(() => {
+                    Controls.Clear();
+                    BuildShell();
+                    UpdateCurrentPanelTitle();
+                    if (currentPanel != "setup" && currentPanel != "launcher") BuildSidebar();
+                    ShowPanel(currentPanel);
+                });
+            }
+            else
+            {
+                Controls.Clear();
+                BuildShell();
+                UpdateCurrentPanelTitle();
+                if (currentPanel != "setup" && currentPanel != "launcher") BuildSidebar();
+                ShowPanel(currentPanel);
+            }
+        };
+        
         var wa = Screen.FromPoint(Cursor.Position).WorkingArea;
         var w = Math.Min((int)(1200 * Theme.ScaleFactor), (int)(wa.Width * 0.9));
         var h = Math.Min((int)(780 * Theme.ScaleFactor), (int)(wa.Height * 0.9));
@@ -111,13 +134,13 @@ public class MainForm : Form
         };
         trayIcon.DoubleClick += (_, _) => { Show(); WindowState = FormWindowState.Normal; Activate(); };
         var trayMenu = new ContextMenuStrip();
-        trayMenu.Items.Add("显示", null, (_, _) => { Show(); WindowState = FormWindowState.Normal; Activate(); });
+        trayMenu.Items.Add(OpenClawManager.Properties.LanguageManager.GetString("MainFormShow"), null, (_, _) => { Show(); WindowState = FormWindowState.Normal; Activate(); });
         trayMenu.Items.Add("-");
-        trayMenu.Items.Add("退出", null, (_, _) =>
+        trayMenu.Items.Add(OpenClawManager.Properties.LanguageManager.GetString("MainFormExit"), null, (_, _) =>
         {
             var dlg = new Form
             {
-                Text = "退出 OpenClaw",
+                Text = OpenClawManager.Properties.LanguageManager.GetString("MainFormExitTitle"),
                 Size = new Size(360, 180),
                 StartPosition = FormStartPosition.CenterScreen,
                 FormBorderStyle = FormBorderStyle.FixedDialog,
@@ -127,25 +150,25 @@ public class MainForm : Form
             };
             dlg.Controls.Add(new Label
             {
-                Text = "退出时是否同时关闭网关？",
+                Text = OpenClawManager.Properties.LanguageManager.GetString("MainFormExitPrompt"),
                 AutoSize = true, Location = new Point(28, 30),
                 ForeColor = Theme.Fc, Font = Theme.Font(10f, FontStyle.Bold),
                 BackColor = Color.Transparent
             });
             dlg.Controls.Add(new Label
             {
-                Text = "关闭网关将结束进程并禁用守护计划任务",
+                Text = OpenClawManager.Properties.LanguageManager.GetString("MainFormExitSubPrompt"),
                 AutoSize = true, Location = new Point(28, 58),
                 ForeColor = Theme.Fc2, Font = Theme.Font(8f),
                 BackColor = Color.Transparent
             });
 
             DialogResult result = DialogResult.Cancel;
-            var btnClose = new Button { Text = "关闭网关", FlatStyle = FlatStyle.Flat, BackColor = Theme.Red, ForeColor = Theme.FcWhite, Font = Theme.Font(9f), Size = new Size(100, 32), Cursor = Cursors.Hand, FlatAppearance = { BorderSize = 0 }, Location = new Point(60, 95) };
+            var btnClose = new Button { Text = OpenClawManager.Properties.LanguageManager.GetString("MainFormCloseGateway"), FlatStyle = FlatStyle.Flat, BackColor = Theme.Red, ForeColor = Theme.FcWhite, Font = Theme.Font(9f), Size = new Size(100, 32), Cursor = Cursors.Hand, FlatAppearance = { BorderSize = 0 }, Location = new Point(60, 95) };
             btnClose.Click += (_, _) => { result = DialogResult.Yes; dlg.Close(); };
             dlg.Controls.Add(btnClose);
 
-            var btnOnly = new Button { Text = "仅退出控制台", FlatStyle = FlatStyle.Flat, BackColor = Theme.Fc2, ForeColor = Theme.FcWhite, Font = Theme.Font(9f), Size = new Size(100, 32), Cursor = Cursors.Hand, FlatAppearance = { BorderSize = 0 }, Location = new Point(190, 95) };
+            var btnOnly = new Button { Text = OpenClawManager.Properties.LanguageManager.GetString("MainFormExitOnly"), FlatStyle = FlatStyle.Flat, BackColor = Theme.Fc2, ForeColor = Theme.FcWhite, Font = Theme.Font(9f), Size = new Size(100, 32), Cursor = Cursors.Hand, FlatAppearance = { BorderSize = 0 }, Location = new Point(190, 95) };
             btnOnly.Click += (_, _) => { result = DialogResult.No; dlg.Close(); };
             dlg.Controls.Add(btnOnly);
 
@@ -163,25 +186,58 @@ public class MainForm : Form
 
         BuildShell();
         if (File.Exists(CfgFullPath))
+        {
             ShowPanel("dashboard");
+            UpdateCurrentPanelTitle();
+        }
         else
+        {
             ShowPanel("setup");
+            UpdateCurrentPanelTitle();
+        }
     }
 
     void BuildShell()
     {
+        // 标题栏容器面板
+        titlePanel = new Panel
+        {
+            Size = new Size(ClientSize.Width, (int)(Theme.TitleH * Theme.ScaleFactor)),
+            BackColor = Theme.BgWhite
+        };
+        
         titleLbl = new Label
         {
             Text = "  OpenClaw",
             ForeColor = Theme.Fc,
             Font = Theme.Font(13.5f, FontStyle.Bold),
-            Size = new Size(ClientSize.Width, (int)(Theme.TitleH * Theme.ScaleFactor)),
+            Size = new Size(ClientSize.Width - 55, (int)(Theme.TitleH * Theme.ScaleFactor)),
             TextAlign = ContentAlignment.MiddleLeft,
-            BackColor = Theme.BgWhite
+            BackColor = Theme.BgWhite,
+            Location = new Point(0, 0)
         };
         titleLbl.Paint += (s, e) => { e.Graphics.DrawLine(new Pen(Theme.BdrLight), 0, (int)(Theme.TitleH * Theme.ScaleFactor) - 1, titleLbl.Width, (int)(Theme.TitleH * Theme.ScaleFactor) - 1); };
         titleLbl.Click += (_, _) => _chatPage?.CollapseSidebar();
-        Controls.Add(titleLbl);
+        titlePanel.Controls.Add(titleLbl);
+        
+        // 语言切换按钮
+        var langBtn = new Button
+        {
+            Name = "langBtn",
+            Text = CurrentLangShort(),
+            Font = Theme.Font(9f, FontStyle.Bold),
+            FlatStyle = FlatStyle.Flat,
+            Size = new Size(50, (int)(Theme.TitleH * Theme.ScaleFactor)),
+            BackColor = Theme.BgWhite,
+            ForeColor = Theme.Fc,
+            Cursor = Cursors.Hand,
+            FlatAppearance = { BorderSize = 0 },
+            Location = new Point(ClientSize.Width - 55, 0)
+        };
+        langBtn.Click += ToggleLanguage;
+        titlePanel.Controls.Add(langBtn);
+        
+        Controls.Add(titlePanel);
 
         bool hasConfig = File.Exists(CfgFullPath);
 
@@ -220,7 +276,7 @@ public class MainForm : Form
         int itemH = (int)(42 * Theme.ScaleFactor);
         int itemGap = (int)(5 * Theme.ScaleFactor);
         float fs = Theme.ScaleFactor;
-        foreach (var (id, label, icon) in navItems)
+        foreach (var (id, label, icon) in GetNavItems())
         {
             if (!hasConfig && id != "setup") continue;
             if (hasConfig && id == "setup") continue;
@@ -259,8 +315,8 @@ public class MainForm : Form
         };
         themePanel.MouseEnter += (_, _) => themePanel.BackColor = Theme.BgHover;
         themePanel.MouseLeave += (_, _) => themePanel.BackColor = Theme.BgSidebar;
-        var themeIco = new Label { Text = Theme.IsDark ? "☀" : "◐", Font = Theme.Font(11f), ForeColor = Theme.Fc2, Size = new Size((int)(28 * fs), (int)(32 * fs)), TextAlign = ContentAlignment.MiddleCenter, Location = new Point((int)(8 * fs), 0), BackColor = Color.Transparent };
-        var themeLbl = new Label { Text = Theme.IsDark ? "切换亮色" : "切换暗色", Font = Theme.Font(8.5f), ForeColor = Theme.Fc2, Size = new Size((int)(92 * fs), (int)(32 * fs)), TextAlign = ContentAlignment.MiddleLeft, Location = new Point((int)(38 * fs), 0), BackColor = Color.Transparent };
+        var themeIco = new Label { Text = Theme.IsDark ? "☀️" : "🌙", Font = Theme.Font(11f), ForeColor = Theme.Fc2, Size = new Size((int)(28 * fs), (int)(32 * fs)), TextAlign = ContentAlignment.MiddleCenter, Location = new Point((int)(8 * fs), 0), BackColor = Color.Transparent };
+        var themeLbl = new Label { Text = Theme.IsDark ? OpenClawManager.Properties.LanguageManager.GetString("MainFormSwitchLight") : OpenClawManager.Properties.LanguageManager.GetString("MainFormSwitchDark"), Font = Theme.Font(8.5f), ForeColor = Theme.Fc2, Size = new Size((int)(92 * fs), (int)(32 * fs)), TextAlign = ContentAlignment.MiddleLeft, Location = new Point((int)(38 * fs), 0), BackColor = Color.Transparent };
         themePanel.Controls.Add(themeIco);
         themePanel.Controls.Add(themeLbl);
         EventHandler toggleTheme = (_, _) => ApplyThemeChange();
@@ -291,8 +347,25 @@ public class MainForm : Form
             BackColor = Theme.Bg;
             ForeColor = Theme.Fc;
             Font = Theme.Font(9f);
+            
+            // 更新标题栏面板
+            int titleH = (int)(Theme.TitleH * Theme.ScaleFactor);
+            titlePanel.Size = new Size(ClientSize.Width, titleH);
+            titlePanel.BackColor = Theme.BgWhite;
             titleLbl.BackColor = Theme.BgWhite;
             titleLbl.ForeColor = Theme.Fc;
+            titleLbl.Size = new Size(ClientSize.Width - 55, titleH);
+            
+            // 更新语言切换按钮主题
+            var ctls = titlePanel.Controls.Find("langBtn", false);
+            if (ctls.Length > 0 && ctls[0] is Button lb)
+            {
+                lb.BackColor = Theme.BgWhite;
+                lb.ForeColor = Theme.Fc;
+                lb.Location = new Point(ClientSize.Width - 55, 0);
+                lb.Size = new Size(50, titleH);
+            }
+            
             sidebar.BackColor = Theme.BgSidebar;
             body.BackColor = Theme.Bg;
             BuildSidebar();
@@ -353,12 +426,7 @@ public class MainForm : Form
         }
 
         Text = WindowTitle();
-        titleLbl.Text = "  OpenClaw - " + id switch
-        {
-            "dashboard" => "仪表盘", "chat" => "AI 对话", "models" => "模型配置",
-            "skills" => "技能管理", "channels" => "频道设置", "logs" => "运行日志",
-            "setup" => "初始化配置", "settings" => "系统设置", "guardian" => "守护程序", "launcher" => "启动", _ => id
-        };
+        UpdateCurrentPanelTitle();
 
         switch (id)
         {
@@ -385,10 +453,22 @@ public class MainForm : Form
         {
             Hide();
             trayIcon.Visible = true;
-            trayIcon.ShowBalloonTip(2000, "OpenClaw", "已最小化到任务栏托盘", ToolTipIcon.Info);
+            trayIcon.ShowBalloonTip(2000, "OpenClaw", OpenClawManager.Properties.LanguageManager.GetString("MainFormMinimizedToTray"), ToolTipIcon.Info);
             return;
         }
-        titleLbl.Width = ClientSize.Width;
+        // 更新标题栏面板大小
+        int titleH = (int)(Theme.TitleH * Theme.ScaleFactor);
+        titlePanel.Size = new Size(ClientSize.Width, titleH);
+        titleLbl.Size = new Size(ClientSize.Width - 55, titleH);
+        
+        // 更新语言按钮位置
+        var ctls = titlePanel.Controls.Find("langBtn", false);
+        if (ctls.Length > 0 && ctls[0] is Button lb)
+        {
+            lb.Location = new Point(ClientSize.Width - 55, 0);
+            lb.Size = new Size(50, titleH);
+        }
+        
         sidebar.Width = SidebarWidth();
         sidebar.Height = ClientSize.Height - (int)(Theme.TitleH * Theme.ScaleFactor);
         if (currentPanel == "setup" || currentPanel == "launcher")
@@ -429,7 +509,7 @@ public class MainForm : Form
 
         var dlg = new Form
         {
-            Text = "关闭窗口",
+            Text = OpenClawManager.Properties.LanguageManager.GetString("MainFormCloseWindow"),
             Size = new Size(360, 115),
             StartPosition = FormStartPosition.CenterScreen,
             FormBorderStyle = FormBorderStyle.FixedDialog,
@@ -440,15 +520,15 @@ public class MainForm : Form
 
         DialogResult result = DialogResult.Cancel;
 
-        var btnTray = new Button { Text = "最小化到托盘", FlatStyle = FlatStyle.Flat, BackColor = Theme.Acc, ForeColor = Theme.FcWhite, Font = Theme.Font(9f), Size = new Size(100, 34), Cursor = Cursors.Hand, FlatAppearance = { BorderSize = 0 }, Location = new Point(22, 30) };
+        var btnTray = new Button { Text = OpenClawManager.Properties.LanguageManager.GetString("MainFormMinimizeToTray"), FlatStyle = FlatStyle.Flat, BackColor = Theme.Acc, ForeColor = Theme.FcWhite, Font = Theme.Font(9f), Size = new Size(100, 34), Cursor = Cursors.Hand, FlatAppearance = { BorderSize = 0 }, Location = new Point(22, 30) };
         btnTray.Click += (_, _) => { result = DialogResult.No; dlg.Close(); };
         dlg.Controls.Add(btnTray);
 
-        var btnExit = new Button { Text = "关闭网关并退出", FlatStyle = FlatStyle.Flat, BackColor = Theme.Red, ForeColor = Theme.FcWhite, Font = Theme.Font(9f), Size = new Size(114, 34), Cursor = Cursors.Hand, FlatAppearance = { BorderSize = 0 }, Location = new Point(128, 30) };
+        var btnExit = new Button { Text = OpenClawManager.Properties.LanguageManager.GetString("MainFormExitAndClose"), FlatStyle = FlatStyle.Flat, BackColor = Theme.Red, ForeColor = Theme.FcWhite, Font = Theme.Font(9f), Size = new Size(114, 34), Cursor = Cursors.Hand, FlatAppearance = { BorderSize = 0 }, Location = new Point(128, 30) };
         btnExit.Click += (_, _) => { result = DialogResult.Yes; dlg.Close(); };
         dlg.Controls.Add(btnExit);
 
-        var btnCancel = new Button { Text = "取消", FlatStyle = FlatStyle.Flat, BackColor = Theme.Bg, ForeColor = Theme.Fc, Font = Theme.Font(9f), Size = new Size(80, 34), Cursor = Cursors.Hand, FlatAppearance = { BorderSize = 1, BorderColor = Theme.Bdr }, Location = new Point(248, 30) };
+        var btnCancel = new Button { Text = OpenClawManager.Properties.LanguageManager.GetString("MainFormCancel"), FlatStyle = FlatStyle.Flat, BackColor = Theme.Bg, ForeColor = Theme.Fc, Font = Theme.Font(9f), Size = new Size(80, 34), Cursor = Cursors.Hand, FlatAppearance = { BorderSize = 1, BorderColor = Theme.Bdr }, Location = new Point(248, 30) };
         btnCancel.Click += (_, _) => { dlg.Close(); };
         dlg.Controls.Add(btnCancel);
 
@@ -466,5 +546,45 @@ public class MainForm : Form
             Application.Exit();
         }
         // Cancel: do nothing, stay open
+    }
+
+    // 直接切换语言，按钮只显示另一种语言缩写
+    void ToggleLanguage(object sender, EventArgs e)
+    {
+        var current = OpenClawManager.Properties.LanguageManager.CurrentCulture.Name;
+        var next = current == "zh-CN" ? "en-US" : "zh-CN";
+        OpenClawManager.Properties.LanguageManager.SetLanguage(next);
+    }
+
+    string CurrentLangShort()
+    {
+        var current = OpenClawManager.Properties.LanguageManager.CurrentCulture.Name;
+        return current == "zh-CN" ? "中" : "EN";
+    }
+
+    public void UpdateLangBtnText()
+    {
+        var ctls = titlePanel.Controls.Find("langBtn", false);
+        if (ctls.Length > 0 && ctls[0] is Button btn)
+            btn.Text = CurrentLangShort();
+    }
+
+    // 更新当前面板标题
+    void UpdateCurrentPanelTitle()
+    {
+        titleLbl.Text = "  OpenClaw - " + (currentPanel switch
+        {
+            "dashboard" => OpenClawManager.Properties.LanguageManager.GetString("NavDashboard"),
+            "chat" => OpenClawManager.Properties.LanguageManager.GetString("NavChat"),
+            "models" => OpenClawManager.Properties.LanguageManager.GetString("NavModels"),
+            "skills" => OpenClawManager.Properties.LanguageManager.GetString("NavSkills"),
+            "channels" => OpenClawManager.Properties.LanguageManager.GetString("NavChannels"),
+            "logs" => OpenClawManager.Properties.LanguageManager.GetString("NavLogs"),
+            "setup" => OpenClawManager.Properties.LanguageManager.GetString("NavSetup"),
+            "settings" => OpenClawManager.Properties.LanguageManager.GetString("NavSettings"),
+            "guardian" => OpenClawManager.Properties.LanguageManager.GetString("NavGuardian"),
+            "launcher" => "??",
+            _ => currentPanel
+        });
     }
 }

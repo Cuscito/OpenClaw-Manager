@@ -1,0 +1,480 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="NavDashboard" xml:space="preserve"><value>仪表盘</value></data>
+  <data name="NavSetup" xml:space="preserve"><value>初始化配置</value></data>
+  <data name="NavChat" xml:space="preserve"><value>AI 对话</value></data>
+  <data name="NavModels" xml:space="preserve"><value>模型配置</value></data>
+  <data name="NavSkills" xml:space="preserve"><value>技能管理</value></data>
+  <data name="NavChannels" xml:space="preserve"><value>频道设置</value></data>
+  <data name="NavLogs" xml:space="preserve"><value>运行日志</value></data>
+  <data name="NavSettings" xml:space="preserve"><value>系统设置</value></data>
+  <data name="NavGuardian" xml:space="preserve"><value>守护程序</value></data>
+  <data name="DashboardLoading" xml:space="preserve"><value>⏳ 仪表盘加载中...</value></data>
+  <data name="GatewayStatus" xml:space="preserve"><value>Gateway 状态</value></data>
+  <data name="Online" xml:space="preserve"><value>在线</value></data>
+  <data name="Offline" xml:space="preserve"><value>离线</value></data>
+  <data name="CPUAndMemory" xml:space="preserve"><value>CPU / 内存</value></data>
+  <data name="ChannelCount" xml:space="preserve"><value>频道数</value></data>
+  <data name="OpenClawVersion" xml:space="preserve"><value>OpenClaw 版本</value></data>
+  <data name="StartupTime" xml:space="preserve"><value>启动时间</value></data>
+  <data name="Uptime" xml:space="preserve"><value>运行时长</value></data>
+  <data name="Workspace" xml:space="preserve"><value>工作区</value></data>
+  <data name="WorkspacePath" xml:space="preserve"><value>工作目录 (Workspace)</value></data>
+  <data name="DefaultModel" xml:space="preserve"><value>默认模型</value></data>
+  <data name="EnvironmentStatus" xml:space="preserve"><value>环境状态</value></data>
+  <data name="NodeJS" xml:space="preserve"><value>Node.js</value></data>
+  <data name="OpenClaw" xml:space="preserve"><value>OpenClaw</value></data>
+  <data name="Gateway" xml:space="preserve"><value>网关</value></data>
+  <data name="Ready" xml:space="preserve"><value>已就绪</value></data>
+  <data name="NotInstalled" xml:space="preserve"><value>未安装</value></data>
+  <data name="GatewayControl" xml:space="preserve"><value>网关控制</value></data>
+  <data name="Start" xml:space="preserve"><value>启动</value></data>
+  <data name="Stop" xml:space="preserve"><value>停止</value></data>
+  <data name="Restart" xml:space="preserve"><value>重启</value></data>
+  <data name="Fix" xml:space="preserve"><value>诊断修复</value></data>
+  <data name="Console" xml:space="preserve"><value>Web 控制台</value></data>
+  <data name="RealTimeConsole" xml:space="preserve"><value>实时控制台</value></data>
+  <data name="GatewayStarted" xml:space="preserve"><value>━━ 启动网关 ━━</value></data>
+  <data name="GatewayStopped" xml:space="preserve"><value>━━ 停止网关 ━━</value></data>
+  <data name="GatewayRestarted" xml:space="preserve"><value>━━ 重启网关 ━━</value></data>
+  <data name="VersionSwitch" xml:space="preserve"><value>版本切换</value></data>
+  <data name="CurrentVersion" xml:space="preserve"><value>当前版本</value></data>
+  <data name="SwitchTo" xml:space="preserve"><value>切换到</value></data>
+  <data name="Refresh" xml:space="preserve"><value>刷新列表</value></data>
+  <data name="RunningWithPID" xml:space="preserve"><value>运行中 (PID: </value></data>
+  <data name="Stopped" xml:space="preserve"><value>已停止</value></data>
+  <data name="Starting" xml:space="preserve"><value>启动中...</value></data>
+  <data name="Stopping" xml:space="preserve"><value>停止中...</value></data>
+  <data name="Restarting" xml:space="preserve"><value>重启中...</value></data>
+  <data name="LaunchFailed" xml:space="preserve"><value>❌ 启动失败</value></data>
+  <data name="GatewayReady" xml:space="preserve"><value>✅ 网关就绪</value></data>
+  <data name="LaunchTimeout" xml:space="preserve"><value>⚠ 启动超时 (30s)</value></data>
+  <data name="LaunchFailedMsg" xml:space="preserve"><value>启动失败：</value></data>
+  <data name="VersionSwitchComplete" xml:space="preserve"><value>✅ 版本切换完成</value></data>
+  <data name="ChatNewChat" xml:space="preserve"><value>新对话</value></data>
+  <data name="ChatAttach" xml:space="preserve"><value>📎 添加附件</value></data>
+  <data name="ChatNewSess" xml:space="preserve"><value>＋ 新建会话</value></data>
+  <data name="ChatStop" xml:space="preserve"><value>⏹ 停止</value></data>
+  <data name="ChatClear" xml:space="preserve"><value>🗑️ 清屏</value></data>
+  <data name="ChatInputPlaceholder" xml:space="preserve"><value>输入消息...</value></data>
+  <data name="ChatCopy" xml:space="preserve"><value>复制</value></data>
+  <data name="Copied" xml:space="preserve"><value>已复制</value></data>
+  <data name="Copy" xml:space="preserve"><value>复制</value></data>
+  <data name="ChatThinking" xml:space="preserve"><value>🤔 思考过程</value></data>
+  <data name="ChatCommand" xml:space="preserve"><value>命令</value></data>
+  <data name="ChatRunning" xml:space="preserve"><value>运行中</value></data>
+  <data name="ChatOutput" xml:space="preserve"><value>输出</value></data>
+  <data name="ChatResult" xml:space="preserve"><value>结果</value></data>
+  <data name="ChatSending" xml:space="preserve"><value>发送...</value></data>
+  <data name="ChatSent" xml:space="preserve"><value>已发送</value></data>
+  <data name="ChatSendFailed" xml:space="preserve"><value>发送失败</value></data>
+  <data name="FilterOn" xml:space="preserve"><value>: 开</value></data>
+  <data name="FilterOff" xml:space="preserve"><value>: 关</value></data>
+  <data name="Schedule" xml:space="preserve"><value>定时</value></data>
+  <data name="Tools" xml:space="preserve"><value>工具</value></data>
+  <data name="Thinking" xml:space="preserve"><value>思考</value></data>
+  <data name="LogsTitle" xml:space="preserve"><value>运行日志</value></data>
+  <data name="RefreshLog" xml:space="preserve"><value>刷新</value></data>
+  <data name="AutoRefresh" xml:space="preserve"><value>实时</value></data>
+  <data name="ClearLog" xml:space="preserve"><value>清屏</value></data>
+  <data name="LogDirectoryNotExist" xml:space="preserve"><value>日志目录不存在</value></data>
+  <data name="PleaseEnsureGatewayRunning" xml:space="preserve"><value>请确保网关已启动。</value></data>
+  <data name="NoGatewayLogs" xml:space="preserve"><value>暂无网关日志。</value></data>
+  <data name="Pause" xml:space="preserve"><value>暂停</value></data>
+  <data name="SettingsTitle" xml:space="preserve"><value>系统设置</value></data>
+  <data name="SaveConfig" xml:space="preserve"><value>保存配置</value></data>
+  <data name="RestartGateway" xml:space="preserve"><value>重启 Gateway</value></data>
+  <data name="StopGateway" xml:space="preserve"><value>停止 Gateway</value></data>
+  <data name="ConfigDiagnostic" xml:space="preserve"><value>配置诊断</value></data>
+  <data name="BindAddress" xml:space="preserve"><value>绑定地址 (Bind)</value></data>
+  <data name="Port" xml:space="preserve"><value>端口 (Port)</value></data>
+  <data name="AuthMode" xml:space="preserve"><value>认证模式 (Auth)</value></data>
+  <data name="Token" xml:space="preserve"><value>访问令牌 (Token)</value></data>
+  <data name="LogLevel" xml:space="preserve"><value>日志级别 (Log)</value></data>
+  <data name="HeartbeatMin" xml:space="preserve"><value>心跳间隔分钟</value></data>
+  <data name="ContextWindow" xml:space="preserve"><value>上下文窗口</value></data>
+  <data name="MaxOutputLen" xml:space="preserve"><value>最大输出长度</value></data>
+  <data name="SessionLimit" xml:space="preserve"><value>会话轮数限制</value></data>
+  <data name="UpdateLicense" xml:space="preserve"><value>更新注册码</value></data>
+  <data name="EnterLicense" xml:space="preserve"><value>输入注册码</value></data>
+  <data name="Update" xml:space="preserve"><value>更新</value></data>
+  <data name="Activate" xml:space="preserve"><value>激活</value></data>
+  <data name="Cancel" xml:space="preserve"><value>取消</value></data>
+  <data name="Save" xml:space="preserve"><value>保存</value></data>
+  <data name="ConfigFix" xml:space="preserve"><value>配置修复</value></data>
+  <data name="EnterLicensePrompt" xml:space="preserve"><value>请输入注册码:</value></data>
+  <data name="Verifying" xml:space="preserve"><value>验证中...</value></data>
+  <data name="ActivateSuccess" xml:space="preserve"><value>激活成功</value></data>
+  <data name="ActivateFailed" xml:space="preserve"><value>激活失败</value></data>
+  <data name="ConfigSavedRestart" xml:space="preserve"><value>配置已保存，请重启 Gateway 生效。</value></data>
+  <data name="SaveSuccess" xml:space="preserve"><value>保存成功</value></data>
+  <data name="SaveFailed" xml:space="preserve"><value>保存失败</value></data>
+  <data name="Error" xml:space="preserve"><value>错误</value></data>
+  <data name="Warning" xml:space="preserve"><value>警告</value></data>
+  <data name="ChannelsProFeature" xml:space="preserve"><value>🔒 频道管理是专业版功能</value></data>
+  <data name="ChannelsActivatePro" xml:space="preserve"><value>请前往 系统设置 → 输入注册码 激活专业版</value></data>
+  <data name="ChannelsManage" xml:space="preserve"><value>频道管理</value></data>
+  <data name="Channel" xml:space="preserve"><value>频道</value></data>
+  <data name="ChannelsDesc" xml:space="preserve"><value>说明</value></data>
+  <data name="ChannelsPluginStatus" xml:space="preserve"><value>插件状态</value></data>
+  <data name="ChannelsSwitch" xml:space="preserve"><value>开关</value></data>
+  <data name="ChannelsConfigure" xml:space="preserve"><value>配置</value></data>
+  <data name="ChannelsStatus" xml:space="preserve"><value>状态</value></data>
+  <data name="NotEnabled" xml:space="preserve"><value>未启用</value></data>
+  <data name="Configured" xml:space="preserve"><value>已配置</value></data>
+  <data name="PendingConfig" xml:space="preserve"><value>待配置</value></data>
+  <data name="Add" xml:space="preserve"><value>+ 添加</value></data>
+  <data name="Delete" xml:space="preserve"><value>删除</value></data>
+  <data name="FetchModels" xml:space="preserve"><value>拉取模型</value></data>
+  <data name="SetAsDefault" xml:space="preserve"><value>设为默认</value></data>
+  <data name="ManualAddModel" xml:space="preserve"><value>添加模型</value></data>
+  <data name="PleaseSelectItem" xml:space="preserve"><value>请先选择项目</value></data>
+  <data name="ConfirmDeleteProvider" xml:space="preserve"><value>同时删除该供应商下所有模型？</value></data>
+  <data name="Confirm" xml:space="preserve"><value>确认</value></data>
+  <data name="Done" xml:space="preserve"><value>完成</value></data>
+  <data name="Prompt" xml:space="preserve"><value>提示</value></data>
+  <data name="ModelsTitle" xml:space="preserve"><value>模型配置</value></data>
+  <data name="ModelsSubtitle" xml:space="preserve"><value>管理 API 供应商、模型列表和默认模型。</value></data>
+  <data name="ModelsProvCard" xml:space="preserve"><value>API 供应商</value></data>
+  <data name="ModelsModelCard" xml:space="preserve"><value>已配置模型</value></data>
+  <data name="ModelsManualCard" xml:space="preserve"><value>手动添加模型</value></data>
+  <data name="ModelsManualProvHint" xml:space="preserve"><value>Provider ID（点击上方供应商自动填入）</value></data>
+  <data name="ModelsManualAliasHint" xml:space="preserve"><value>Alias（可选）</value></data>
+  <data name="ModelsAddProvTitle" xml:space="preserve"><value>添加供应商</value></data>
+  <data name="ModelsQuickFill" xml:space="preserve"><value>-- 快速填入 --</value></data>
+  <data name="ModelsApiType" xml:space="preserve"><value>API 类型</value></data>
+  <data name="ModelsSetDefaultPrompt" xml:space="preserve"><value>设为默认模型？
+</value></data>
+  <data name="ModelsSetDefaultTitle" xml:space="preserve"><value>设置默认</value></data>
+  <data name="ModelsSelectImport" xml:space="preserve"><value>选择导入</value></data>
+  <data name="ModelsSelectAll" xml:space="preserve"><value>全选</value></data>
+  <data name="ModelsSelectNone" xml:space="preserve"><value>全不选</value></data>
+  <data name="ModelsImportSelected" xml:space="preserve"><value>导入选中模型</value></data>
+  <data name="ModelsImported" xml:space="preserve"><value>已导入 {0} 个模型</value></data>
+  <data name="ModelsNeedApiKey" xml:space="preserve"><value>请先设置 API Key</value></data>
+  <data name="ModelsFetchFailed" xml:space="preserve"><value>拉取失败</value></data>
+  <data name="ModelsProvNotFound" xml:space="preserve"><value>供应商不存在，请先在供应商表中添加。</value></data>
+  <data name="SkillsTitle" xml:space="preserve"><value>技能管理</value></data>
+  <data name="SkillsRefresh" xml:space="preserve"><value>刷新</value></data>
+  <data name="SkillsSearchPlaceholder" xml:space="preserve"><value>搜索 ClawHub 技能市场...</value></data>
+  <data name="SkillsSearch" xml:space="preserve"><value>搜索</value></data>
+  <data name="SkillsColName" xml:space="preserve"><value>名称</value></data>
+  <data name="SkillsColDesc" xml:space="preserve"><value>说明</value></data>
+  <data name="SkillsColType" xml:space="preserve"><value>类型</value></data>
+  <data name="SkillsColStatus" xml:space="preserve"><value>状态</value></data>
+  <data name="SkillsColSource" xml:space="preserve"><value>来源</value></data>
+  <data name="SkillsColAction" xml:space="preserve"><value>操作</value></data>
+  <data name="SkillsLoading" xml:space="preserve"><value>正在加载...</value></data>
+  <data name="SkillsCancel" xml:space="preserve"><value>取消</value></data>
+  <data name="SkillsCancelled" xml:space="preserve"><value>已取消当前操作</value></data>
+  <data name="SkillsBusyLoading" xml:space="preserve"><value>正在读取插件与技能...</value></data>
+  <data name="SkillsReady" xml:space="preserve"><value>就绪，共 {0} 项</value></data>
+  <data name="SkillsTypeBundled" xml:space="preserve"><value>内置插件</value></data>
+  <data name="SkillsTypeInstalled" xml:space="preserve"><value>已安装插件</value></data>
+  <data name="SkillsStatusEnabled" xml:space="preserve"><value>已启用</value></data>
+  <data name="SkillsStatusDisabled" xml:space="preserve"><value>已停用</value></data>
+  <data name="SkillsActionEnable" xml:space="preserve"><value>启用</value></data>
+  <data name="SkillsActionDisable" xml:space="preserve"><value>停用</value></data>
+  <data name="SkillsSourceBundled" xml:space="preserve"><value>官方内置</value></data>
+  <data name="SkillsSourceExternal" xml:space="preserve"><value>外部安装</value></data>
+  <data name="SkillsTypeSkill" xml:space="preserve"><value>技能</value></data>
+  <data name="SkillsTypeUnavailable" xml:space="preserve"><value>不可用</value></data>
+  <data name="SkillsActionInstallDeps" xml:space="preserve"><value>安装依赖</value></data>
+  <data name="SkillsSourceWorkspace" xml:space="preserve"><value>工作区</value></data>
+  <data name="SkillsTypeInstallable" xml:space="preserve"><value>可安装</value></data>
+  <data name="SkillsStatusNotInstalled" xml:space="preserve"><value>未安装</value></data>
+  <data name="SkillsActionInstall" xml:space="preserve"><value>安装</value></data>
+  <data name="SkillsInstalling" xml:space="preserve"><value>正在安装 {0}...</value></data>
+  <data name="SkillsInstallDone" xml:space="preserve"><value>{0} 安装完成</value></data>
+  <data name="SkillsInstallFailed" xml:space="preserve"><value>安装失败</value></data>
+  <data name="SkillsInstallingDep" xml:space="preserve"><value>安装 {0} ...</value></data>
+  <data name="SkillsDepsDone" xml:space="preserve"><value>依赖安装完成: 成功 {0}，失败 {1}</value></data>
+  <data name="SkillsNeedInstall" xml:space="preserve"><value>需安装</value></data>
+  <data name="SkillsNeedInstallOne" xml:space="preserve"><value>需安装其一</value></data>
+  <data name="SkillsUnavailable" xml:space="preserve"><value>不可用</value></data>
+  <data name="ChannelsSubtitle" xml:space="preserve"><value>点击配置设置各频道对接参数，修改后请重启 Gateway 生效</value></data>
+  <data name="ChannelsBuiltInChannel" xml:space="preserve"><value>内置通道</value></data>
+  <data name="ChannelsPluginBuiltIn" xml:space="preserve"><value>内置</value></data>
+  <data name="ChannelsPluginDownload" xml:space="preserve"><value>需下载</value></data>
+  <data name="ChannelsPluginExternal" xml:space="preserve"><value>外部插件</value></data>
+  <data name="ChannelsConfigTitle" xml:space="preserve"><value>配置 {0}</value></data>
+  <data name="ChannelsEnableChannel" xml:space="preserve"><value>启用该频道</value></data>
+  <data name="ChannelsSave" xml:space="preserve"><value>保存</value></data>
+  <data name="ChannelsSaveConfig" xml:space="preserve"><value>保存配置</value></data>
+  <data name="ChannelsInstallPlugin" xml:space="preserve"><value>安装插件</value></data>
+  <data name="ChannelsSavedMsg" xml:space="preserve"><value>{0} 配置已保存，请重启 Gateway 生效。</value></data>
+  <data name="ChannelsDisabledMsg" xml:space="preserve"><value>{0} 已关闭</value></data>
+  <data name="ChannelsEnabledMsg" xml:space="preserve"><value>{0} 已启用</value></data>
+  <data name="ChannelsNeedExternal" xml:space="preserve"><value>⚠ 该频道需要先手动安装外部插件！</value></data>
+  <data name="ChannelsNeedDownload" xml:space="preserve"><value>⚠ 该频道需要先下载安装插件！</value></data>
+  <data name="ChannelsInstallManual" xml:space="preserve"><value>请手动安装: npm install -g &lt;包名&gt;</value></data>
+  <data name="ChannelsInstalling" xml:space="preserve"><value>安装中</value></data>
+  <data name="ChannelsInstalledMsg" xml:space="preserve"><value>{0} 插件安装已启动。</value></data>
+  <data name="ChannelsInstallFailed" xml:space="preserve"><value>安装失败</value></data>
+  <data name="ChannelsQRGuide" xml:space="preserve"><value>{0} 通过 QR 码扫描登录配对，无需手动填写参数。
+
+操作步骤：
+1. 点击下方「保存」启用该频道
+2. 点击「安装插件」（如未安装）
+3. 重启 OpenClaw Gateway
+4. 查看 Gateway 日志获取二维码进行扫描</value></data>
+  <data name="ChannelsWeixinGuide" xml:space="preserve"><value>个人微信插件安装程序已启动。
+
+安装完成后：
+1. 在频道列表启用「微信(个人)」
+2. 重启 Gateway
+3. 查看日志获取二维码扫描</value></data>
+  <data name="ChannelsWeixinStartFailed" xml:space="preserve"><value>启动失败</value></data>
+  <data name="ChannelsWeixinManual" xml:space="preserve"><value>请手动运行:
+npx -y @tencent-weixin/openclaw-weixin-cli@latest install</value></data>
+
+  <data name="SettingsSectionGateway" xml:space="preserve"><value>━ Gateway</value></data>
+  <data name="SettingsSectionAIModels" xml:space="preserve"><value>━ AI 模型</value></data>
+  <data name="SettingsSectionWebSearch" xml:space="preserve"><value>━ 网络搜索 (Brave)</value></data>
+  <data name="SettingsSectionStorage" xml:space="preserve"><value>━ 存储</value></data>
+  <data name="SettingsSectionLicense" xml:space="preserve"><value>━ 注册状态</value></data>
+  <data name="SettingsBindAddr" xml:space="preserve"><value>绑定地址 (Bind)</value></data>
+  <data name="SettingsPort" xml:space="preserve"><value>端口 (Port)</value></data>
+  <data name="SettingsAuthMode" xml:space="preserve"><value>认证模式 (Auth)</value></data>
+  <data name="SettingsAuthToken" xml:space="preserve"><value>访问令牌 (Token)</value></data>
+  <data name="SettingsTokenPlaceholder" xml:space="preserve"><value>自动生成的 token</value></data>
+  <data name="SettingsLogLevel" xml:space="preserve"><value>日志级别 (Log)</value></data>
+  <data name="SettingsHeartbeatMin" xml:space="preserve"><value>心跳间隔分钟</value></data>
+  <data name="SettingsDefaultModel" xml:space="preserve"><value>默认模型</value></data>
+  <data name="SettingsContextWindow" xml:space="preserve"><value>上下文窗口</value></data>
+  <data name="SettingsContextWindowPH" xml:space="preserve"><value>1M=1048576, 默认200K</value></data>
+  <data name="SettingsMaxOutputLen" xml:space="preserve"><value>最大输出长度</value></data>
+  <data name="SettingsMaxOutputPH" xml:space="preserve"><value>0=默认(8192)</value></data>
+  <data name="SettingsSessionLimit" xml:space="preserve"><value>会话轮数限制</value></data>
+  <data name="SettingsWorkspaceDir" xml:space="preserve"><value>工作目录 (Workspace)</value></data>
+  <data name="SettingsBraveKeyPH" xml:space="preserve"><value>填写后开启网络搜索能力</value></data>
+  <data name="SettingsUpdateLicense" xml:space="preserve"><value>更新注册码</value></data>
+  <data name="SettingsEnterLicense" xml:space="preserve"><value>输入注册码</value></data>
+  <data name="SettingsBindingType" xml:space="preserve"><value>绑定类型:</value></data>
+  <data name="SettingsBindingPC" xml:space="preserve"><value>电脑</value></data>
+  <data name="SettingsBindingUSB" xml:space="preserve"><value>U盘</value></data>
+  <data name="SettingsUSBBinding" xml:space="preserve"><value>U盘绑定</value></data>
+  <data name="SettingsUSBCode" xml:space="preserve"><value>U盘码: </value></data>
+  <data name="SettingsMachineCode" xml:space="preserve"><value>机器码: </value></data>
+  <data name="SettingsCopied" xml:space="preserve"><value>✓ 已复制</value></data>
+  <data name="SettingsCopy" xml:space="preserve"><value>📋 复制</value></data>
+  <data name="SettingsLicensePrompt" xml:space="preserve"><value>请输入注册码:</value></data>
+  <data name="SettingsUpdate" xml:space="preserve"><value>更新</value></data>
+  <data name="SettingsActivate" xml:space="preserve"><value>激活</value></data>
+  <data name="SettingsVerifying" xml:space="preserve"><value>验证中...</value></data>
+  <data name="SettingsActivateSuccess" xml:space="preserve"><value>激活成功</value></data>
+  <data name="SettingsActivateFailed" xml:space="preserve"><value>激活失败</value></data>
+  <data name="SettingsMigrateTitle" xml:space="preserve"><value>迁移完成</value></data>
+  <data name="SettingsMigrateMsg" xml:space="preserve"><value>已从旧目录迁移 {0} 个文件到新工作目录。\n\n旧目录: {1}\n新目录: {2}</value></data>
+  <data name="SettingsMigrateFailed" xml:space="preserve"><value>文件迁移失败: </value></data>
+  <data name="SettingsNodeNotFound" xml:space="preserve"><value>未找到 Node.js 或 OpenClaw 入口。\n预期路径: </value></data>
+  <data name="SettingsCmdExecuted" xml:space="preserve"><value> 命令已执行。</value></data>
+  <data name="SettingsCmdFailed" xml:space="preserve"><value>失败: </value></data>
+  <data name="SettingsPro" xml:space="preserve"><value> 专业版</value></data>
+  <data name="SettingsTrial" xml:space="preserve"><value> 试用{0}天</value></data>
+
+  <data name="MainFormShow" xml:space="preserve"><value>显示</value></data>
+  <data name="MainFormExit" xml:space="preserve"><value>退出</value></data>
+  <data name="MainFormExitTitle" xml:space="preserve"><value>退出 OpenClaw</value></data>
+  <data name="MainFormExitPrompt" xml:space="preserve"><value>退出时是否同时关闭网关？</value></data>
+  <data name="MainFormExitSubPrompt" xml:space="preserve"><value>关闭网关将结束进程并禁用守护计划任务</value></data>
+  <data name="MainFormCloseGateway" xml:space="preserve"><value>关闭网关</value></data>
+  <data name="MainFormExitOnly" xml:space="preserve"><value>仅退出控制台</value></data>
+  <data name="MainFormCloseWindow" xml:space="preserve"><value>关闭窗口</value></data>
+  <data name="MainFormMinimizeToTray" xml:space="preserve"><value>最小化到托盘</value></data>
+  <data name="MainFormExitAndClose" xml:space="preserve"><value>关闭网关并退出</value></data>
+  <data name="MainFormCancel" xml:space="preserve"><value>取消</value></data>
+  <data name="MainFormSwitchLight" xml:space="preserve"><value>切换亮色</value></data>
+  <data name="MainFormSwitchDark" xml:space="preserve"><value>切换暗色</value></data>
+  <data name="MainFormMinimizedToTray" xml:space="preserve"><value>已最小化到任务栏托盘</value></data>
+  <data name="MainFormPro" xml:space="preserve"><value> 专业版</value></data>
+  <data name="MainFormTrialExpired" xml:space="preserve"><value> 试用已到期</value></data>
+  <data name="MainFormTrial" xml:space="preserve"><value> 试用{0}天</value></data>
+  <data name="GuardianProFeature" xml:space="preserve"><value>🔒 守护程序是专业版功能</value></data>
+  <data name="GuardianActivatePro" xml:space="preserve"><value>请前往 系统设置 → 输入注册码 激活专业版</value></data>
+  <data name="GuardianInstall" xml:space="preserve"><value>安装守护</value></data>
+  <data name="GuardianReinstall" xml:space="preserve"><value>重装守护</value></data>
+  
+  <data name="LogsRefresh" xml:space="preserve"><value>刷新</value></data>
+  <data name="LogsAutoRefresh" xml:space="preserve"><value>实时</value></data>
+  <data name="LogsClear" xml:space="preserve"><value>清屏</value></data>
+  <data name="LogsPause" xml:space="preserve"><value>暂停</value></data>
+  <data name="LogsNotFound" xml:space="preserve"><value>日志目录不存在</value></data>
+  <data name="LogsEnsureGateway" xml:space="preserve"><value>请确保网关已启动。</value></data>
+  <data name="LogsNone" xml:space="preserve"><value>暂无网关日志。</value></data>
+  <data name="LogsReadFailed" xml:space="preserve"><value>日志读取失败</value></data>
+  <data name="SetupTitle" xml:space="preserve"><value>初始化配置向导</value></data>
+  <data name="SetupSubtitleSystem" xml:space="preserve"><value>系统配置</value></data>
+  <data name="SetupSubtitleRegister" xml:space="preserve"><value>注册启动</value></data>
+  <data name="SetupNext" xml:space="preserve"><value>下一步</value></data>
+  <data name="SetupPrev" xml:space="preserve"><value>上一步</value></data>
+  <data name="SetupGatewaySettings" xml:space="preserve"><value>网关设置</value></data>
+  <data name="SetupPort" xml:space="preserve"><value>端口</value></data>
+  <data name="SetupAuth" xml:space="preserve"><value>认证</value></data>
+  <data name="SetupTokenPlaceholder" xml:space="preserve"><value>留空自动生成</value></data>
+  <data name="SetupPassword" xml:space="preserve"><value>密码</value></data>
+  <data name="SetupWorkspace" xml:space="preserve"><value>工作区</value></data>
+  <data name="SetupProvider" xml:space="preserve"><value>供应商</value></data>
+  <data name="SetupCustom" xml:space="preserve"><value>自定义</value></data>
+  <data name="SetupProviderName" xml:space="preserve"><value>名称</value></data>
+  <data name="SetupProviderNameHint" xml:space="preserve"><value>输入供应商名称</value></data>
+  <data name="SetupProviderType" xml:space="preserve"><value>类型</value></data>
+  <data name="SetupModelMgmt" xml:space="preserve"><value>模型管理</value></data>
+  <data name="SetupManualAdd" xml:space="preserve"><value>手动添加</value></data>
+  <data name="SetupFetch" xml:space="preserve"><value>拉取</value></data>
+  <data name="SetupInputModelHint" xml:space="preserve"><value>输入 Model ID，回车添加</value></data>
+  <data name="SetupAdd" xml:space="preserve"><value>添加</value></data>
+  <data name="SetupFetchModels" xml:space="preserve"><value>拉取模型</value></data>
+  <data name="SetupDefaultModel" xml:space="preserve"><value>默认模型</value></data>
+  <data name="SetupFetching" xml:space="preserve"><value>拉取中...</value></data>
+  <data name="SetupSaveCurrent" xml:space="preserve"><value>保存当前选中</value></data>
+  <data name="SetupSaveConfig" xml:space="preserve"><value>保存配置</value></data>
+  <data name="SetupUseFullPrefix" xml:space="preserve"><value>使用完整 provider/model 前缀格式</value></data>
+  <data name="SetupInitWorkspace" xml:space="preserve"><value>创建工作区目录和必需的初始化标记</value></data>
+  <data name="SetupInitialized" xml:space="preserve"><value>已初始化</value></data>
+  <data name="SetupSaveSuccess" xml:space="preserve"><value>保存成功</value></data>
+  <data name="SetupPermissionDenied" xml:space="preserve"><value>权限不足，请以管理员身份运行或检查目标目录写入权限</value></data>
+  <data name="SetupFailed" xml:space="preserve"><value>失败</value></data>
+  <data name="SetupStartGateway" xml:space="preserve"><value>启动网关</value></data>
+  <data name="SetupStartingGateway" xml:space="preserve"><value>启动网关中...</value></data>
+  <data name="SetupStartFailed" xml:space="preserve"><value>启动失败</value></data>
+  <data name="SetupWaitForGateway" xml:space="preserve"><value>等待网关就绪...</value></data>
+  <data name="SetupRunning" xml:space="preserve"><value>运行中</value></data>
+  <data name="SetupGatewayRunning" xml:space="preserve"><value>网关运行中！</value></data>
+  <data name="SetupGatewayReady" xml:space="preserve"><value>网关就绪！</value></data>
+  <data name="SetupRestart" xml:space="preserve"><value>重新启动</value></data>
+  <data name="SetupStartTimeout" xml:space="preserve"><value>启动超时，请检查日志</value></data>
+  <data name="SetupStartupTimeout" xml:space="preserve"><value>启动超时</value></data>
+  <data name="SetupCheckStatus" xml:space="preserve"><value>检测状态...</value></data>
+  <data name="SetupChecking" xml:space="preserve"><value>检测中...</value></data>
+  <data name="SetupNotRunning" xml:space="preserve"><value>未运行</value></data>
+  <data name="SetupComplete" xml:space="preserve"><value>初始化完成！</value></data>
+  <data name="SetupOpenConsole" xml:space="preserve"><value>打开 Web 控制台</value></data>
+  <data name="SetupDoneReturn" xml:space="preserve"><value>完成，返回仪表盘</value></data>
+  <data name="SetupRealTimePush" xml:space="preserve"><value>实时推送网关日志到仪表盘</value></data>
+  <data name="SetupLocalNote" xml:space="preserve"><value>网关将直接从U盘启动，不在电脑上创建计划任务。</value></data>
+  <data name="SearchTitle" xml:space="preserve"><value>技能搜索</value></data>
+  <data name="SearchColSkill" xml:space="preserve"><value>技能</value></data>
+  <data name="SearchColDesc" xml:space="preserve"><value>说明</value></data>
+  <data name="SearchColStatus" xml:space="preserve"><value>状态</value></data>
+  <data name="SearchColAction" xml:space="preserve"><value>操作</value></data>
+  <data name="SearchNotInstalled" xml:space="preserve"><value>未安装</value></data>
+  <data name="SearchInstall" xml:space="preserve"><value>安装</value></data>
+  <data name="SearchRemove" xml:space="preserve"><value>移除</value></data>
+  <data name="SearchSearching" xml:space="preserve"><value>搜索中...</value></data>
+  <data name="SearchCancel" xml:space="preserve"><value>取消</value></data>
+  <data name="SearchCancelled" xml:space="preserve"><value>已取消</value></data>
+  <data name="SearchInstalled" xml:space="preserve"><value>已安装</value></data>
+  <data name="SearchFailed" xml:space="preserve"><value>失败</value></data>
+  <data name="SearchInstalling" xml:space="preserve"><value>安装中...</value></data>
+  <data name="SearchRemaining" xml:space="preserve"><value>剩余</value></data>
+  <data name="SearchFound" xml:space="preserve"><value>找到 {0} 个技能</value></data>
+  <data name="SearchNoResult" xml:space="preserve"><value>没有找到结果</value></data>
+  <data name="SearchParseFailed" xml:space="preserve"><value>解析失败</value></data>
+  <data name="SearchSearchFailed" xml:space="preserve"><value>搜索失败</value></data>
+  <data name="SearchInstallingItem" xml:space="preserve"><value>正在安装 {0}...</value></data>
+  <data name="SearchInstallDone" xml:space="preserve"><value>{0} 安装完成</value></data>
+  <data name="SearchInstallFailed" xml:space="preserve"><value>安装失败: </value></data>
+
+  <data name="GuardianDetectEnv" xml:space="preserve"><value>🔍 检测环境</value></data>
+
+  <data name="GuardianUninstall" xml:space="preserve"><value>卸载守护</value></data>
+
+  <data name="GuardianStop" xml:space="preserve"><value>停止守护和网关</value></data>
+
+  <data name="GuardianStart" xml:space="preserve"><value>启动网关和守护</value></data>
+
+  <data name="GuardianStarting" xml:space="preserve"><value>启动中...</value></data>
+
+  <data name="GuardianStopping" xml:space="preserve"><value>停止中...</value></data>
+
+  <data name="LicenseProExpired" xml:space="preserve"><value>专业版已过期</value></data>
+  <data name="LicensePro" xml:space="preserve"><value>专业版</value></data>
+  <data name="LicenseUSB" xml:space="preserve"><value>U盘</value></data>
+
+  <data name="LicenseExpiry" xml:space="preserve"><value>到期</value></data>
+
+  <data name="LicenseBinding" xml:space="preserve"><value>绑定</value></data>
+
+  <data name="LicenseTrial" xml:space="preserve"><value>试用中</value></data>
+
+  <data name="LicenseRemaining" xml:space="preserve"><value>剩余</value></data>
+
+  <data name="LicenseDays" xml:space="preserve"><value>天</value></data>
+
+  <data name="LicenseTrialExpired" xml:space="preserve"><value>试用已到期 · 请激活专业版</value></data>
+  <data name="LicenseBindingUSB" xml:space="preserve"><value>U盘绑定</value></data>
+  <data name="LicenseBindingPC" xml:space="preserve"><value>电脑绑定</value></data>
+  <data name="LicenseActivateSuccess" xml:space="preserve"><value>✓ 激活成功！
+
+专业版 · {0}
+到期日: {1}</value></data>
+  <data name="LicenseProFeature" xml:space="preserve"><value>试用已到期，请激活专业版以使用此功能。
+
+设置 → 系统设置 → 输入注册码</value></data>
+  <data name="LicenseProFeatureTrial" xml:space="preserve"><value>这是专业版功能。
+
+试用剩余 {0} 天，激活专业版后即可使用。
+
+设置 → 系统设置 → 输入注册码</value></data>
+  <data name="LicenseSaveFailed" xml:space="preserve"><value>保存失败: </value></data>
+  <data name="LicenseProDialogTitle" xml:space="preserve"><value>🔒 高级功能</value></data>
+  <data name="SetupBind" xml:space="preserve"><value>绑 定</value></data>
+  <data name="SetupApiKey" xml:space="preserve"><value>API Key</value></data>
+  <data name="SetupApiType" xml:space="preserve"><value>API 类型</value></data>
+  <data name="SetupApiRegister" xml:space="preserve"><value>API 注册</value></data>
+  <data name="SetupNextSave" xml:space="preserve"><value>下一步 (保存配置) →</value></data>
+  <data name="SetupNeedKey" xml:space="preserve"><value>请填 Key</value></data>
+  <data name="SetupConfigApi" xml:space="preserve"><value>API 供应商</value></data>
+  <data name="SetupManualFetch" xml:space="preserve"><value>手动添加/拉取</value></data>
+</root>

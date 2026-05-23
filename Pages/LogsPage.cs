@@ -20,22 +20,22 @@ public class LogsPage
         body = p;
         body.Controls.Clear();
 
-        var title = new Label { Text = "运行日志", ForeColor = Theme.Fc, Font = Theme.Font(13f, FontStyle.Bold), AutoSize = true, BackColor = Color.Transparent, Location = new Point(12, 12) };
+        var title = new Label { Text = OpenClawManager.Properties.LanguageManager.GetString("LogsTitle"), ForeColor = Theme.Fc, Font = Theme.Font(13f, FontStyle.Bold), AutoSize = true, BackColor = Color.Transparent, Location = new Point(12, 12) };
         body.Controls.Add(title);
 
         // 状态指示灯
         var statusDot = new Label { Text = "●", ForeColor = Theme.Grn, Font = Theme.Font(10f), AutoSize = true, BackColor = Color.Transparent, Location = new Point(110, 14) };
         body.Controls.Add(statusDot);
 
-        var refreshBtn = new Button { Text = "刷新", FlatStyle = FlatStyle.Flat, BackColor = Theme.Acc, ForeColor = Color.White, Font = Theme.Font(9f), Location = new Point(body.ClientSize.Width - 180, 10), Size = new Size(56, 28), Cursor = Cursors.Hand, FlatAppearance = { BorderSize = 0 }, UseVisualStyleBackColor = false };
+        var refreshBtn = new Button { Text = OpenClawManager.Properties.LanguageManager.GetString("RefreshLog"), FlatStyle = FlatStyle.Flat, BackColor = Theme.Acc, ForeColor = Color.White, Font = Theme.Font(9f), Location = new Point(body.ClientSize.Width - 180, 10), Size = new Size(56, 28), Cursor = Cursors.Hand, FlatAppearance = { BorderSize = 0 }, UseVisualStyleBackColor = false };
         refreshBtn.Click += (_, _) => RefreshLog(statusDot);
         body.Controls.Add(refreshBtn);
 
-        var autoBtn = new Button { Text = "实时", FlatStyle = FlatStyle.Flat, BackColor = Color.FromArgb(0x52, 0xC4, 0x1A), ForeColor = Color.White, Font = Theme.Font(9f), Location = new Point(body.ClientSize.Width - 118, 10), Size = new Size(56, 28), Cursor = Cursors.Hand, FlatAppearance = { BorderSize = 0 }, UseVisualStyleBackColor = false };
+        var autoBtn = new Button { Text = OpenClawManager.Properties.LanguageManager.GetString("AutoRefresh"), FlatStyle = FlatStyle.Flat, BackColor = Color.FromArgb(0x52, 0xC4, 0x1A), ForeColor = Color.White, Font = Theme.Font(9f), Location = new Point(body.ClientSize.Width - 118, 10), Size = new Size(56, 28), Cursor = Cursors.Hand, FlatAppearance = { BorderSize = 0 }, UseVisualStyleBackColor = false };
         autoBtn.Click += (_, _) => ToggleAuto(autoBtn);
         body.Controls.Add(autoBtn);
 
-        var clearBtn = new Button { Text = "清屏", FlatStyle = FlatStyle.Flat, BackColor = Theme.BgElevated, ForeColor = Theme.Fc, Font = Theme.Font(9f), Location = new Point(body.ClientSize.Width - 56, 10), Size = new Size(44, 28), Cursor = Cursors.Hand, FlatAppearance = { BorderSize = 0 }, UseVisualStyleBackColor = false };
+        var clearBtn = new Button { Text = OpenClawManager.Properties.LanguageManager.GetString("ClearLog"), FlatStyle = FlatStyle.Flat, BackColor = Theme.BgElevated, ForeColor = Theme.Fc, Font = Theme.Font(9f), Location = new Point(body.ClientSize.Width - 56, 10), Size = new Size(44, 28), Cursor = Cursors.Hand, FlatAppearance = { BorderSize = 0 }, UseVisualStyleBackColor = false };
         clearBtn.Click += (_, _) => { logBox.Clear(); };
         body.Controls.Add(clearBtn);
 
@@ -65,7 +65,7 @@ public class LogsPage
             // 找最新的 gateway log
             if (!Directory.Exists(logDir))
             {
-                logBox.Text = "日志目录不存在:\n" + logDir + "\n\n请确保网关已启动。";
+                logBox.Text = OpenClawManager.Properties.LanguageManager.GetString("LogDirectoryNotExist") + ":\n" + logDir + "\n\n" + OpenClawManager.Properties.LanguageManager.GetString("PleaseEnsureGatewayRunning");
                 statusDot.ForeColor = Theme.Red;
                 return;
             }
@@ -77,7 +77,7 @@ public class LogsPage
 
             if (latest == null)
             {
-                logBox.Text = "暂无网关日志。\n\n请确保网关已启动并产生日志输出。";
+                logBox.Text = OpenClawManager.Properties.LanguageManager.GetString("NoGatewayLogs");
                 statusDot.ForeColor = Theme.Warn;
                 return;
             }
@@ -113,7 +113,7 @@ public class LogsPage
         if (autoTimer != null)
         {
             autoTimer.Stop(); autoTimer.Dispose(); autoTimer = null;
-            btn.Text = "实时"; btn.BackColor = Color.FromArgb(0x52, 0xC4, 0x1A);
+            btn.Text = OpenClawManager.Properties.LanguageManager.GetString("AutoRefresh"); btn.BackColor = Color.FromArgb(0x52, 0xC4, 0x1A);
             return;
         }
         autoTimer = new System.Windows.Forms.Timer { Interval = 3000 };
@@ -141,6 +141,6 @@ public class LogsPage
             }
         };
         autoTimer.Start();
-        btn.Text = "暂停"; btn.BackColor = Color.FromArgb(0xF4, 0x43, 0x36);
+        btn.Text = OpenClawManager.Properties.LanguageManager.GetString("Pause"); btn.BackColor = Color.FromArgb(0xF4, 0x43, 0x36);
     }
 }

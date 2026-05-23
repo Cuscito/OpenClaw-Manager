@@ -29,7 +29,33 @@ public class DashboardPage
     static string _lastLogMsg = "";
     static int _lastLogSec;
 
-    public static async Task ApproveAllDevices() { await Task.CompletedTask; }
+    public static async Task ApproveAllDevices()
+    {
+        for (int round = 0; round < 3; round++)
+        {
+            var list = await Task.Run(() => OpenClawRuntime.RunOpenClawSync("devices list", 20000));
+            if (list.code != 0) return;
+
+            var pendingText = list.stdout;
+            var pairedIndex = pendingText.IndexOf("Paired", StringComparison.OrdinalIgnoreCase);
+            if (pairedIndex >= 0) pendingText = pendingText[..pairedIndex];
+
+            var ids = System.Text.RegularExpressions.Regex
+                .Matches(pendingText, @"\b[0-9a-fA-F]{8}(?:-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}\b")
+                .Select(m => m.Value)
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToList();
+            if (ids.Count == 0) return;
+
+            foreach (var id in ids)
+            {
+                var approved = await Task.Run(() => OpenClawRuntime.RunOpenClawSync("devices approve " + id, 20000));
+                LogToConsole(approved.code == 0 ? "✓ 已自动批准设备请求: " + id : "⚠ 自动批准设备失败: " + id);
+            }
+
+            await Task.Delay(800);
+        }
+    }
 
     /// 外部页面写入仪表盘日志（线程安全）
     public static void LogToConsole(string msg)
@@ -67,7 +93,7 @@ public class DashboardPage
         body.Controls.Clear();
         PatchWorkspaceDrive(); // 先修正盘符，再读取路径
         int pad = 12;
-        body.Controls.Add(new Label { Text = "⏳ 仪表盘加载中...", ForeColor = Theme.Acc, Font = Theme.Font(11f, FontStyle.Bold), Location = new Point(pad, pad), AutoSize = true, BackColor = Color.Transparent });
+        body.Controls.Add(new Label { Text = OpenClawManager.Properties.LanguageManager.GetString("DashboardLoading"), ForeColor = Theme.Acc, Font = Theme.Font(11f, FontStyle.Bold), Location = new Point(pad, pad), AutoSize = true, BackColor = Color.Transparent });
 
         Task.Run(async () =>
         {
@@ -110,26 +136,26 @@ public class DashboardPage
 
         // Row 1 — 统计卡片
         var row1 = Flow(pad, y, cw, rowH); body.Controls.Add(row1);
-        row1.Controls.Add(Card("Gateway 状态", gwOk ? "在线 (PID: " + pid + ")" : "离线", cardW, cardH, gwOk ? Theme.Grn : Theme.Red));
+        row1.Controls.Add(Card(OpenClawManager.Properties.LanguageManager.GetString("GatewayStatus"), gwOk ? OpenClawManager.Properties.LanguageManager.GetString("Online") + " (PID: " + pid + ")" : OpenClawManager.Properties.LanguageManager.GetString("Offline"), cardW, cardH, gwOk ? Theme.Grn : Theme.Red));
         _cardGw = row1.Controls[0].Controls[1] as Label;
-        row1.Controls.Add(Card("CPU / 内存", cpuMem, cardW, cardH));
+        row1.Controls.Add(Card(OpenClawManager.Properties.LanguageManager.GetString("CPUAndMemory"), cpuMem, cardW, cardH));
         _cardCpu = row1.Controls[1].Controls[1] as Label;
-        row1.Controls.Add(Card("频道数", chCnt, cardW, cardH));
-        row1.Controls.Add(Card("OpenClaw 版本", ver, cardW, cardH));
+        row1.Controls.Add(Card(OpenClawManager.Properties.LanguageManager.GetString("ChannelCount"), chCnt, cardW, cardH));
+        row1.Controls.Add(Card(OpenClawManager.Properties.LanguageManager.GetString("OpenClawVersion"), ver, cardW, cardH));
         y += rowH + (int)(4 * s);
 
         var row2 = Flow(pad, y, cw, rowH); body.Controls.Add(row2);
-        row2.Controls.Add(Card("启动时间", st, cardW, cardH));
+        row2.Controls.Add(Card(OpenClawManager.Properties.LanguageManager.GetString("StartupTime"), st, cardW, cardH));
         _cardStart = row2.Controls[0].Controls[1] as Label;
-        row2.Controls.Add(Card("运行时长", ut, cardW, cardH));
+        row2.Controls.Add(Card(OpenClawManager.Properties.LanguageManager.GetString("Uptime"), ut, cardW, cardH));
         _cardUptime = row2.Controls[1].Controls[1] as Label;
-        row2.Controls.Add(Card("工作区", ws, cardW, cardH));
-        row2.Controls.Add(Card("默认模型", model, cardW, cardH));
+        row2.Controls.Add(Card(OpenClawManager.Properties.LanguageManager.GetString("Workspace"), ws, cardW, cardH));
+        row2.Controls.Add(Card(OpenClawManager.Properties.LanguageManager.GetString("DefaultModel"), model, cardW, cardH));
         y += rowH + (int)(4 * s);
 
         // 环境状态
-        bool needNode = nodeVer == "未安装", needOc = ocVer == "未安装";
-        body.Controls.Add(SectionTitle("环境状态", pad, y)); y += (int)(22 * s);
+        bool needNode = nodeVer == OpenClawManager.Properties.LanguageManager.GetString("NotInstalled"), needOc = ocVer == OpenClawManager.Properties.LanguageManager.GetString("NotInstalled");
+        body.Controls.Add(SectionTitle(OpenClawManager.Properties.LanguageManager.GetString("EnvironmentStatus"), pad, y)); y += (int)(22 * s);
         int ey = y + (int)(6 * s), ex = pad;
         void AddLbl(string t, Color? c = null, float s = 9f, FontStyle st = FontStyle.Regular)
         {
@@ -137,23 +163,23 @@ public class DashboardPage
             body.Controls.Add(l);
             ex += l.PreferredSize.Width;
         }
-        AddLbl("Node.js: ", Theme.Fc2);
-        AddLbl(needNode ? "未安装" : nodeVer, needNode ? Theme.Red : Theme.Grn, 9f, FontStyle.Bold);
-        ex += 6; if (!needNode) { AddLbl(" 已就绪", Theme.Grn); ex += 8; }
-        AddLbl("OpenClaw: ", Theme.Fc2);
-        AddLbl(needOc ? "未安装" : ocVer, needOc ? Theme.Red : Theme.Grn, 9f, FontStyle.Bold);
-        ex += 6; if (!needOc) { AddLbl(" 已就绪", Theme.Grn); ex += 8; }
-        AddLbl("网关: ", Theme.Fc2);
-        AddLbl(gwInstalled ? "已就绪" : "未安装", gwInstalled ? Theme.Grn : Theme.Red, 9f, FontStyle.Bold);
+        AddLbl(OpenClawManager.Properties.LanguageManager.GetString("NodeJS") + ": ", Theme.Fc2);
+        AddLbl(needNode ? OpenClawManager.Properties.LanguageManager.GetString("NotInstalled") : nodeVer, needNode ? Theme.Red : Theme.Grn, 9f, FontStyle.Bold);
+        ex += 6; if (!needNode) { AddLbl(" " + OpenClawManager.Properties.LanguageManager.GetString("Ready"), Theme.Grn); ex += 8; }
+        AddLbl(OpenClawManager.Properties.LanguageManager.GetString("OpenClaw") + ": ", Theme.Fc2);
+        AddLbl(needOc ? OpenClawManager.Properties.LanguageManager.GetString("NotInstalled") : ocVer, needOc ? Theme.Red : Theme.Grn, 9f, FontStyle.Bold);
+        ex += 6; if (!needOc) { AddLbl(" " + OpenClawManager.Properties.LanguageManager.GetString("Ready"), Theme.Grn); ex += 8; }
+        AddLbl(OpenClawManager.Properties.LanguageManager.GetString("Gateway") + ": ", Theme.Fc2);
+        AddLbl(gwInstalled ? OpenClawManager.Properties.LanguageManager.GetString("Ready") : OpenClawManager.Properties.LanguageManager.GetString("NotInstalled"), gwInstalled ? Theme.Grn : Theme.Red, 9f, FontStyle.Bold);
         ex += 10;
         y += (int)(34 * s);
 
         // 网关控制
-        body.Controls.Add(SectionTitle("网关控制", pad, y)); y += (int)(22 * s);
+        body.Controls.Add(SectionTitle(OpenClawManager.Properties.LanguageManager.GetString("GatewayControl"), pad, y)); y += (int)(22 * s);
         int gy = y + 6;
         body.Controls.Add(new Label { Text = "\u25CF ", ForeColor = gwOk ? Theme.Grn : Theme.Red, Font = Theme.Font(12f), AutoSize = true, BackColor = Color.Transparent, Location = new Point(pad, gy) });
         _gwDot = body.Controls[^1] as Label;
-        var statusText = gwOk ? "运行中 (PID: " + pid + ")  " : "已停止  ";
+        var statusText = gwOk ? OpenClawManager.Properties.LanguageManager.GetString("RunningWithPID") + pid + ")  " : OpenClawManager.Properties.LanguageManager.GetString("Stopped") + "  ";
         body.Controls.Add(new Label { Text = statusText, ForeColor = Theme.Fc, Font = Theme.Font(10f, FontStyle.Bold), AutoSize = true, BackColor = Color.Transparent, Location = new Point(pad + (int)(24 * s), gy + 1) });
         _gwStatusLbl = body.Controls[^1] as Label;
         // 按钮从状态文字右侧开始，留足间距
@@ -165,37 +191,38 @@ public class DashboardPage
         Font btnFont = Theme.Font(narrow ? 8f : 9f, FontStyle.Bold);
         Padding btnPad = narrow ? new Padding((int)(6 * s), 1, (int)(6 * s), 1) : new Padding((int)(10 * s), 1, (int)(10 * s), 1);
 
-        var startBtn = Theme.Btn("启动");
+        var startBtn = Theme.Btn(OpenClawManager.Properties.LanguageManager.GetString("Start"));
         startBtn.Font = btnFont; startBtn.Padding = btnPad; startBtn.Height = btnH;
         _startBtn = startBtn;
         if (gwOk) { startBtn.Enabled = false; startBtn.BackColor = Color.Gray; }
         else { startBtn.BackColor = Theme.Grn; }
         startBtn.Location = new Point(bx, btnY); body.Controls.Add(startBtn); bx += startBtn.PreferredSize.Width + (int)(6 * s);
 
-        var stopBtn = Theme.Btn("停止");
+        var stopBtn = Theme.Btn(OpenClawManager.Properties.LanguageManager.GetString("Stop"));
         stopBtn.Font = btnFont; stopBtn.Padding = btnPad; stopBtn.Height = btnH;
         _stopBtn = stopBtn;
         if (!gwOk) { stopBtn.Enabled = false; stopBtn.BackColor = Color.Gray; }
         else { stopBtn.BackColor = Theme.Red; }
         stopBtn.Location = new Point(bx, btnY); body.Controls.Add(stopBtn); bx += stopBtn.PreferredSize.Width + (int)(6 * s);
 
-        var restartBtn = Theme.Btn("重启");
+        var restartBtn = Theme.Btn(OpenClawManager.Properties.LanguageManager.GetString("Restart"));
         restartBtn.Font = btnFont; restartBtn.Padding = btnPad; restartBtn.Height = btnH;
         _restartBtn = restartBtn;
         if (!gwOk) { restartBtn.Enabled = false; restartBtn.BackColor = Color.Gray; }
         else { restartBtn.BackColor = Theme.QqOrange; }
         restartBtn.Location = new Point(bx, btnY); body.Controls.Add(restartBtn); bx += restartBtn.PreferredSize.Width + (int)(6 * s);
 
-        var fixBtn = Theme.Btn("修复配置"); fixBtn.Font = btnFont; fixBtn.Padding = btnPad; fixBtn.Height = btnH;
+        var fixBtn = Theme.Btn(OpenClawManager.Properties.LanguageManager.GetString("Fix")); fixBtn.Font = btnFont; fixBtn.Padding = btnPad; fixBtn.Height = btnH;
         _fixBtn = fixBtn;
         fixBtn.Click += (_, _) => { RestoreConfig(); body.Controls.Clear(); Build(body); };
         fixBtn.Location = new Point(bx, btnY); body.Controls.Add(fixBtn); bx += fixBtn.PreferredSize.Width + (int)(6 * s);
 
-        var btnConsole = new Button { Text = "Web 控制台", FlatStyle = FlatStyle.Flat, BackColor = gwOk ? Theme.Acc : Color.Gray, ForeColor = Theme.FcWhite, Font = btnFont, AutoSize = true, AutoSizeMode = AutoSizeMode.GrowAndShrink, Cursor = Cursors.Hand, FlatAppearance = { BorderSize = 0 }, Padding = btnPad, Enabled = gwOk, Height = btnH };
+        var btnConsole = new Button { Text = OpenClawManager.Properties.LanguageManager.GetString("Console"), FlatStyle = FlatStyle.Flat, BackColor = gwOk ? Theme.Acc : Color.Gray, ForeColor = Theme.FcWhite, Font = btnFont, AutoSize = true, AutoSizeMode = AutoSizeMode.GrowAndShrink, Cursor = Cursors.Hand, FlatAppearance = { BorderSize = 0 }, Padding = btnPad, Enabled = gwOk, Height = btnH };
         btnConsole.Click += (_, _) =>
         {
             try
             {
+                _ = ApproveAllDevices();
                 string token = "";
                 var cfg = JsonNode.Parse(File.ReadAllText(MainForm.CfgFullPath, Encoding.UTF8))?.AsObject();
                 if (cfg != null && cfg.TryGetPropertyValue("gateway", out var gw) && gw is JsonObject gwo && gwo.TryGetPropertyValue("auth", out var au) && au is JsonObject auo && auo.TryGetPropertyValue("token", out var tk))
@@ -211,16 +238,16 @@ public class DashboardPage
         y += (int)(34 * s);
 
         // 版本切换
-        body.Controls.Add(SectionTitle("版本切换", pad, y)); y += (int)(22 * s);
+        body.Controls.Add(SectionTitle(OpenClawManager.Properties.LanguageManager.GetString("VersionSwitch"), pad, y)); y += (int)(22 * s);
         int vy = y + (int)(3 * s), vx = pad;
         void AddVerLbl(string t, Color? c = null, float s = 9f, FontStyle st = FontStyle.Regular)
         { var l = new Label { Text = t, ForeColor = c ?? Theme.Fc, Font = Theme.Font(s, st), AutoSize = true, BackColor = Color.Transparent, Location = new Point(vx, vy) }; body.Controls.Add(l); vx += l.PreferredSize.Width; }
-        AddVerLbl("当前: v" + ver + "    目标版本: ", Theme.Fc2, 10f);
+        AddVerLbl(OpenClawManager.Properties.LanguageManager.GetString("CurrentVersion") +  ": v" + ver + "    " + OpenClawManager.Properties.LanguageManager.GetString("SwitchTo") + ": ", Theme.Fc2, 10f);
         vx += 6;
         var verCmb = new ComboBox { Width = 180, BackColor = Theme.BgWhite, ForeColor = Theme.Fc, FlatStyle = FlatStyle.Popup, DropDownStyle = ComboBoxStyle.DropDownList, Font = Theme.Font(9f), Location = new Point(vx, vy - 1) };
         verCmb.Items.Add("latest (最新)"); body.Controls.Add(verCmb); vx += 190;
-        var swBtn = Theme.Btn("切换"); swBtn.Location = new Point(vx, y + 4); body.Controls.Add(swBtn); vx += swBtn.PreferredSize.Width + 8;
-        var refBtn = Theme.Btn("刷新列表"); refBtn.Click += async (_, _) => { refBtn.Enabled = false; refBtn.Text = "加载中..."; var vs = await GetVersions(); verCmb.Items.Clear(); verCmb.Items.Add("latest (最新)"); foreach (var v in vs) verCmb.Items.Add(v); verCmb.SelectedIndex = 0; refBtn.Enabled = true; refBtn.Text = "刷新列表"; };
+        var swBtn = Theme.Btn(OpenClawManager.Properties.LanguageManager.GetString("SwitchTo")); swBtn.Location = new Point(vx, y + 4); body.Controls.Add(swBtn); vx += swBtn.PreferredSize.Width + 8;
+        var refBtn = Theme.Btn(OpenClawManager.Properties.LanguageManager.GetString("Refresh")); refBtn.Click += async (_, _) => { refBtn.Enabled = false; refBtn.Text = OpenClawManager.Properties.LanguageManager.GetString("Loading"); var vs = await GetVersions(); verCmb.Items.Clear(); verCmb.Items.Add("latest (最新)"); foreach (var v in vs) verCmb.Items.Add(v); verCmb.SelectedIndex = 0; refBtn.Enabled = true; refBtn.Text = OpenClawManager.Properties.LanguageManager.GetString("Refresh"); };
         refBtn.Location = new Point(vx, y + 4); body.Controls.Add(refBtn); vx += refBtn.PreferredSize.Width + 10;
         int verEndX = vx;
         y += (int)(34 * s);
@@ -293,22 +320,22 @@ public class DashboardPage
         // 启动
         startBtn.Click += async (_, _) =>
         {
-            startBtn.Enabled = false; startBtn.Text = "启动中..."; RepositionButtons();
-            WriteConsole("━━ 启动网关 ━━");
+            startBtn.Enabled = false; startBtn.Text = OpenClawManager.Properties.LanguageManager.GetString("Starting"); RepositionButtons();
+            WriteConsole(OpenClawManager.Properties.LanguageManager.GetString("GatewayStarted"));
             await Task.Run(KillGateway);
-            if (!StartGatewayDirect()) { WriteConsole("❌ 启动失败"); body.Controls.Clear(); Build(body); return; }
+            if (!StartGatewayDirect()) { WriteConsole(OpenClawManager.Properties.LanguageManager.GetString("LaunchFailed")); body.Controls.Clear(); Build(body); return; }
             bool up = false;
             for (int i = 0; i < 15; i++) { await Task.Delay(2000); if (GwHttpOk()) { up = true; break; } }
-            WriteConsole(up ? "✓ 网关就绪" : "⚠ 启动超时 (30s)");
-            if (up) { StartHealthTimer(); SaveConfigBackup(); } else if (_gatewayProc != null) { WriteConsole("  网关可能启动较慢，守护将自动检测"); StartHealthTimer(); }
+            WriteConsole(up ? OpenClawManager.Properties.LanguageManager.GetString("GatewayReady") : OpenClawManager.Properties.LanguageManager.GetString("LaunchTimeout"));
+            if (up) { StartHealthTimer(); SaveConfigBackup(); _ = ApproveAllDevices(); } else if (_gatewayProc != null) { WriteConsole("  网关可能启动较慢，守护将自动检测"); StartHealthTimer(); }
             UpdateGatewayStatus(up, _gatewayProc?.Id);
         };
 
         // 停止
         stopBtn.Click += async (_, _) =>
         {
-            stopBtn.Enabled = false; stopBtn.Text = "停止中..."; RepositionButtons();
-            WriteConsole("━━ 停止网关 ━━");
+            stopBtn.Enabled = false; stopBtn.Text = OpenClawManager.Properties.LanguageManager.GetString("Stopping"); RepositionButtons();
+            WriteConsole(OpenClawManager.Properties.LanguageManager.GetString("GatewayStopped"));
             StopHealthTimer();
             await Task.Run(KillGateway);
             try { _gatewayProc?.Kill(); } catch { }
@@ -320,8 +347,8 @@ public class DashboardPage
         // 重启
         restartBtn.Click += async (_, _) =>
         {
-            restartBtn.Enabled = false; restartBtn.Text = "重启中..."; RepositionButtons();
-            WriteConsole("━━ 重启网关 ━━");
+            restartBtn.Enabled = false; restartBtn.Text = OpenClawManager.Properties.LanguageManager.GetString("Restarting"); RepositionButtons();
+            WriteConsole(OpenClawManager.Properties.LanguageManager.GetString("GatewayRestarted"));
             StopHealthTimer();
             await Task.Run(KillGateway);
             try { _gatewayProc?.Kill(); } catch { }
@@ -330,7 +357,7 @@ public class DashboardPage
             bool up = false;
             for (int i = 0; i < 15; i++) { await Task.Delay(2000); if (GwHttpOk()) { up = true; break; } }
             WriteConsole(up ? "✓ 网关已重启" : "⚠ 重启超时 (30s)");
-            if (up) StartHealthTimer(); else StartHealthTimer();
+            if (up) { StartHealthTimer(); _ = ApproveAllDevices(); } else StartHealthTimer();
             UpdateGatewayStatus(up, _gatewayProc?.Id);
         };
 
@@ -362,11 +389,11 @@ public class DashboardPage
 
             WriteConsole("✓ npm 安装完成");
             WriteConsole("启动网关...");
-            if (!StartGatewayDirect()) { WriteConsole("❌ 启动失败"); swBtn.Enabled = true; refBtn.Enabled = true; verCmb.Enabled = true; return; }
+            if (!StartGatewayDirect()) { WriteConsole(OpenClawManager.Properties.LanguageManager.GetString("LaunchFailed")); swBtn.Enabled = true; refBtn.Enabled = true; verCmb.Enabled = true; return; }
             bool up = false;
             for (int i = 0; i < 15; i++) { await Task.Delay(2000); if (GwHttpOk()) { up = true; break; } }
-            WriteConsole(up ? "✓ 版本切换完成" : "⚠ 启动超时 (30s)");
-            if (up) { StartHealthTimer(); MainForm.RefreshOcVersion(); try { var f = body.FindForm(); if (f != null) f.Text = MainForm.WindowTitle(); } catch { } } else StartHealthTimer();
+            WriteConsole(up ? OpenClawManager.Properties.LanguageManager.GetString("VersionSwitchComplete") : OpenClawManager.Properties.LanguageManager.GetString("LaunchTimeout"));
+            if (up) { StartHealthTimer(); _ = ApproveAllDevices(); MainForm.RefreshOcVersion(); try { var f = body.FindForm(); if (f != null) f.Text = MainForm.WindowTitle(); } catch { } } else StartHealthTimer();
             swBtn.Enabled = true; refBtn.Enabled = true; verCmb.Enabled = true;
         };
 
@@ -399,7 +426,7 @@ public class DashboardPage
 
     // ── UI 辅助 ──
 
-    FlowLayoutPanel Flow(int x, int y, int w, int h, bool wrap = false) => new FlowLayoutPanel { Location = new Point(x, y), Size = new Size(w, h), BackColor = Color.Transparent, WrapContents = wrap };
+    FlowLayoutPanel Flow(int x, int y, int w, int h, bool wrap = false) => new FlowLayoutPanel { Location = new Point(x, y), Size = new Size(w, h), BackColor = Color.Transparent, WrapContents = wrap, FlowDirection = FlowDirection.LeftToRight };
     Label SectionTitle(string text, int x, int y) { var l = Theme.Lbl(text, Theme.Fc, 11f, FontStyle.Bold); l.Location = new Point(x, y); return l; }
     Panel Card(string title, string value, int w, int h, Color? valColor = null)
     {
@@ -459,8 +486,8 @@ public class DashboardPage
     }
     string StartTimeSync(int? p) { if (p == null) return "N/A"; try { using var pr = Process.GetProcessById(p.Value); return pr.StartTime.ToString("HH:mm:ss"); } catch { return "N/A"; } }
     string UpTimeSync(int? p) { if (p == null) return "N/A"; try { using var pr = Process.GetProcessById(p.Value); var ts = DateTime.Now - pr.StartTime; return ts.TotalHours >= 1 ? (int)ts.TotalHours + "h" + ts.Minutes + "m" : ts.Minutes + "m" + ts.Seconds + "s"; } catch { return "N/A"; } }
-    string NodeVerSync() { try { string nodeExe = FindNodeExe(); if (string.IsNullOrEmpty(nodeExe)) return "未安装"; var psi = new ProcessStartInfo { FileName = nodeExe, Arguments = "-v", UseShellExecute = false, RedirectStandardOutput = true, CreateNoWindow = true, StandardOutputEncoding = Encoding.UTF8 }; using var p = Process.Start(psi); if (p == null) return "未安装"; p.WaitForExit(3000); var v = p.StandardOutput.ReadToEnd().Trim(); return string.IsNullOrEmpty(v) ? "未安装" : v; } catch { return "未安装"; } }
-    string OcVerSync() { var v = VerSync(); return v == "N/A" ? "未安装" : v; }
+    string NodeVerSync() { try { string nodeExe = FindNodeExe(); if (string.IsNullOrEmpty(nodeExe)) return OpenClawManager.Properties.LanguageManager.GetString("NotInstalled"); var psi = new ProcessStartInfo { FileName = nodeExe, Arguments = "-v", UseShellExecute = false, RedirectStandardOutput = true, CreateNoWindow = true, StandardOutputEncoding = Encoding.UTF8 }; using var p = Process.Start(psi); if (p == null) return OpenClawManager.Properties.LanguageManager.GetString("NotInstalled"); p.WaitForExit(3000); var v = p.StandardOutput.ReadToEnd().Trim(); return string.IsNullOrEmpty(v) ? OpenClawManager.Properties.LanguageManager.GetString("NotInstalled") : v; } catch { return OpenClawManager.Properties.LanguageManager.GetString("NotInstalled"); } }
+    string OcVerSync() { var v = VerSync(); return v == "N/A" ? OpenClawManager.Properties.LanguageManager.GetString("NotInstalled") : v; }
     string DefaultModelSync()
     {
         try { var cfg = JsonNode.Parse(File.ReadAllText(MainForm.CfgFullPath, Encoding.UTF8))?.AsObject(); if (cfg?.TryGetPropertyValue("agents", out var ag) == true) { if (ag!.AsObject().TryGetPropertyValue("defaults", out var df) && df is JsonObject d && d.TryGetPropertyValue("model", out var mn) && mn is JsonObject mobj && mobj.TryGetPropertyValue("primary", out var prim)) return prim!.ToString(); } } catch { }
@@ -700,10 +727,68 @@ public class DashboardPage
                 }
             }
 
+            int ReadPositiveInt(JsonNode? value)
+                => int.TryParse(value?.ToString(), out var parsed) && parsed > 0 ? parsed : 0;
+
+            // Older settings builds wrote the user cap into contextWindow, which is native
+            // model metadata. Keep contextTokens as the cap and remove the bad metadata.
+            int defaultContextCap = ReadPositiveInt(defs?["contextTokens"]);
+            if (defaultContextCap is > 0 and < 8192)
+            {
+                defs!["contextTokens"] = 8192;
+                defaultContextCap = 8192;
+                dirty = true;
+            }
+
+            var provs = node["models"]?["providers"]?.AsObject();
+            if (provs != null)
+            {
+                foreach (var pk in provs)
+                    if (pk.Value is JsonObject po && po["models"] is JsonArray arr)
+                        foreach (var model in arr)
+                            if (model is JsonObject mo)
+                            {
+                                var modelContextTokens = ReadPositiveInt(mo["contextTokens"]);
+                                var modelContextWindow = ReadPositiveInt(mo["contextWindow"]);
+                                if (modelContextTokens is > 0 and < 8192)
+                                {
+                                    mo["contextTokens"] = 8192;
+                                    modelContextTokens = 8192;
+                                    dirty = true;
+                                }
+                                if (modelContextWindow > 0 && (modelContextWindow == modelContextTokens || modelContextWindow == defaultContextCap || modelContextWindow < 8192))
+                                {
+                                    mo.Remove("contextWindow");
+                                    dirty = true;
+                                }
+                            }
+            }
+
+            var gateway = node["gateway"] as JsonObject;
+            if (gateway?["auth"] is JsonObject auth)
+            {
+                var authMode = auth["mode"]?.ToString()?.Trim().ToLowerInvariant();
+                if (authMode == "basic")
+                {
+                    auth["mode"] = "password";
+                    dirty = true;
+                }
+
+                var bindMode = gateway["bind"]?.ToString()?.Trim().ToLowerInvariant() ?? "loopback";
+                var normalizedMode = auth["mode"]?.ToString()?.Trim().ToLowerInvariant();
+                if (normalizedMode == "none" && bindMode != "loopback")
+                {
+                    auth["mode"] = "token";
+                    if (string.IsNullOrWhiteSpace(auth["token"]?.ToString()))
+                        auth["token"] = Guid.NewGuid().ToString("N");
+                    dirty = true;
+                }
+            }
+
             if (dirty)
             {
                 File.WriteAllText(cfgPath, node.ToJsonString(new JsonSerializerOptions { WriteIndented = true }), Encoding.UTF8);
-                WriteConsole($"已修正 workspace 盘符 -> {ws}");
+                WriteConsole($"已修正配置 -> workspace: {ws}");
             }
         }
         catch (Exception ex) { WriteConsole($"WARN: workspace 盘符修正失败: {ex.Message}"); }
@@ -761,7 +846,7 @@ public class DashboardPage
         }
         catch (Exception ex)
         {
-            WriteConsole($"启动失败: {ex.Message}");
+            WriteConsole($"{OpenClawManager.Properties.LanguageManager.GetString("LaunchFailedMsg")} {ex.Message}");
             return false;
         }
     }
@@ -823,7 +908,7 @@ public class DashboardPage
             var cpuMem = CpuMemStr(pid);
             var up = UpTimeSync(pid);
             var st = StartTimeSync(pid);
-            _cardGw?.Invoke(() => { _cardGw.Text = ok ? "在线 (PID: " + pid + ")" : "离线"; _cardGw.ForeColor = ok ? Theme.Grn : Theme.Red; });
+            _cardGw?.Invoke(() => { _cardGw.Text = ok ? OpenClawManager.Properties.LanguageManager.GetString("Online") + " (PID: " + pid + ")" : OpenClawManager.Properties.LanguageManager.GetString("Offline"); _cardGw.ForeColor = ok ? Theme.Grn : Theme.Red; });
             _cardCpu?.Invoke(() => _cardCpu.Text = cpuMem);
             _cardUptime?.Invoke(() => _cardUptime.Text = up);
             _cardStart?.Invoke(() => _cardStart.Text = st);
@@ -836,11 +921,11 @@ public class DashboardPage
     void UpdateGatewayStatus(bool gwOk, int? pid)
     {
         _gwDot?.Invoke(() => _gwDot.ForeColor = gwOk ? Theme.Grn : Theme.Red);
-        string text = gwOk ? "运行中 (PID: " + pid + ")  " : "已停止  ";
+        string text = gwOk ? OpenClawManager.Properties.LanguageManager.GetString("RunningWithPID") + pid + ")  " : OpenClawManager.Properties.LanguageManager.GetString("Stopped") + "  ";
         _gwStatusLbl?.Invoke(() => { _gwStatusLbl.Text = text; _gwStatusLbl.AutoSize = true; });
-        _startBtn?.Invoke(() => { _startBtn.Enabled = !gwOk; _startBtn.BackColor = gwOk ? Color.Gray : Theme.Grn; _startBtn.Text = "启动"; });
-        _stopBtn?.Invoke(() => { _stopBtn.Enabled = gwOk; _stopBtn.BackColor = !gwOk ? Color.Gray : Theme.Red; _stopBtn.Text = "停止"; });
-        _restartBtn?.Invoke(() => { _restartBtn.Enabled = gwOk; _restartBtn.BackColor = !gwOk ? Color.Gray : Theme.QqOrange; _restartBtn.Text = "重启"; });
+        _startBtn?.Invoke(() => { _startBtn.Enabled = !gwOk; _startBtn.BackColor = gwOk ? Color.Gray : Theme.Grn; _startBtn.Text = OpenClawManager.Properties.LanguageManager.GetString("Start"); });
+        _stopBtn?.Invoke(() => { _stopBtn.Enabled = gwOk; _stopBtn.BackColor = !gwOk ? Color.Gray : Theme.Red; _stopBtn.Text = OpenClawManager.Properties.LanguageManager.GetString("Stop"); });
+        _restartBtn?.Invoke(() => { _restartBtn.Enabled = gwOk; _restartBtn.BackColor = !gwOk ? Color.Gray : Theme.QqOrange; _restartBtn.Text = OpenClawManager.Properties.LanguageManager.GetString("Restart"); });
         // 重排按钮位置，适配状态文字宽度变化
         RepositionButtons();
     }

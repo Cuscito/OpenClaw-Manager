@@ -85,7 +85,7 @@ public static class OpenClawRuntime
             var dir = Path.GetDirectoryName(path);
             if (!string.IsNullOrEmpty(dir) && !Directory.Exists(dir))
                 Directory.CreateDirectory(dir);
-            File.WriteAllText(path, cfg.ToJsonString(new System.Text.Json.JsonSerializerOptions { WriteIndented = true }), Encoding.UTF8);
+            File.WriteAllText(path, cfg.ToJsonString(new System.Text.Json.JsonSerializerOptions { WriteIndented = true }), new UTF8Encoding(false));
         }
         catch (Exception ex)
         {

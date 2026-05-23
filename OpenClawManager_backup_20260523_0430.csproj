@@ -33,5 +33,10 @@
     </Content>
 
   </ItemGroup>
-  <!-- 发布时不解压 runtime.zip，runtime 目录由手动维护 -->
+  <!-- .openclaw 数据由网关自行管理，发布时不备份/恢复，避免覆盖运行中文件。 -->
+  <!-- 发布后自动解压 runtime.zip 到发布目录，提供 Node.js + openclaw 及所有依赖 -->
+  <Target Name="UnzipRuntime" AfterTargets="AfterPublish">
+    <Message Importance="high" Text="解压 runtime.zip → $(PublishDir)..." />
+    <Exec Command="powershell -NoProfile -Command &quot;if (Test-Path '$(PublishDir)runtime') { Remove-Item -Recurse -Force '$(PublishDir)runtime' }; Expand-Archive -Path '$(MSBuildProjectDirectory)\runtime.zip' -DestinationPath '$(PublishDir)' -Force&quot;" />
+  </Target>
 </Project>

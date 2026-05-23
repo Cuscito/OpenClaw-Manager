@@ -29,14 +29,14 @@ public class GuardianPage
 
         if (!LicenseManager.CheckPro())
         {
-            body.Controls.Add(new Label { Text = "🔒 守护程序是专业版功能", ForeColor = Theme.Fc2, Font = Theme.Font(12f, FontStyle.Bold), AutoSize = true, BackColor = Color.Transparent, Location = new Point(12, 20) });
-            body.Controls.Add(new Label { Text = "请前往 系统设置 → 输入注册码 激活专业版", ForeColor = Theme.Fc2, Font = Theme.Font(10f), AutoSize = true, BackColor = Color.Transparent, Location = new Point(12, 50) });
+            body.Controls.Add(new Label { Text = OpenClawManager.Properties.LanguageManager.GetString("GuardianProFeature"), ForeColor = Theme.Fc2, Font = Theme.Font(12f, FontStyle.Bold), AutoSize = true, BackColor = Color.Transparent, Location = new Point(12, 20) });
+            body.Controls.Add(new Label { Text = OpenClawManager.Properties.LanguageManager.GetString("GuardianActivatePro"), ForeColor = Theme.Fc2, Font = Theme.Font(10f), AutoSize = true, BackColor = Color.Transparent, Location = new Point(12, 50) });
             return;
         }
 
         guardianDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "guardian");
 
-        var title = new Label { Text = "\u5B88\u62A4\u7A0B\u5E8F", ForeColor = Theme.Fc, Font = Theme.Font(13f, FontStyle.Bold), AutoSize = true, BackColor = Color.Transparent, Location = new Point(12, 12) };
+        var title = new Label { Text = "守护程序", ForeColor = Theme.Fc, Font = Theme.Font(13f, FontStyle.Bold), AutoSize = true, BackColor = Color.Transparent, Location = new Point(12, 12) };
         body.Controls.Add(title);
 
         // Status
@@ -51,7 +51,7 @@ public class GuardianPage
 
         // Install directory row
         var dirRow = new FlowLayoutPanel { Location = new Point(12, y), Size = new Size(body.ClientSize.Width - 24, 34), BackColor = Color.Transparent, WrapContents = false };
-        dirRow.Controls.Add(new Label { Text = "\u5B89\u88C5\u76EE\u5F55: ", ForeColor = Theme.Fc2, Font = Theme.Font(10f), AutoSize = true, BackColor = Color.Transparent, Margin = new Padding(0, 6, 0, 0) });
+        dirRow.Controls.Add(new Label { Text = "安装目录: ", ForeColor = Theme.Fc2, Font = Theme.Font(10f), AutoSize = true, BackColor = Color.Transparent, Margin = new Padding(0, 6, 0, 0) });
         dirBox = new TextBox { Text = guardianDir, Width = 260, BackColor = Theme.BgWhite, ForeColor = Theme.Fc, Font = Theme.Font(9f), BorderStyle = BorderStyle.FixedSingle };
         dirRow.Controls.Add(dirBox);
         var btnBrowse = new Button { Text = "...", Width = 32, Height = 24, FlatStyle = FlatStyle.Flat, BackColor = Theme.BgWhite, ForeColor = Theme.Fc, FlatAppearance = { BorderSize = 1 } };
@@ -62,19 +62,19 @@ public class GuardianPage
 
         // Action buttons
         var btnRow = new FlowLayoutPanel { Location = new Point(12, y), Size = new Size(body.ClientSize.Width - 24, 40), BackColor = Color.Transparent };
-        var btnDetect = new Button { Text = "\uD83D\uDD0D \u68C0\u6D4B\u73AF\u5883", FlatStyle = FlatStyle.Flat, BackColor = Color.FromArgb(0x66, 0x66, 0x66), ForeColor = Theme.FcWhite, Size = new Size(110, 34), Cursor = Cursors.Hand, FlatAppearance = { BorderSize = 0 }, UseVisualStyleBackColor = false };
+        var btnDetect = new Button { Text = OpenClawManager.Properties.LanguageManager.GetString("GuardianDetectEnv"), FlatStyle = FlatStyle.Flat, BackColor = Color.FromArgb(0x66, 0x66, 0x66), ForeColor = Theme.FcWhite, Size = new Size(110, 34), Cursor = Cursors.Hand, FlatAppearance = { BorderSize = 0 }, UseVisualStyleBackColor = false };
         btnDetect.Click += (_, _) => DetectEnvironment();
         btnRow.Controls.Add(btnDetect);
 
-        btnInstall = new Button { Text = "安装守护", FlatStyle = FlatStyle.Flat, BackColor = Theme.QqBlue, ForeColor = Theme.FcWhite, Size = new Size(130, 34), Cursor = Cursors.Hand, FlatAppearance = { BorderSize = 0 }, UseVisualStyleBackColor = false };
+        btnInstall = new Button { Text = OpenClawManager.Properties.LanguageManager.GetString("GuardianInstall"), FlatStyle = FlatStyle.Flat, BackColor = Theme.QqBlue, ForeColor = Theme.FcWhite, Size = new Size(130, 34), Cursor = Cursors.Hand, FlatAppearance = { BorderSize = 0 }, UseVisualStyleBackColor = false };
         btnInstall.Click += (_, _) => InstallGuardian();
         btnRow.Controls.Add(btnInstall);
 
-        var btnUninstall = new Button { Text = "\u5378\u8F7D\u5B88\u62A4", FlatStyle = FlatStyle.Flat, BackColor = Color.FromArgb(0xF4, 0x43, 0x36), ForeColor = Theme.FcWhite, Size = new Size(100, 34), Cursor = Cursors.Hand, FlatAppearance = { BorderSize = 0 }, UseVisualStyleBackColor = false };
+        var btnUninstall = new Button { Text = OpenClawManager.Properties.LanguageManager.GetString("GuardianUninstall"), FlatStyle = FlatStyle.Flat, BackColor = Color.FromArgb(0xF4, 0x43, 0x36), ForeColor = Theme.FcWhite, Size = new Size(100, 34), Cursor = Cursors.Hand, FlatAppearance = { BorderSize = 0 }, UseVisualStyleBackColor = false };
         btnUninstall.Click += (_, _) => UninstallGuardian();
         btnRow.Controls.Add(btnUninstall);
 
-        btnToggle = new Button { Text = "\u505C\u6B62\u5B88\u62A4\u548C\u7F51\u5173", FlatStyle = FlatStyle.Flat, BackColor = Color.FromArgb(0xF4, 0x43, 0x36), ForeColor = Theme.FcWhite, Size = new Size(140, 34), Cursor = Cursors.Hand, FlatAppearance = { BorderSize = 0 }, UseVisualStyleBackColor = false };
+        btnToggle = new Button { Text = OpenClawManager.Properties.LanguageManager.GetString("GuardianStop"), FlatStyle = FlatStyle.Flat, BackColor = Color.FromArgb(0xF4, 0x43, 0x36), ForeColor = Theme.FcWhite, Size = new Size(140, 34), Cursor = Cursors.Hand, FlatAppearance = { BorderSize = 0 }, UseVisualStyleBackColor = false };
         btnToggle.Click += (_, _) => ToggleGuardian();
         btnRow.Controls.Add(btnToggle);
 
@@ -118,8 +118,8 @@ public class GuardianPage
         detectedNode = FindNodeExe();
         detectedEntry = FindOpenClawEntry(detectedNode);
 
-        string nodeInfo = string.IsNullOrEmpty(detectedNode) ? "\u274C Node.js \u672A\u627E\u5230" : "\u2705 " + detectedNode;
-        string ocInfo = string.IsNullOrEmpty(detectedEntry) ? "\u274C OpenClaw \u5165\u53E3\u672A\u627E\u5230" : "\u2705 " + detectedEntry;
+        string nodeInfo = string.IsNullOrEmpty(detectedNode) ? "❌ Node.js 未找到" : "✅ " + detectedNode;
+        string ocInfo = string.IsNullOrEmpty(detectedEntry) ? "❌ OpenClaw 入口未找到" : "✅ " + detectedEntry;
         pathLbl.Text = nodeInfo + "\n" + ocInfo;
         pathLbl.AutoSize = true;
 
@@ -160,13 +160,13 @@ public class GuardianPage
             File.Exists(Path.Combine(guardianDir, "launch-gateway.vbs")) &&
             File.Exists(Path.Combine(guardianDir, "launch-gateway.ps1"));
 
-        statusLbl.Text = "\u76EE\u5F55: " + guardianDir + "  |  " +
-            (scriptsExist ? "\u2705 \u5B88\u62A4\u5DF2\u5B89\u88C5" : "\u26A0 \u5B88\u62A4\u672A\u5B89\u88C5") + "  |  " +
-            (taskExists ? "\u2705 \u8BA1\u5212\u4EFB\u52A1\u5DF2\u6CE8\u518C" : "\u26A0 \u8BA1\u5212\u4EFB\u52A1\u672A\u6CE8\u518C");
+        statusLbl.Text = "目录: " + guardianDir + "  |  " +
+            (scriptsExist ? "✅ 守护已安装" : "⚠ 守护未安装") + "  |  " +
+            (taskExists ? "✅ 计划任务已注册" : "⚠ 计划任务未注册");
 
         // Update install button text
         if (btnInstall != null)
-            btnInstall.Text = scriptsExist ? "重装守护" : "安装守护";
+            btnInstall.Text = scriptsExist ? OpenClawManager.Properties.LanguageManager.GetString("GuardianReinstall") : OpenClawManager.Properties.LanguageManager.GetString("GuardianInstall");
 
         // Update toggle button state
         if (btnToggle != null)
@@ -175,12 +175,12 @@ public class GuardianPage
             bool taskEnabled = IsTaskEnabled();
             if (gwRunning || taskEnabled)
             {
-                btnToggle.Text = "\u505C\u6B62\u5B88\u62A4\u548C\u7F51\u5173";
+                btnToggle.Text = OpenClawManager.Properties.LanguageManager.GetString("GuardianStop");
                 btnToggle.BackColor = Color.FromArgb(0xF4, 0x43, 0x36);
             }
             else
             {
-                btnToggle.Text = "\u542F\u52A8\u7F51\u5173\u548C\u5B88\u62A4";
+                btnToggle.Text = OpenClawManager.Properties.LanguageManager.GetString("GuardianStart");
                 btnToggle.BackColor = Theme.Grn;
             }
         }
@@ -195,19 +195,19 @@ public class GuardianPage
             {
                 var text = File.ReadAllText(logPath, Encoding.UTF8);
                 if (text.Length > 100000)
-                    text = "\u2500\u2500\u2500 \u6587\u4EF6\u8FC7\u5927\uFF0C\u663E\u793A\u672B\u5C3E 100KB \u2500\u2500\u2500\n" + text.Substring(text.Length - 100000);
+                    text = "─── 文件过大，显示末尾 100KB ───\n" + text.Substring(text.Length - 100000);
                 logBox.Text = text;
                 logBox.SelectionStart = logBox.Text.Length;
                 logBox.ScrollToCaret();
             }
             else
             {
-                logBox.Text = "\u5B88\u62A4\u65E5\u5FD7\u8FD8\u6CA1\u6709\u5185\u5BB9\uFF0C\u5B89\u88C5\u5B88\u62A4\u540E\u6BCF\u5206\u949F\u4F1A\u81EA\u52A8\u8BB0\u5F55\u3002\n\u9884\u671F\u4F4D\u7F6E: " + logPath;
+                logBox.Text = "守护日志还没有内容，安装守护后每分钟会自动记录。\n预期位置: " + logPath;
             }
         }
         catch (Exception ex)
         {
-            logBox.Text = "\u8BFB\u53D6\u65E5\u5FD7\u5931\u8D25: " + ex.Message;
+            logBox.Text = "读取日志失败: " + ex.Message;
         }
     }
     #endregion
@@ -219,7 +219,7 @@ public class GuardianPage
         guardianDir = dirBox.Text.Trim();
         if (string.IsNullOrWhiteSpace(guardianDir))
         {
-            MessageBox.Show("\u8BF7\u5148\u6307\u5B9A\u5B89\u88C5\u76EE\u5F55", "\u63D0\u793A", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            MessageBox.Show("请先指定安装目录", "提示", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             return;
         }
 
@@ -229,11 +229,11 @@ public class GuardianPage
         if (string.IsNullOrEmpty(detectedNode) || string.IsNullOrEmpty(detectedEntry))
         {
             var dr = MessageBox.Show(
-                "\u68C0\u6D4B\u672A\u5B8C\u6210\uFF1A\n" +
-                "Node.js: " + (string.IsNullOrEmpty(detectedNode) ? "\u672A\u627E\u5230" : detectedNode) + "\n" +
-                "OpenClaw: " + (string.IsNullOrEmpty(detectedEntry) ? "\u672A\u627E\u5230" : detectedEntry) + "\n\n" +
-                "\u662F\u5426\u4ECD\u7136\u7EE7\u7EED\u5B89\u88C5\uFF1F\uFF08\u5B88\u62A4\u53EF\u80FD\u65E0\u6CD5\u6B63\u5E38\u5DE5\u4F5C\uFF09",
-                "\u786E\u8BA4", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                "检测未完成：\n" +
+                "Node.js: " + (string.IsNullOrEmpty(detectedNode) ? "未找到" : detectedNode) + "\n" +
+                "OpenClaw: " + (string.IsNullOrEmpty(detectedEntry) ? "未找到" : detectedEntry) + "\n\n" +
+                "是否仍然继续安装？（守护可能无法正常工作）",
+                "确认", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
             if (dr != DialogResult.Yes) return;
         }
 
@@ -358,8 +358,8 @@ public class GuardianPage
 
             if (!result.success)
             {
-                logBox.Text = "\u26A0 \u5B88\u62A4\u811A\u672C\u5DF2\u751F\u6210\uFF0C\u4F46\u8BA1\u5212\u4EFB\u52A1\u6CE8\u518C\u5931\u8D25\u3002\n\n" +
-                    "\u70B9\u51FB\u201C\u5B89\u88C5/\u91CD\u65B0\u5B89\u88C5\u201D\u65F6\u4F1A\u5F39\u51FAUAC\u63D0\u6743\u7A97\u53E3\uFF0C\u8BF7\u70B9\u51FB\u201C\u662F\u201D\u6388\u6743\u3002";
+                logBox.Text = "⚠ 守护脚本已生成，但计划任务注册失败。\n\n" +
+                    "点击“安装/重新安装”时会弹出UAC提权窗口，请点击“是”授权。";
                 UpdateStatus();
                 return;
             }
@@ -367,20 +367,20 @@ public class GuardianPage
             // Trigger first run
             try { RunSchTasks("/run /tn \"OpenClaw Gateway\"", admin: true); } catch { }
 
-            logBox.Text = "\u2705 \u5B88\u62A4\u7A0B\u5E8F\u5B89\u88C5\u6210\u529F\uFF01\n\n" +
-                "\u5B89\u88C5\u76EE\u5F55: " + guardianDir + "\n" +
+            logBox.Text = "✅ 守护程序安装成功！\n\n" +
+                "安装目录: " + guardianDir + "\n" +
                 "Node.js: " + (detectedNode ?? "N/A") + "\n" +
                 "OpenClaw: " + (detectedEntry ?? "N/A") + "\n" +
-                "\u8BA1\u5212\u4EFB\u52A1: OpenClaw Gateway (\u6BCF1\u5206\u949F)\n" +
-                "\u68C0\u6D4B\u65B9\u5F0F: HTTP GET /health\n" +
-                "\u65E5\u5FD7\u6587\u4EF6: " + Path.Combine(guardianDir, "guardian.log") + "\n\n" +
-                "\u5B88\u62A4\u5DF2\u5F00\u59CB\u8FD0\u884C\u3002";
+                "计划任务: OpenClaw Gateway (每1分钟)\n" +
+                "检测方式: HTTP GET /health\n" +
+                "日志文件: " + Path.Combine(guardianDir, "guardian.log") + "\n\n" +
+                "守护已开始运行。";
             logBox.SelectionStart = 0;
             UpdateStatus();
         }
         catch (Exception ex)
         {
-            MessageBox.Show("\u5B89\u88C5\u5931\u8D25: " + ex.Message, "\u9519\u8BEF", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show("安装失败: " + ex.Message, "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 
@@ -393,21 +393,21 @@ public class GuardianPage
             RunSchTasks("/delete /tn \"OpenClaw-Guardian\" /f", admin: true);
 
             var dr = MessageBox.Show(
-                "\u8BA1\u5212\u4EFB\u52A1\u5DF2\u5220\u9664\u3002\n\n\u662F\u5426\u540C\u65F6\u5220\u9664\u5B88\u62A4\u6587\u4EF6\u76EE\u5F55\uFF1F\n" + guardianDir,
-                "\u786E\u8BA4\u5220\u9664\u6587\u4EF6", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                "计划任务已删除。\n\n是否同时删除守护文件目录？\n" + guardianDir,
+                "确认删除文件", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
             if (dr == DialogResult.Yes)
             {
                 try { Directory.Delete(guardianDir, true); }
-                catch (Exception ex) { MessageBox.Show("\u5220\u9664\u76EE\u5F55\u5931\u8D25\uFF1A" + ex.Message, "\u63D0\u793A"); }
+                catch (Exception ex) { MessageBox.Show("删除目录失败：" + ex.Message, "提示"); }
             }
 
             UpdateStatus();
-            logBox.Text = "\u2705 \u5B88\u62A4\u7A0B\u5E8F\u5DF2\u5378\u8F7D\u3002";
+            logBox.Text = "✅ 守护程序已卸载。";
         }
         catch (Exception ex)
         {
-            MessageBox.Show("\u5378\u8F7D\u5931\u8D25: " + ex.Message, "\u9519\u8BEF", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show("卸载失败: " + ex.Message, "错误", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 
@@ -457,9 +457,9 @@ public class GuardianPage
         if (gwRunning || taskEnabled)
         {
             // === STOP: disable task + kill gateway ===
-            btnToggle.Text = "\u505C\u6B62\u4E2D...";
+            btnToggle.Text = OpenClawManager.Properties.LanguageManager.GetString("GuardianStopping");
             btnToggle.BackColor = Color.Gray;
-            logBox.Text = "\u23F3 \u6B63\u5728\u505C\u6B62\u5B88\u62A4\u548C\u7F51\u5173...";
+            logBox.Text = "⏳ 正在停止守护和网关...";
 
             RunSchTasks("/change /tn \"OpenClaw Gateway\" /disable", admin: true);
             try { foreach (var p in Process.GetProcessesByName("node")) { try { p.Kill(); } catch { } } } catch { }
@@ -475,15 +475,15 @@ public class GuardianPage
             }
 
             logBox.Text = down
-                ? "\u2705 \u5B88\u62A4\u5DF2\u505C\u6B62\uFF0C\u7F51\u5173\u5DF2\u5173\u95ED\u3002"
-                : "\u26A0 \u7F51\u5173\u53EF\u80FD\u4ECD\u5728\u8FD0\u884C\uFF0C\u8BF7\u624B\u52A8\u68C0\u67E5\u3002";
+                ? "✅ 守护已停止，网关已关闭。"
+                : "⚠ 网关可能仍在运行，请手动检查。";
         }
         else
         {
             // === START: enable task, let guardian auto-launch gateway ===
-            btnToggle.Text = "\u542F\u52A8\u4E2D...";
+            btnToggle.Text = OpenClawManager.Properties.LanguageManager.GetString("GuardianStarting");
             btnToggle.BackColor = Color.Gray;
-            logBox.Text = "\u23F3 \u5B88\u62A4\u5DF2\u542F\u7528\uFF0C\u7B49\u5F85\u5B88\u62A4\u81EA\u52A8\u62C9\u8D77\u7F51\u5173...";
+            logBox.Text = "⏳ 守护已启用，等待守护自动拉起网关...";
 
             RunSchTasks("/change /tn \"OpenClaw Gateway\" /enable", admin: true);
             
@@ -495,8 +495,8 @@ public class GuardianPage
             }
 
             logBox.Text = up
-                ? "\u2705 \u7F51\u5173\u548C\u5B88\u62A4\u542F\u52A8\u6210\u529F\uFF01"
-                : "\u26A0 \u542F\u52A8\u8D85\u65F6\uFF0860\u79D2\uFF09\uFF0C\u8BF7\u70B9\u201C\u5237\u65B0\u72B6\u6001\u201D\u67E5\u770B\u65E5\u5FD7\u3002";
+                ? "✅ 网关和守护启动成功！"
+                : "⚠ 启动超时（60秒），请点“刷新状态”查看日志。";
         }
 
         logBox.SelectionStart = 0;

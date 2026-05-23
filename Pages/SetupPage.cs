@@ -41,8 +41,10 @@ public class SetupPage
     static string NCmd => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "nodejs", "npm.cmd");
     static string OcPs => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "npm", "openclaw.ps1");
     static string Cfg => MainForm.CfgFullPath;
-    // DPI 缩放辅助：所有硬编码像素值统一乘 ScaleFactor
     int S(float v) => (int)(v * Theme.ScaleFactor);
+
+    // 国际化快捷方法
+    static string LGet(string key) => OpenClawManager.Properties.LanguageManager.GetString(key);
 
     int port = 18789; string bind = "loopback"; string auth = "token"; string gwt = "";
     string pUrl = "https://api.deepseek.com"; string pKey = ""; string pApi = "openai-completions"; string pId = "deepseek";
@@ -53,16 +55,20 @@ public class SetupPage
     {
         body = pnl; body.Controls.Clear(); ocCmd = File.Exists(OcPs) ? OcPs : ""; Ld();
 
+        // 订阅语言切换事件，切换时重建整个 UI
+        OpenClawManager.Properties.LanguageManager.LanguageChanged -= RebuildOnLangChange;
+        OpenClawManager.Properties.LanguageManager.LanguageChanged += RebuildOnLangChange;
+
         var runtimeDir = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "runtime");
         if (File.Exists(Path.Combine(runtimeDir, "node.exe")))
             ocCmd = Path.Combine(runtimeDir, "node.exe");
 
         Panel b = new Panel { Location = new Point(0, 0), Size = new Size(body.ClientSize.Width, S(40)), BackColor = Theme.Acc };
-        b.Controls.Add(new Label { Text = "  \u2691 初始化配置向导", ForeColor = Theme.FcWhite, Font = Theme.Font(12f, FontStyle.Bold), Location = new Point(S(10), S(6)), AutoSize = true, BackColor = Color.Transparent });
+        b.Controls.Add(new Label { Text = "  \u2691 " + LGet("SetupTitle"), ForeColor = Theme.FcWhite, Font = Theme.Font(12f, FontStyle.Bold), Location = new Point(S(10), S(6)), AutoSize = true, BackColor = Color.Transparent });
         body.Controls.Add(b);
 
         stepBar = new FlowLayoutPanel { Location = new Point(S(18), S(50)), Size = new Size(body.ClientSize.Width - S(36), S(28)), BackColor = Color.Transparent };
-        string[] ls = { "系统配置", "注册启动" };
+        var ls = new[] { LGet("SetupSubtitleSystem"), LGet("SetupSubtitleRegister") };
         for (int i = 0; i < ls.Length; i++) { Panel dp = new Panel { Size = new Size(S(150), S(26)), BackColor = Color.Transparent }; dp.Controls.Add(new Label { Text = i == 0 ? "\u25CF" : "\u25CB", ForeColor = i == 0 ? Theme.Acc : Theme.Fc2, Font = Theme.Font(9f), Size = new Size(S(12), S(26)), TextAlign = ContentAlignment.MiddleCenter, BackColor = Color.Transparent }); dp.Controls.Add(new Label { Text = (i + 1) + ". " + ls[i], ForeColor = i == 0 ? Theme.Fc : Theme.Fc2, Font = Theme.Font(8f, i == 0 ? FontStyle.Bold : FontStyle.Regular), Location = new Point(S(12), 0), Size = new Size(S(138), S(26)), TextAlign = ContentAlignment.MiddleLeft, BackColor = Color.Transparent }); stepBar.Controls.Add(dp); }
         body.Controls.Add(stepBar);
 
@@ -76,6 +82,14 @@ public class SetupPage
         Show(0);
     }
 
+    void RebuildOnLangChange()
+    {
+        // 语言切换时重建 UI，保留当前步骤
+        int savedStep = step;
+        // 先保存当前配置状态
+        if (body != null) { body.Controls.Clear(); step = savedStep; Build(body, false); }
+    }
+
     void Ld() { try { if (!File.Exists(Cfg)) return; var n = JsonNode.Parse(File.ReadAllText(Cfg, Encoding.UTF8)); if (n == null) return; var g = n["gateway"]; if (g != null) { port = (int?)g["port"] ?? 18789; bind = g["bind"]?.ToString() ?? "loopback"; auth = g["auth"]?["mode"]?.ToString() ?? "token"; gwt = g["auth"]?["token"]?.ToString() ?? ""; } defM = n["agents"]?["defaults"]?["model"]?["primary"]?.ToString() ?? defM; ws = n["agents"]?["defaults"]?["workspace"]?.ToString() ?? ws; } catch { } }
 
     void Rf() { for (int i = 0; i < stepBar.Controls.Count; i++) if (stepBar.Controls[i] is Panel p && p.Controls.Count >= 2 && p.Controls[0] is Label d1 && p.Controls[1] is Label l1) { d1.Text = step >= i ? "\u25CF" : "\u25CB"; d1.ForeColor = step >= i ? Theme.Acc : Theme.Fc2; l1.ForeColor = step == i ? Theme.Fc : Theme.Fc2; l1.Font = Theme.Font(8f, step == i ? FontStyle.Bold : FontStyle.Regular); } }
@@ -86,46 +100,44 @@ public class SetupPage
     Button Bb(string t, Color c) => new Button { Text = t, FlatStyle = FlatStyle.Flat, BackColor = c, ForeColor = Theme.FcWhite, Font = Theme.Font(9f, FontStyle.Bold), AutoSize = true, FlatAppearance = { BorderSize = 0 }, Cursor = Cursors.Hand, Padding = new Padding(S(14), S(4), S(14), S(4)) };
     Button Bw(string t) => new Button { Text = t, FlatStyle = FlatStyle.Flat, BackColor = Theme.BgWhite, ForeColor = Theme.Fc, Font = Theme.Font(9f), AutoSize = true, FlatAppearance = { BorderColor = Theme.Bdr, BorderSize = 1 }, Cursor = Cursors.Hand, Padding = new Padding(S(10), S(4), S(10), S(4)) };
 
-    void Nav(bool canNext = true) { if (step < stepBar.Controls.Count - 1) { var b = Bb("下一步 →", canNext ? Theme.Acc : Theme.Fc2); b.Location = new Point(card.ClientSize.Width - S(180), card.ClientSize.Height - S(48)); b.Enabled = canNext; if (canNext) b.Click += (_, _) => Show(step + 1); card.Controls.Add(b); } if (step > 0) Prev(); }
-    void Prev() { var b = Bw("← 上一步"); b.Location = new Point(S(22), card.ClientSize.Height - S(48)); b.Click += (_, _) => Show(step - 1); card.Controls.Add(b); }
+    void Nav(bool canNext = true) { if (step < stepBar.Controls.Count - 1) { var b = Bb(LGet("SetupNext") + " →", canNext ? Theme.Acc : Theme.Fc2); b.Location = new Point(card.ClientSize.Width - S(180), card.ClientSize.Height - S(48)); b.Enabled = canNext; if (canNext) b.Click += (_, _) => Show(step + 1); card.Controls.Add(b); } if (step > 0) Prev(); }
+    void Prev() { var b = Bw("← " + LGet("SetupPrev")); b.Location = new Point(S(22), card.ClientSize.Height - S(48)); b.Click += (_, _) => Show(step - 1); card.Controls.Add(b); }
 
-    // S0 no longer used - always skip to system config
     void S0() { Show(0); }
 
     // ============= S1 =============
     void S1() {
-        int y = S(14); Title("1. 系统配置", ref y);
+        int y = S(14); Title("1. " + LGet("SetupSubtitleSystem"), ref y);
         int W = card.ClientSize.Width - S(44);
 
         // ---- 网关设置 ----
-        Panel gc = Card("网关设置", W, ref y, S(130));
-        Cl("绑   定:", S(14), S(26), gc, 9f); var bc = new ComboBox { Location = new Point(S(69), S(24)), Size = new Size(S(140), S(24)), DropDownStyle = ComboBoxStyle.DropDownList, BackColor = Theme.BgWhite, ForeColor = Theme.Fc, FlatStyle = FlatStyle.Flat, Font = Theme.Font(9f) }; bc.Items.AddRange(new[] { "loopback", "lan", "public" }); bc.SelectedIndex = bind == "lan" ? 1 : bind == "public" ? 2 : 0; gc.Controls.Add(bc);
-        Cl("端口:", S(220), S(26), gc, 9f); var pb = new TextBox { Location = new Point(S(260), S(24)), Size = new Size(S(50), S(24)), Text = port.ToString(), BackColor = Theme.BgWhite, ForeColor = Theme.Fc, BorderStyle = BorderStyle.FixedSingle, Font = Theme.Font(9f) }; gc.Controls.Add(pb);
-        Cl("认证:", S(340), S(26), gc, 9f); var ac = new ComboBox { Location = new Point(S(385), S(24)), Size = new Size(S(140), S(24)), DropDownStyle = ComboBoxStyle.DropDownList, BackColor = Theme.BgWhite, ForeColor = Theme.Fc, FlatStyle = FlatStyle.Flat, Font = Theme.Font(9f) }; ac.Items.AddRange(new[] { "token", "none", "password" }); ac.SelectedIndex = auth == "none" ? 1 : auth == "password" ? 2 : 0; gc.Controls.Add(ac);
+        Panel gc = Card(LGet("SetupGatewaySettings"), W, ref y, S(130));
+        Cl(LGet("SetupBind") + ":", S(14), S(26), gc, 9f); var bc = new ComboBox { Location = new Point(S(69), S(24)), Size = new Size(S(140), S(24)), DropDownStyle = ComboBoxStyle.DropDownList, BackColor = Theme.BgWhite, ForeColor = Theme.Fc, FlatStyle = FlatStyle.Flat, Font = Theme.Font(9f) }; bc.Items.AddRange(new[] { "loopback", "lan", "public" }); bc.SelectedIndex = bind == "lan" ? 1 : bind == "public" ? 2 : 0; gc.Controls.Add(bc);
+        Cl(LGet("SetupPort") + ":", S(220), S(26), gc, 9f); var pb = new TextBox { Location = new Point(S(260), S(24)), Size = new Size(S(50), S(24)), Text = port.ToString(), BackColor = Theme.BgWhite, ForeColor = Theme.Fc, BorderStyle = BorderStyle.FixedSingle, Font = Theme.Font(9f) }; gc.Controls.Add(pb);
+        Cl(LGet("SetupAuth") + ":", S(340), S(26), gc, 9f); var ac = new ComboBox { Location = new Point(S(385), S(24)), Size = new Size(S(140), S(24)), DropDownStyle = ComboBoxStyle.DropDownList, BackColor = Theme.BgWhite, ForeColor = Theme.Fc, FlatStyle = FlatStyle.Flat, Font = Theme.Font(9f) }; ac.Items.AddRange(new[] { "token", "none", "password" }); ac.SelectedIndex = auth == "none" ? 1 : auth == "password" ? 2 : 0; gc.Controls.Add(ac);
 
         Panel ar = new Panel { Location = new Point(S(14), S(56)), Size = new Size(W - S(28), S(26)), BackColor = Color.Transparent }; gc.Controls.Add(ar);
         TextBox tb = null, pw = null;
-        Action<int> ra = (s) => { ar.Controls.Clear(); if (s == 0) { ar.Controls.Add(L("Token:", 9f)); tb = new TextBox { Location = new Point(S(55), 0), Size = new Size(S(360), S(24)), Text = gwt, PlaceholderText = "留空自动生成", BackColor = Theme.BgWhite, ForeColor = Theme.Fc, BorderStyle = BorderStyle.FixedSingle, Font = Theme.Font(9f) }; ar.Controls.Add(tb); } else if (s == 2) { ar.Controls.Add(L("密码:", 9f)); pw = new TextBox { Location = new Point(S(55), 0), Size = new Size(S(360), S(24)), Text = gwt, UseSystemPasswordChar = true, BackColor = Theme.BgWhite, ForeColor = Theme.Fc, BorderStyle = BorderStyle.FixedSingle, Font = Theme.Font(9f) }; ar.Controls.Add(pw); } };
+        Action<int> ra = (s) => { ar.Controls.Clear(); if (s == 0) { ar.Controls.Add(L("Token:", 9f)); tb = new TextBox { Location = new Point(S(55), 0), Size = new Size(S(360), S(24)), Text = gwt, PlaceholderText = LGet("SetupTokenPlaceholder"), BackColor = Theme.BgWhite, ForeColor = Theme.Fc, BorderStyle = BorderStyle.FixedSingle, Font = Theme.Font(9f) }; ar.Controls.Add(tb); } else if (s == 2) { ar.Controls.Add(L(LGet("SetupPassword") + ":", 9f)); pw = new TextBox { Location = new Point(S(55), 0), Size = new Size(S(360), S(24)), Text = gwt, UseSystemPasswordChar = true, BackColor = Theme.BgWhite, ForeColor = Theme.Fc, BorderStyle = BorderStyle.FixedSingle, Font = Theme.Font(9f) }; ar.Controls.Add(pw); } };
         ac.SelectedIndexChanged += (_, _) => ra(ac.SelectedIndex); ra(ac.SelectedIndex);
 
         if (string.IsNullOrEmpty(ws)) ws = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "workspace");
-        Cl("工作区:", S(14), S(90), gc, 9f); var wb = new TextBox { Location = new Point(S(69), S(88)), Size = new Size(S(360), S(24)), Text = ws, BackColor = Theme.BgWhite, ForeColor = Theme.Fc, BorderStyle = BorderStyle.FixedSingle, Font = Theme.Font(9f) }; gc.Controls.Add(wb);
+        Cl(LGet("SetupWorkspace") + ":", S(14), S(90), gc, 9f); var wb = new TextBox { Location = new Point(S(69), S(88)), Size = new Size(S(360), S(24)), Text = ws, BackColor = Theme.BgWhite, ForeColor = Theme.Fc, BorderStyle = BorderStyle.FixedSingle, Font = Theme.Font(9f) }; gc.Controls.Add(wb);
         var wbtn = new Button { Text = "...", Size = new Size(S(28), S(24)), Location = new Point(S(433), S(88)), FlatStyle = FlatStyle.Flat, BackColor = Theme.BgWhite, Cursor = Cursors.Hand }; wbtn.Click += (_, _) => { using var dlg = new FolderBrowserDialog { SelectedPath = wb.Text }; if (dlg.ShowDialog() == DialogResult.OK) wb.Text = dlg.SelectedPath; }; gc.Controls.Add(wbtn);
         y = gc.Bottom + S(10);
 
         // ---- API 供应商 ----
-        Panel pc = Card("API 供应商", W, ref y, S(120));
-        Cl("供应商:", S(14), S(28), pc, 9f); var pv = new ComboBox { Location = new Point(S(70), S(26)), Size = new Size(S(140), S(24)), DropDownStyle = ComboBoxStyle.DropDownList, BackColor = Theme.BgWhite, ForeColor = Theme.Fc, FlatStyle = FlatStyle.Flat, Font = Theme.Font(9f) }; pv.Items.AddRange(new[] { "DeepSeek", "OpenAI", "Anthropic", "Google Gemini", "xAI Grok", "Mistral", "Groq", "OpenRouter", "Together AI", "阿里百炼", "百度千帆", "通义千问", "智谱 GLM", "月之暗面", "豆包", "Ollama 本地", "LM Studio 本地", "自定义" }); pv.SelectedIndex = 0; pc.Controls.Add(pv);
-        var regBtn = new Button { Text = "API 注册", FlatStyle = FlatStyle.Flat, BackColor = Color.FromArgb(255, 152, 0), ForeColor = Theme.FcWhite, Font = Theme.Font(8f, FontStyle.Bold), Size = new Size(S(64), S(24)), Location = new Point(S(224), S(26)), Cursor = Cursors.Hand, FlatAppearance = { BorderSize = 0 }, Visible = true };
+        Panel pc = Card(LGet("SetupConfigApi"), W, ref y, S(120));
+        Cl(LGet("SetupProvider") + ":", S(14), S(28), pc, 9f); var pv = new ComboBox { Location = new Point(S(70), S(26)), Size = new Size(S(140), S(24)), DropDownStyle = ComboBoxStyle.DropDownList, BackColor = Theme.BgWhite, ForeColor = Theme.Fc, FlatStyle = FlatStyle.Flat, Font = Theme.Font(9f) }; pv.Items.AddRange(new[] { "DeepSeek", "OpenAI", "Anthropic", "Google Gemini", "xAI Grok", "Mistral", "Groq", "OpenRouter", "Together AI", "阿里百炼", "百度千帆", "通义千问", "智谱 GLM", "月之暗面", "豆包", "Ollama 本地", "LM Studio 本地", LGet("SetupCustom") }); pv.SelectedIndex = 0; pc.Controls.Add(pv);
+        var regBtn = new Button { Text = LGet("SetupApiRegister"), FlatStyle = FlatStyle.Flat, BackColor = Color.FromArgb(255, 152, 0), ForeColor = Theme.FcWhite, Font = Theme.Font(8f, FontStyle.Bold), Size = new Size(S(64), S(24)), Location = new Point(S(224), S(26)), Cursor = Cursors.Hand, FlatAppearance = { BorderSize = 0 }, Visible = true };
         regBtn.Click += (_, _) => { var u = regBtn.Tag?.ToString(); if (!string.IsNullOrEmpty(u)) try { Process.Start(new ProcessStartInfo(u) { UseShellExecute = true }); } catch { } };
         pc.Controls.Add(regBtn);
-        var pnl = new Label { Text = "名称:", ForeColor = Theme.Fc2, Font = Theme.Font(9f), AutoSize = true, Location = new Point(S(218), S(30)), Visible = false, BackColor = Color.Transparent }; pc.Controls.Add(pnl);
-        var pn = new TextBox { Location = new Point(S(255), S(26)), Size = new Size(S(140), S(24)), Text = pId, PlaceholderText = "输入供应商名称", Visible = false, BackColor = Theme.BgWhite, ForeColor = Theme.Fc, BorderStyle = BorderStyle.FixedSingle, Font = Theme.Font(9f) }; pc.Controls.Add(pn);
+        var pnl = new Label { Text = LGet("SetupProviderName") + ":", ForeColor = Theme.Fc2, Font = Theme.Font(9f), AutoSize = true, Location = new Point(S(218), S(30)), Visible = false, BackColor = Color.Transparent }; pc.Controls.Add(pnl);
+        var pn = new TextBox { Location = new Point(S(255), S(26)), Size = new Size(S(140), S(24)), Text = pId, PlaceholderText = LGet("SetupProviderNameHint"), Visible = false, BackColor = Theme.BgWhite, ForeColor = Theme.Fc, BorderStyle = BorderStyle.FixedSingle, Font = Theme.Font(9f) }; pc.Controls.Add(pn);
         Cl("URL:", S(14), S(60), pc, 9f); var pu = new TextBox { Location = new Point(S(55), S(58)), Size = new Size(W - S(73), S(24)), Text = pUrl, BackColor = Theme.BgWhite, ForeColor = Theme.Fc, BorderStyle = BorderStyle.FixedSingle, Font = Theme.Font(9f) }; pc.Controls.Add(pu);
-        Cl("API类型:", S(14), S(92), pc, 9f); var pi = new ComboBox { Location = new Point(S(70), S(90)), Size = new Size(S(170), S(24)), DropDownStyle = ComboBoxStyle.DropDownList, BackColor = Theme.BgWhite, ForeColor = Theme.Fc, FlatStyle = FlatStyle.Flat, Font = Theme.Font(9f) }; pi.Items.AddRange(new[] { "openai-completions", "anthropic-messages", "google-generative", "ollama" }); pi.SelectedIndex = 0; pc.Controls.Add(pi);
-        Cl("API Key:", S(260), S(92), pc, 9f); var pk = new TextBox { Location = new Point(S(315), S(90)), Size = new Size(W - S(333), S(24)), Text = pKey, UseSystemPasswordChar = !string.IsNullOrEmpty(pKey), BackColor = Theme.BgWhite, ForeColor = Theme.Fc, BorderStyle = BorderStyle.FixedSingle, Font = Theme.Font(9f) }; pc.Controls.Add(pk);
-        pv.SelectedIndexChanged += (_, _) => { var s = pv.Text; bool custom = s == "自定义"; pnl.Visible = custom; pn.Visible = custom;
-            // 实时更新供应商ID（模型添加用）
+        Cl(LGet("SetupApiType") + ":", S(14), S(92), pc, 9f); var pi = new ComboBox { Location = new Point(S(70), S(90)), Size = new Size(S(170), S(24)), DropDownStyle = ComboBoxStyle.DropDownList, BackColor = Theme.BgWhite, ForeColor = Theme.Fc, FlatStyle = FlatStyle.Flat, Font = Theme.Font(9f) }; pi.Items.AddRange(new[] { "openai-completions", "anthropic-messages", "google-generative", "ollama" }); pi.SelectedIndex = 0; pc.Controls.Add(pi);
+        Cl(LGet("SetupApiKey") + ":", S(260), S(92), pc, 9f); var pk = new TextBox { Location = new Point(S(315), S(90)), Size = new Size(W - S(333), S(24)), Text = pKey, UseSystemPasswordChar = !string.IsNullOrEmpty(pKey), BackColor = Theme.BgWhite, ForeColor = Theme.Fc, BorderStyle = BorderStyle.FixedSingle, Font = Theme.Font(9f) }; pc.Controls.Add(pk);
+        pv.SelectedIndexChanged += (_, _) => { var s = pv.Text; bool custom = s == LGet("SetupCustom"); pnl.Visible = custom; pn.Visible = custom;
             pId = custom ? (string.IsNullOrWhiteSpace(pn.Text) ? "custom" : pn.Text.Trim()) : s switch { "DeepSeek" => "deepseek", "OpenAI" => "openai", "Anthropic" => "anthropic", "Google Gemini" => "google", "xAI Grok" => "xai", "Mistral" => "mistral", "Groq" => "groq", "OpenRouter" => "openrouter", "Together AI" => "togetherai", "阿里百炼" => "alibaba", "百度千帆" => "qianfan", "通义千问" => "qwen", "智谱 GLM" => "glm", "月之暗面" => "moonshot", "豆包" => "volcengine", "Ollama 本地" => "ollama", "LM Studio 本地" => "lmstudio", _ => "custom" };
             string regUrl = s switch { "DeepSeek" => "https://platform.deepseek.com/api_keys", "OpenAI" => "https://platform.openai.com/api-keys", "Anthropic" => "https://console.anthropic.com/settings/keys", "Google Gemini" => "https://aistudio.google.com/apikey", "xAI Grok" => "https://console.x.ai", "Mistral" => "https://console.mistral.ai/api-keys", "Groq" => "https://console.groq.com/keys", "OpenRouter" => "https://openrouter.ai/keys", "Together AI" => "https://api.together.xyz/settings/api-keys", "阿里百炼" => "https://bailian.console.aliyun.com/", "百度千帆" => "https://console.bce.baidu.com/qianfan/ais/console/applicationConsole/application", "通义千问" => "https://dashscope.console.aliyun.com/apiKey", "智谱 GLM" => "https://open.bigmodel.cn/usercenter/apikeys", "月之暗面" => "https://platform.moonshot.cn/console/api-keys", "豆包" => "https://console.volcengine.com/ark/region:ark+cn-beijing/apiKey", "Ollama 本地" => "https://ollama.com/", "LM Studio 本地" => "https://lmstudio.ai/", _ => "" };
             regBtn.Visible = !string.IsNullOrEmpty(regUrl); regBtn.Tag = regUrl;
@@ -148,25 +160,22 @@ public class SetupPage
             else if (s == "Ollama 本地") { pu.Text = "http://localhost:11434/v1"; pi.SelectedIndex = 3; }
             else if (s == "LM Studio 本地") { pu.Text = "http://localhost:1234/v1"; pi.SelectedIndex = 0; }
         };
-        // 触发默认选中 (DeepSeek)
         regBtn.Tag = "https://platform.deepseek.com/api_keys";
 
         // ---- 模型管理 ----
-        Panel mc = Card("模型管理", W, ref y, S(160));
-        Cl("手动添加/拉取:", S(14), S(28), mc, 9f); var mb = new TextBox { Location = new Point(S(130), S(26)), Size = new Size(S(200), S(24)), PlaceholderText = "输入ID回车添加", BackColor = Theme.BgWhite, ForeColor = Theme.Fc, BorderStyle = BorderStyle.FixedSingle, Font = Theme.Font(9f) }; mc.Controls.Add(mb);
-        var ab = new Button { Text = "+ 添加", FlatStyle = FlatStyle.Flat, BackColor = Theme.Acc, ForeColor = Theme.FcWhite, Font = Theme.Font(9f), Size = new Size(S(60), S(24)), Location = new Point(S(338), S(26)), FlatAppearance = { BorderSize = 0 }, Cursor = Cursors.Hand }; mc.Controls.Add(ab);
-        var fb = new Button { Text = "拉取模型", FlatStyle = FlatStyle.Flat, BackColor = Theme.Grn, ForeColor = Theme.FcWhite, Font = Theme.Font(9f), Size = new Size(S(80), S(24)), Location = new Point(S(406), S(26)), FlatAppearance = { BorderSize = 0 }, Cursor = Cursors.Hand }; mc.Controls.Add(fb);
+        Panel mc = Card(LGet("SetupModelMgmt"), W, ref y, S(160));
+        Cl(LGet("SetupManualFetch") + ":", S(14), S(28), mc, 9f); var mb = new TextBox { Location = new Point(S(130), S(26)), Size = new Size(S(200), S(24)), PlaceholderText = LGet("SetupInputModelHint"), BackColor = Theme.BgWhite, ForeColor = Theme.Fc, BorderStyle = BorderStyle.FixedSingle, Font = Theme.Font(9f) }; mc.Controls.Add(mb);
+        var ab = new Button { Text = "+ " + LGet("SetupAdd"), FlatStyle = FlatStyle.Flat, BackColor = Theme.Acc, ForeColor = Theme.FcWhite, Font = Theme.Font(9f), Size = new Size(S(60), S(24)), Location = new Point(S(338), S(26)), FlatAppearance = { BorderSize = 0 }, Cursor = Cursors.Hand }; mc.Controls.Add(ab);
+        var fb = new Button { Text = LGet("SetupFetchModels"), FlatStyle = FlatStyle.Flat, BackColor = Theme.Grn, ForeColor = Theme.FcWhite, Font = Theme.Font(9f), Size = new Size(S(80), S(24)), Location = new Point(S(406), S(26)), FlatAppearance = { BorderSize = 0 }, Cursor = Cursors.Hand }; mc.Controls.Add(fb);
         var fs = new Label { Location = new Point(S(492), S(28)), AutoSize = true, BackColor = Color.Transparent, ForeColor = Theme.Fc2, Font = Theme.Font(8f) }; mc.Controls.Add(fs);
 
         CheckedListBox clb = new CheckedListBox { Location = new Point(S(14), S(56)), Size = new Size(W - S(28), S(66)), BackColor = Color.FromArgb(252, 252, 254), ForeColor = Theme.Fc, Font = Theme.Font(9f), CheckOnClick = true, BorderStyle = BorderStyle.FixedSingle };
         mc.Controls.Add(clb);
 
-        // 默认模型（放在列表下方）
         var dc = new ComboBox { Location = new Point(S(85), S(126)), Size = new Size(S(320), S(24)), DropDownStyle = ComboBoxStyle.DropDown, BackColor = Theme.BgWhite, ForeColor = Theme.Fc, FlatStyle = FlatStyle.Flat, Font = Theme.Font(9f) }; mc.Controls.Add(dc);
-        mc.Controls.Add(new Label { Text = "默认模型:", ForeColor = Theme.Fc2, Font = Theme.Font(9f), AutoSize = true, Location = new Point(S(14), S(130)), BackColor = Color.Transparent });
+        mc.Controls.Add(new Label { Text = LGet("SetupDefaultModel") + ":", ForeColor = Theme.Fc2, Font = Theme.Font(9f), AutoSize = true, Location = new Point(S(14), S(130)), BackColor = Color.Transparent });
         y = mc.Bottom + S(10);
 
-        // 生成完整模型ID（自动补 provider 前缀，确保 agents.defaults.models 的 key 格式正确）
         string FullModelId(string name) => name.Contains('/') ? name : pId + "/" + name;
 
         Action validateS1 = null;
@@ -174,26 +183,24 @@ public class SetupPage
         mb.KeyDown += (_, e) => { if (e.KeyCode == Keys.Enter) { ab.PerformClick(); e.SuppressKeyPress = true; } };
         
         dc.SelectedIndexChanged += (_, _) => { if (dc.SelectedIndex >= 0) defM = FullModelId(dc.SelectedItem?.ToString() ?? defM); };
-        fb.Click += (_, _) => { if (string.IsNullOrEmpty(pk.Text) && !pv.Text.StartsWith("Ollama")) { fs.Text = "请填Key"; fs.ForeColor = Theme.Red; return; } fs.Text = "拉取中..."; fs.ForeColor = Theme.Acc; Task.Run(() => { try { using var h = new HttpClient { Timeout = TimeSpan.FromSeconds(15) }; if (!string.IsNullOrEmpty(pk.Text)) h.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", pk.Text); var r = h.GetStringAsync(pu.Text.Trim().TrimEnd('/') + "/models").Result; var d = JsonDocument.Parse(r); var ids = new List<string>(); if (d.RootElement.TryGetProperty("data", out var el)) foreach (var m in el.EnumerateArray()) if (m.TryGetProperty("id", out var did)) ids.Add(did.GetString() ?? ""); 
-                            // 保存当前选中
+        fb.Click += (_, _) => { if (string.IsNullOrEmpty(pk.Text) && !pv.Text.StartsWith("Ollama")) { fs.Text = LGet("SetupNeedKey"); fs.ForeColor = Theme.Red; return; } fs.Text = LGet("SetupFetching"); fs.ForeColor = Theme.Acc; Task.Run(() => { try { using var h = new HttpClient { Timeout = TimeSpan.FromSeconds(15) }; if (!string.IsNullOrEmpty(pk.Text)) h.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", pk.Text); var r = h.GetStringAsync(pu.Text.Trim().TrimEnd('/') + "/models").Result; var d = JsonDocument.Parse(r); var ids = new List<string>(); if (d.RootElement.TryGetProperty("data", out var el)) foreach (var m in el.EnumerateArray()) if (m.TryGetProperty("id", out var did)) ids.Add(did.GetString() ?? ""); 
                             for (int i = 0; i < clb.Items.Count; i++) { var item = clb.Items[i].ToString(); if (clb.GetItemChecked(i)) checkedModels.Add(item); else checkedModels.Remove(item); }
-                            card.Invoke(() => { clb.Items.Clear(); dc.Items.Clear(); foreach (var id in ids) { bool wasChecked = checkedModels.Contains(id); clb.Items.Add(id, wasChecked); dc.Items.Add(id); } dc.Text = defM; fs.Text = "✓ " + ids.Count + "个"; fs.ForeColor = Theme.Grn; validateS1?.Invoke(); }); } catch (Exception ex) { card.Invoke(() => { fs.Text = ex.Message.Length > 30 ? ex.Message[..30] : ex.Message; fs.ForeColor = Theme.Red; }); } }); };
+                            card.Invoke(() => { clb.Items.Clear(); dc.Items.Clear(); foreach (var id in ids) { bool wasChecked = checkedModels.Contains(id); clb.Items.Add(id, wasChecked); dc.Items.Add(id); } dc.Text = defM; fs.Text = "\u2713 " + ids.Count + " " + LGet("SetupModelMgmt"); fs.ForeColor = Theme.Grn; validateS1?.Invoke(); }); } catch (Exception ex) { card.Invoke(() => { fs.Text = ex.Message.Length > 30 ? ex.Message[..30] : ex.Message; fs.ForeColor = Theme.Red; }); } }); };
 
-        // Save
-        var nb = Bb("下一步 (保存配置) →", Theme.Fc2); nb.Location = new Point(card.ClientSize.Width - S(220), card.ClientSize.Height - S(48)); nb.Enabled = false;
+        var nb = Bb(LGet("SetupNextSave"), Theme.Fc2); nb.Location = new Point(card.ClientSize.Width - S(220), card.ClientSize.Height - S(48)); nb.Enabled = false;
         validateS1 = () => {
             bool isLocal = pv.Text.StartsWith("Ollama") || pv.Text.StartsWith("LM Studio");
             bool ok = int.TryParse(pb.Text.Trim(), out int vp) && vp >= 1 && vp <= 65535
                 && !string.IsNullOrWhiteSpace(pu.Text)
                 && (isLocal || !string.IsNullOrWhiteSpace(pk.Text))
-                && (pv.Text != "自定义" || !string.IsNullOrWhiteSpace(pn.Text))
+                && (pv.Text != LGet("SetupCustom") || !string.IsNullOrWhiteSpace(pn.Text))
                 && (clb.CheckedItems.Count > 0 || dc.SelectedIndex >= 0);
             nb.Enabled = ok; nb.BackColor = ok ? Theme.Acc : Theme.Fc2;
         };
         pb.TextChanged += (_, _) => validateS1();
         pu.TextChanged += (_, _) => validateS1();
         pk.TextChanged += (_, _) => validateS1();
-        pn.TextChanged += (_, _) => { if (pv.Text == "自定义") pId = string.IsNullOrWhiteSpace(pn.Text) ? "custom" : pn.Text.Trim(); validateS1(); };
+        pn.TextChanged += (_, _) => { if (pv.Text == LGet("SetupCustom")) pId = string.IsNullOrWhiteSpace(pn.Text) ? "custom" : pn.Text.Trim(); validateS1(); };
         pv.SelectedIndexChanged += (_, _) => validateS1();
         clb.ItemCheck += (_, e) => card.BeginInvoke(new Action(validateS1));
         dc.SelectedIndexChanged += (_, _) => validateS1();
@@ -206,8 +213,7 @@ public class SetupPage
             if (ac.SelectedIndex == 0 && string.IsNullOrEmpty(gwt)) gwt = Guid.NewGuid().ToString("N")[..32];
             defM = FullModelId(dc.SelectedItem?.ToString() ?? defM); pUrl = pu.Text.Trim(); pKey = pk.Text.Trim();
             pApi = pi.SelectedIndex switch { 1 => "anthropic-messages", 2 => "google-generative", 3 => "ollama", _ => "openai-completions" };
-            pId = pv.Text == "自定义" ? pn.Text.Trim() : pv.Text switch { "DeepSeek" => "deepseek", "OpenAI" => "openai", "Anthropic" => "anthropic", "Google Gemini" => "google", "xAI Grok" => "xai", "Mistral" => "mistral", "Groq" => "groq", "OpenRouter" => "openrouter", "Together AI" => "togetherai", "阿里百炼" => "alibaba", "百度千帆" => "qianfan", "通义千问" => "qwen", "智谱 GLM" => "glm", "月之暗面" => "moonshot", "豆包" => "volcengine", "Ollama 本地" => "ollama", "LM Studio 本地" => "lmstudio", _ => "custom" };
-            // primary 和 models key 使用完整 provider 前缀格式
+            pId = pv.Text == LGet("SetupCustom") ? pn.Text.Trim() : pv.Text switch { "DeepSeek" => "deepseek", "OpenAI" => "openai", "Anthropic" => "anthropic", "Google Gemini" => "google", "xAI Grok" => "xai", "Mistral" => "mistral", "Groq" => "groq", "OpenRouter" => "openrouter", "Together AI" => "togetherai", "阿里百炼" => "alibaba", "百度千帆" => "qianfan", "通义千问" => "qwen", "智谱 GLM" => "glm", "月之暗面" => "moonshot", "豆包" => "volcengine", "Ollama 本地" => "ollama", "LM Studio 本地" => "lmstudio", _ => "custom" };
             ws = wb.Text.Trim();
             var mo = new JsonObject();
             var modelArray = new JsonArray();
@@ -219,10 +225,8 @@ public class SetupPage
             try {
                 var dir = Path.GetDirectoryName(Cfg);
                 if (dir != null && !Directory.Exists(dir)) Directory.CreateDirectory(dir);
-                // 创建工作区目录和 Gateway 必需的初始化标记
                 if (!string.IsNullOrEmpty(ws) && !Directory.Exists(ws)) Directory.CreateDirectory(ws);
                 try { Directory.CreateDirectory(Path.Combine(ws, "memory")); } catch { }
-                // workspace/.openclaw/workspace-state.json — 空文件标记 workspace 已初始化
                 try {
                     var wsOc = Path.Combine(ws, ".openclaw");
                     if (!Directory.Exists(wsOc)) Directory.CreateDirectory(wsOc);
@@ -232,11 +236,11 @@ public class SetupPage
                 } catch { }
                 File.WriteAllText(Cfg, cfg.ToJsonString(new JsonSerializerOptions { WriteIndented = true }), Encoding.UTF8);
                 try { Directory.CreateDirectory(Path.Combine(dir!, "agents", "main", "sessions")); } catch { }
-                St("✓ 保存成功", Theme.Grn); Show(2);
+                St("\u2713 " + LGet("SetupSaveSuccess"), Theme.Grn); Show(2);
             } catch (UnauthorizedAccessException) {
-                St("权限不足: 请以管理员身份运行或检查目标目录写入权限", Theme.Red);
+                St(LGet("SetupPermissionDenied"), Theme.Red);
             } catch (Exception ex) {
-                St("失败: " + ex.Message, Theme.Red);
+                St(LGet("SetupFailed") + ": " + ex.Message, Theme.Red);
             }
         };
         card.Controls.Add(nb); if (step > 0) Prev();
@@ -247,11 +251,9 @@ public class SetupPage
     {
         try
         {
-            // 修正 workspace 盘符并确保目录和初始化标记存在（适配换电脑）
             string ws = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "workspace");
             try { if (!Directory.Exists(ws)) Directory.CreateDirectory(ws); } catch { }
             try { if (!Directory.Exists(Path.Combine(ws, "memory"))) Directory.CreateDirectory(Path.Combine(ws, "memory")); } catch { }
-            // workspace/.openclaw/workspace-state.json — 缺失则 Gateway 无法正常处理消息
             try {
                 var wsOc = Path.Combine(ws, ".openclaw");
                 if (!Directory.Exists(wsOc)) Directory.CreateDirectory(wsOc);
@@ -301,7 +303,6 @@ public class SetupPage
             psi.EnvironmentVariables["TMP"] = tempDir;
             var p = Process.Start(psi);
             if (p == null) return false;
-            // 实时推送网关日志到仪表盘
             _ = Task.Run(() => { try { while (!p.HasExited) { var line = p.StandardOutput.ReadLine(); if (line != null) DashboardPage.LogToConsole(line); } } catch { } });
             _ = Task.Run(() => { try { while (!p.HasExited) { var line = p.StandardError.ReadLine(); if (line != null) DashboardPage.LogToConsole($"[ERR] {line}"); } } catch { } });
             return true;
@@ -310,40 +311,40 @@ public class SetupPage
     }
 
     void S2() {
-        int y = S(14); Title("2. 启动网关", ref y);
-        Inf("网关将直接从U盘启动，不在电脑上创建计划任务。", Theme.Fc2, ref y); y += S(8);
+        int y = S(14); Title("2. " + LGet("SetupSubtitleRegister"), ref y);
+        Inf(LGet("SetupLocalNote"), Theme.Fc2, ref y); y += S(8);
         var ul = new Label { Location = new Point(S(22), y), AutoSize = true, ForeColor = Theme.Fc2, Font = Theme.Font(9f), BackColor = Color.Transparent }; card.Controls.Add(ul); y += S(22);
         var ba = new ProgressBar { Location = new Point(S(22), y), Size = new Size(S(420), S(14)), Style = ProgressBarStyle.Marquee, Visible = false }; card.Controls.Add(ba); y += S(22);
-        var bn = Bb("▶ 启动网关", Theme.Grn); bn.Location = new Point(S(22), y);
-        bn.Click += (_, _) => { bn.Enabled = false; ul.Text = "启动网关..."; ba.Visible = true;
-            DashboardPage.LogToConsole("━━ 启动网关 ━━");
+        var bn = Bb("\u25B6 " + LGet("SetupStartGateway"), Theme.Grn); bn.Location = new Point(S(22), y);
+        bn.Click += (_, _) => { bn.Enabled = false; ul.Text = LGet("SetupStartingGateway"); ba.Visible = true;
+            DashboardPage.LogToConsole(LGet("GatewayStarted"));
             Task.Run(async () => {
                 bool started = StartGatewayForSetup();
-                if (started) DashboardPage.LogToConsole("启动网关中...");
-                else DashboardPage.LogToConsole("❌ 启动失败");
-                ul.Invoke(() => ul.Text = "等待网关就绪...");
+                if (started) DashboardPage.LogToConsole(LGet("SetupStartingGateway"));
+                else DashboardPage.LogToConsole(LGet("LaunchFailed"));
+                ul.Invoke(() => ul.Text = LGet("SetupWaitForGateway"));
                 bool ok = false; string tok = "";
                 for (int i = 0; i < 15; i++) { await Task.Delay(2000); try { using var h = new HttpClient { Timeout = TimeSpan.FromSeconds(3) }; if ((await h.GetAsync("http://127.0.0.1:18789/")).IsSuccessStatusCode) { ok = true; break; } } catch { } }
                 try { tok = JsonNode.Parse(File.ReadAllText(Cfg, Encoding.UTF8))?["gateway"]?["auth"]?["token"]?.ToString() ?? ""; } catch { }
                 string wu = string.IsNullOrEmpty(tok) ? "http://127.0.0.1:18789/" : "http://127.0.0.1:18789/?token=" + tok;
                 ba.Invoke(() => ba.Visible = false);
-                if (ok) { ul.Invoke(() => { ul.Text = "✓ 运行中 " + wu; ul.ForeColor = Theme.Grn; }); St("✓ 网关运行中！", Theme.Grn); DashboardPage.LogToConsole("✓ 网关就绪"); _ = DashboardPage.ApproveAllDevices(); bn.Invoke(() => { bn.Text = "▶ 重新启动"; bn.Enabled = true; }); card.Invoke(() => Done(wu)); }
-                else { ul.Invoke(() => { ul.Text = "✗ 启动超时，请检查日志"; ul.ForeColor = Theme.QqOrange; }); DashboardPage.LogToConsole("⚠ 启动超时"); bn.Invoke(() => bn.Enabled = true); }
+                if (ok) { ul.Invoke(() => { ul.Text = "\u2713 " + LGet("SetupRunning") + " " + wu; ul.ForeColor = Theme.Grn; }); St("\u2713 " + LGet("SetupGatewayRunning"), Theme.Grn); DashboardPage.LogToConsole(LGet("GatewayReady")); _ = DashboardPage.ApproveAllDevices(); bn.Invoke(() => { bn.Text = "\u25B6 " + LGet("SetupRestart"); bn.Enabled = true; }); card.Invoke(() => Done(wu)); }
+                else { ul.Invoke(() => { ul.Text = "\u2717 " + LGet("SetupStartTimeout"); ul.ForeColor = Theme.QqOrange; }); DashboardPage.LogToConsole(LGet("LaunchTimeout")); bn.Invoke(() => bn.Enabled = true); }
             });
         };
         card.Controls.Add(bn);
-        var ck = Bw("检测状态"); ck.Location = new Point(S(22) + bn.PreferredSize.Width + S(10), y);
-        ck.Click += async (_, _) => { ul.Text = "检测中..."; ul.ForeColor = Theme.Acc; bool ok = false; string tok = ""; try { using var h = new HttpClient { Timeout = TimeSpan.FromSeconds(3) }; ok = (await h.GetAsync("http://127.0.0.1:18789/")).IsSuccessStatusCode; } catch { } if (ok) { try { tok = JsonNode.Parse(File.ReadAllText(Cfg, Encoding.UTF8))?["gateway"]?["auth"]?["token"]?.ToString() ?? ""; } catch { } string wu = string.IsNullOrEmpty(tok) ? "http://127.0.0.1:18789/" : "http://127.0.0.1:18789/?token=" + tok; ul.Text = "✓ 运行中 " + wu; ul.ForeColor = Theme.Grn; Done(wu); } else { ul.Text = "✗ 未运行"; ul.ForeColor = Theme.Red; } };
+        var ck = Bw(LGet("SetupCheckStatus")); ck.Location = new Point(S(22) + bn.PreferredSize.Width + S(10), y);
+        ck.Click += async (_, _) => { ul.Text = LGet("SetupChecking"); ul.ForeColor = Theme.Acc; bool ok = false; string tok = ""; try { using var h = new HttpClient { Timeout = TimeSpan.FromSeconds(3) }; ok = (await h.GetAsync("http://127.0.0.1:18789/")).IsSuccessStatusCode; } catch { } if (ok) { try { tok = JsonNode.Parse(File.ReadAllText(Cfg, Encoding.UTF8))?["gateway"]?["auth"]?["token"]?.ToString() ?? ""; } catch { } string wu = string.IsNullOrEmpty(tok) ? "http://127.0.0.1:18789/" : "http://127.0.0.1:18789/?token=" + tok; ul.Text = "\u2713 " + LGet("SetupRunning") + " " + wu; ul.ForeColor = Theme.Grn; Done(wu); } else { ul.Text = "\u2717 " + LGet("SetupNotRunning"); ul.ForeColor = Theme.Red; } };
         card.Controls.Add(ck); y += S(36); Nav();
         Task.Run(async () => { try { using var h = new HttpClient { Timeout = TimeSpan.FromSeconds(3) }; if ((await h.GetAsync("http://127.0.0.1:18789/")).IsSuccessStatusCode) { string tok = ""; try { tok = JsonNode.Parse(File.ReadAllText(Cfg, Encoding.UTF8))?["gateway"]?["auth"]?["token"]?.ToString() ?? ""; } catch { } card.Invoke(() => Done(string.IsNullOrEmpty(tok) ? "http://127.0.0.1:18789/" : "http://127.0.0.1:18789/?token=" + tok)); } } catch { } });
     }
 
     void Done(string u) {
         card.Controls.Clear(); int y = S(80);
-        card.Controls.Add(new Label { Text = "✓ 初始化完成！", ForeColor = Theme.Grn, Font = Theme.Font(18f, FontStyle.Bold), Location = new Point(S(22), y), AutoSize = true, BackColor = Color.Transparent }); y += S(50);
+        card.Controls.Add(new Label { Text = "\u2713 " + LGet("SetupComplete"), ForeColor = Theme.Grn, Font = Theme.Font(18f, FontStyle.Bold), Location = new Point(S(22), y), AutoSize = true, BackColor = Color.Transparent }); y += S(50);
         card.Controls.Add(new Label { Text = u, ForeColor = Theme.Fc, Font = Theme.Font(10f), Location = new Point(S(22), y), AutoSize = true, BackColor = Color.Transparent }); y += S(40);
-        var ob = Bb("打开 Web 控制台", Theme.Acc); ob.Location = new Point(S(22), y); ob.Font = Theme.Font(10f, FontStyle.Bold); ob.Click += (_, _) => Process.Start(new ProcessStartInfo(u) { UseShellExecute = true }); card.Controls.Add(ob); y += S(50);
-        var db = Bb("完成，返回仪表盘", Theme.Grn); db.Location = new Point(card.ClientSize.Width - S(220), card.ClientSize.Height - S(48)); db.Click += (_, _) => { var mf = body.FindForm() as MainForm; if (mf != null) { mf.BuildSidebar(); mf.ShowPanel("dashboard"); } else { body.Controls.Clear(); new DashboardPage().Build(body); } }; card.Controls.Add(db);
+        var ob = Bb(LGet("SetupOpenConsole"), Theme.Acc); ob.Location = new Point(S(22), y); ob.Font = Theme.Font(10f, FontStyle.Bold); ob.Click += (_, _) => Process.Start(new ProcessStartInfo(u) { UseShellExecute = true }); card.Controls.Add(ob); y += S(50);
+        var db = Bb(LGet("SetupDoneReturn"), Theme.Grn); db.Location = new Point(card.ClientSize.Width - S(220), card.ClientSize.Height - S(48)); db.Click += (_, _) => { var mf = body.FindForm() as MainForm; if (mf != null) { mf.BuildSidebar(); mf.ShowPanel("dashboard"); } else { body.Controls.Clear(); new DashboardPage().Build(body); } }; card.Controls.Add(db);
         Prev();
     }
 

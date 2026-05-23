@@ -31,14 +31,15 @@ public static class LicenseManager
     /// <summary>许可到期日</summary>
     public static DateTime? LicenseExpiry => LoadLicense()?.Expiry;
 
-    /// <summary>许可绑定类型文本</summary>
+    /// <summary>许可绑定类型文本（国际化）</summary>
     public static string LicenseBindingType
     {
         get
         {
+            var L = Properties.LanguageManager.GetString;
             var lic = LoadLicense();
-            if (lic != null && lic.BindingType == "usb") return "U盘绑定";
-            return "电脑绑定";
+            if (lic != null && lic.BindingType == "usb") return L("LicenseBindingUSB");
+            return L("LicenseBindingPC");
         }
     }
 
@@ -53,29 +54,31 @@ public static class LicenseManager
         }
     }
 
-    /// <summary>UI 状态文本</summary>
+    /// <summary>UI 状态文本（国际化）</summary>
     public static string StatusText
     {
         get
         {
+            var L = Properties.LanguageManager.GetString;
             var lic = LoadLicense();
             if (lic != null)
             {
-                var bindLabel = lic.BindingType == "usb" ? "U盘" : "电脑";
+                var bindLabel = lic.BindingType == "usb" ? L("LicenseUSB") : L("LicenseBindingPC");
                 if (lic.IsExpired)
-                    return $"专业版已过期 ({lic.Expiry:yyyy-MM-dd})";
-                return $"专业版 · {lic.Email} · 到期 {lic.Expiry:yyyy-MM-dd} · {bindLabel}绑定";
+                    return L("LicenseProExpired") + " (" + lic.Expiry.ToString("yyyy-MM-dd") + ")";
+                return L("LicensePro") + " · " + lic.Email + " · " + L("LicenseExpiry") + " " + lic.Expiry.ToString("yyyy-MM-dd") + " · " + bindLabel;
             }
             var days = TrialDaysRemaining;
             if (days > 0)
-                return $"试用中 · 剩余 {days} 天";
-            return "试用已到期 · 请激活专业版";
+                return L("LicenseTrial") + " · " + L("LicenseRemaining") + " " + days + " " + L("LicenseDays");
+            return L("LicenseTrialExpired");
         }
     }
 
     /// <summary>激活注册码</summary>
     public static (bool ok, string message) Activate(string code)
     {
+        var L = Properties.LanguageManager.GetString;
         var (ok, data, error) = LicenseValidator.Validate(code);
         if (!ok || data == null)
             return (false, error);
@@ -87,11 +90,12 @@ public static class LicenseManager
             File.WriteAllText(LicenseFile, JsonSerializer.Serialize(save), Encoding.UTF8);
             _cachedLicense = data;
             _loaded = true;
-            return (true, $"✓ 激活成功！\n\n专业版 · {data.Email}\n到期日: {data.Expiry:yyyy-MM-dd}");
+            var msg = string.Format(L("LicenseActivateSuccess"), data.Email, data.Expiry.ToString("yyyy-MM-dd"));
+            return (true, msg);
         }
         catch (Exception ex)
         {
-            return (false, "保存失败: " + ex.Message);
+            return (false, L("LicenseSaveFailed") + ex.Message);
         }
     }
 
@@ -156,12 +160,13 @@ public static class LicenseManager
     /// <summary>检查是否可以使用高级功能，不是则弹窗提示</summary>
     public static bool CheckPro()
     {
+        var L = Properties.LanguageManager.GetString;
         if (IsPro) return true;
         var days = TrialDaysRemaining;
         var msg = days <= 0
-            ? "试用已到期，请激活专业版以使用此功能。\n\n设置 → 系统设置 → 输入注册码"
-            : $"这是专业版功能。\n\n试用剩余 {days} 天，激活专业版后即可使用。\n\n设置 → 系统设置 → 输入注册码";
-        MessageBox.Show(msg, "🔒 高级功能", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            ? L("LicenseProFeature")
+            : string.Format(L("LicenseProFeatureTrial"), days.ToString());
+        MessageBox.Show(msg, L("LicenseProDialogTitle"), MessageBoxButtons.OK, MessageBoxIcon.Information);
         return false;
     }
 

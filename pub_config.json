@@ -1,0 +1,280 @@
+{
+  "agents": {
+    "defaults": {
+      "workspace": "D:\\OpenClaw-Manager\\publish\\workspace",
+      "models": {
+        "deepseek/deepseek-v4-flash": {
+          "alias": "deepseek-v4-flash"
+        },
+        "deepseek/deepseek-v4-pro": {
+          "alias": "deepseek-v4-pro"
+        },
+        "Ollama/qwen2.5:7b": {
+          "alias": "qwen2.5:7b"
+        }
+      },
+      "model": {
+        "primary": "deepseek/deepseek-v4-pro"
+      }
+    },
+    "list": [
+      {
+        "id": "main"
+      },
+      {
+        "id": "desktop-chat",
+        "name": "desktop-chat",
+        "workspace": "D:\\OpenClaw-Manager\\publish\\workspace",
+        "agentDir": "C:\\Users\\yangh\\.openclaw\\agents\\desktop-chat\\agent",
+        "model": "deepseek/deepseek-v4-pro"
+      }
+    ]
+  },
+  "gateway": {
+    "http": {
+      "endpoints": {
+        "chatCompletions": {
+          "enabled": true
+        }
+      }
+    },
+    "mode": "local",
+    "auth": {
+      "mode": "token",
+      "token": "6f07e407a6914fdaddf47008dd9ee65ca0294ada0d3164ac"
+    },
+    "port": 18789,
+    "bind": "loopback",
+    "tailscale": {
+      "mode": "off",
+      "resetOnExit": false
+    },
+    "controlUi": {
+      "allowInsecureAuth": true
+    },
+    "nodes": {
+      "denyCommands": [
+        "camera.snap",
+        "camera.clip",
+        "screen.record",
+        "contacts.add",
+        "calendar.add",
+        "reminders.add",
+        "sms.send",
+        "sms.search"
+      ]
+    }
+  },
+  "session": {
+    "dmScope": "per-channel-peer"
+  },
+  "tools": {
+    "profile": "coding"
+  },
+  "models": {
+    "mode": "merge",
+    "providers": {
+      "deepseek": {
+        "baseUrl": "https://api.deepseek.com",
+        "api": "openai-completions",
+        "apiKey": "sk-3854f704121e480693215e2e2944052f",
+        "models": [
+          {
+            "id": "deepseek-v4-pro",
+            "name": "deepseek-v4-pro",
+            "api": "openai-completions"
+          }
+        ]
+      },
+      "Ollama": {
+        "baseUrl": "http://192.168.66.254:11434/v1",
+        "api": "openai-completions",
+        "models": [],
+        "apiKey": "ollama"
+      }
+    }
+  },
+  "channels": {
+    "qqbot": {
+      "enabled": false,
+      "appId": "1903922097",
+      "clientSecret": "5jN2hN3kR9sbL5qbN9wkYNC2sjaSKD60"
+    }
+  },
+  "wizard": {
+    "lastRunAt": "2026-05-03T15:26:25.133Z",
+    "lastRunVersion": "2026.5.2",
+    "lastRunCommand": "onboard",
+    "lastRunMode": "local"
+  },
+  "meta": {
+    "lastTouchedVersion": "2026.5.7",
+    "lastTouchedAt": "2026-05-15T14:44:15.214Z"
+  },
+  "plugins": {
+    "entries": {
+      "qqbot": {
+        "enabled": true
+      },
+      "deepseek": {
+        "enabled": true
+      },
+      "talk-voice": {
+        "enabled": true
+      },
+      "memory-core": {
+        "enabled": true
+      }
+    }
+  },
+  "skills": {
+    "entries": {
+      "1password": {
+        "enabled": false
+      },
+      "apple-notes": {
+        "enabled": false
+      },
+      "apple-reminders": {
+        "enabled": false
+      },
+      "bear-notes": {
+        "enabled": false
+      },
+      "blogwatcher": {
+        "enabled": false
+      },
+      "blucli": {
+        "enabled": false
+      },
+      "bluebubbles": {
+        "enabled": false
+      },
+      "camsnap": {
+        "enabled": false
+      },
+      "clawhub": {
+        "enabled": false
+      },
+      "coding-agent": {
+        "enabled": false
+      },
+      "discord": {
+        "enabled": false
+      },
+      "eightctl": {
+        "enabled": false
+      },
+      "gemini": {
+        "enabled": false
+      },
+      "gh-issues": {
+        "enabled": false
+      },
+      "gifgrep": {
+        "enabled": false
+      },
+      "github": {
+        "enabled": false
+      },
+      "gog": {
+        "enabled": false
+      },
+      "goplaces": {
+        "enabled": false
+      },
+      "himalaya": {
+        "enabled": false
+      },
+      "imsg": {
+        "enabled": false
+      },
+      "mcporter": {
+        "enabled": false
+      },
+      "model-usage": {
+        "enabled": false
+      },
+      "nano-pdf": {
+        "enabled": false
+      },
+      "notion": {
+        "enabled": false
+      },
+      "obsidian": {
+        "enabled": false
+      },
+      "openai-whisper": {
+        "enabled": false
+      },
+      "openai-whisper-api": {
+        "enabled": false
+      },
+      "openhue": {
+        "enabled": false
+      },
+      "oracle": {
+        "enabled": false
+      },
+      "ordercli": {
+        "enabled": false
+      },
+      "peekaboo": {
+        "enabled": false
+      },
+      "sag": {
+        "enabled": false
+      },
+      "session-logs": {
+        "enabled": false
+      },
+      "sherpa-onnx-tts": {
+        "enabled": false
+      },
+      "slack": {
+        "enabled": false
+      },
+      "songsee": {
+        "enabled": false
+      },
+      "sonoscli": {
+        "enabled": false
+      },
+      "spotify-player": {
+        "enabled": false
+      },
+      "summarize": {
+        "enabled": false
+      },
+      "things-mac": {
+        "enabled": false
+      },
+      "tmux": {
+        "enabled": false
+      },
+      "trello": {
+        "enabled": false
+      },
+      "voice-call": {
+        "enabled": false
+      },
+      "wacli": {
+        "enabled": false
+      },
+      "xurl": {
+        "enabled": false
+      }
+    },
+    "install": {
+      "nodeManager": "npm"
+    }
+  },
+  "auth": {
+    "profiles": {
+      "deepseek:default": {
+        "provider": "deepseek",
+        "mode": "api_key"
+      }
+    }
+  }
+}

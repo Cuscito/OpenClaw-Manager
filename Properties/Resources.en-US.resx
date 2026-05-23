@@ -1,0 +1,480 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <data name="NavDashboard" xml:space="preserve"><value>Dashboard</value></data>
+  <data name="NavSetup" xml:space="preserve"><value>Initial Setup</value></data>
+  <data name="NavChat" xml:space="preserve"><value>AI Chat</value></data>
+  <data name="NavModels" xml:space="preserve"><value>Model Config</value></data>
+  <data name="NavSkills" xml:space="preserve"><value>Skill Mgmt</value></data>
+  <data name="NavChannels" xml:space="preserve"><value>Channels</value></data>
+  <data name="NavLogs" xml:space="preserve"><value>Runtime Logs</value></data>
+  <data name="NavSettings" xml:space="preserve"><value>Settings</value></data>
+  <data name="NavGuardian" xml:space="preserve"><value>Guardian</value></data>
+  <data name="DashboardLoading" xml:space="preserve"><value>⏳ Dashboard loading...</value></data>
+  <data name="GatewayStatus" xml:space="preserve"><value>Gateway Status</value></data>
+  <data name="Online" xml:space="preserve"><value>Online</value></data>
+  <data name="Offline" xml:space="preserve"><value>Offline</value></data>
+  <data name="CPUAndMemory" xml:space="preserve"><value>CPU / Memory</value></data>
+  <data name="ChannelCount" xml:space="preserve"><value>Channels</value></data>
+  <data name="OpenClawVersion" xml:space="preserve"><value>OpenClaw Version</value></data>
+  <data name="StartupTime" xml:space="preserve"><value>Startup Time</value></data>
+  <data name="Uptime" xml:space="preserve"><value>Uptime</value></data>
+  <data name="Workspace" xml:space="preserve"><value>Workspace</value></data>
+  <data name="WorkspacePath" xml:space="preserve"><value>Workspace Dir</value></data>
+  <data name="DefaultModel" xml:space="preserve"><value>Default Model</value></data>
+  <data name="EnvironmentStatus" xml:space="preserve"><value>Env Status</value></data>
+  <data name="NodeJS" xml:space="preserve"><value>Node.js</value></data>
+  <data name="OpenClaw" xml:space="preserve"><value>OpenClaw</value></data>
+  <data name="Gateway" xml:space="preserve"><value>Gateway</value></data>
+  <data name="Ready" xml:space="preserve"><value>Ready</value></data>
+  <data name="NotInstalled" xml:space="preserve"><value>Not Installed</value></data>
+  <data name="GatewayControl" xml:space="preserve"><value>Gateway Control</value></data>
+  <data name="Start" xml:space="preserve"><value>Start</value></data>
+  <data name="Stop" xml:space="preserve"><value>Stop</value></data>
+  <data name="Restart" xml:space="preserve"><value>Restart</value></data>
+  <data name="Fix" xml:space="preserve"><value>Diagnostic Fix</value></data>
+  <data name="Console" xml:space="preserve"><value>Web Console</value></data>
+  <data name="RealTimeConsole" xml:space="preserve"><value>Real-time Console</value></data>
+  <data name="GatewayStarted" xml:space="preserve"><value>━━ Starting Gateway ━━</value></data>
+  <data name="GatewayStopped" xml:space="preserve"><value>━━ Stopping Gateway ━━</value></data>
+  <data name="GatewayRestarted" xml:space="preserve"><value>━━ Restarting Gateway ━━</value></data>
+  <data name="VersionSwitch" xml:space="preserve"><value>Version Switch</value></data>
+  <data name="CurrentVersion" xml:space="preserve"><value>Current Version</value></data>
+  <data name="SwitchTo" xml:space="preserve"><value>Switch To</value></data>
+  <data name="Refresh" xml:space="preserve"><value>Refresh List</value></data>
+  <data name="RunningWithPID" xml:space="preserve"><value>Running (PID: </value></data>
+  <data name="Stopped" xml:space="preserve"><value>Stopped</value></data>
+  <data name="Starting" xml:space="preserve"><value>Starting...</value></data>
+  <data name="Stopping" xml:space="preserve"><value>Stopping...</value></data>
+  <data name="Restarting" xml:space="preserve"><value>Restarting...</value></data>
+  <data name="LaunchFailed" xml:space="preserve"><value>❌ Launch failed</value></data>
+  <data name="GatewayReady" xml:space="preserve"><value>✅ Gateway ready</value></data>
+  <data name="LaunchTimeout" xml:space="preserve"><value>⚠ Launch timeout (30s)</value></data>
+  <data name="LaunchFailedMsg" xml:space="preserve"><value>Launch failed: </value></data>
+  <data name="VersionSwitchComplete" xml:space="preserve"><value>✅ Version switch complete</value></data>
+  <data name="ChatNewChat" xml:space="preserve"><value>New Chat</value></data>
+  <data name="ChatAttach" xml:space="preserve"><value>📎 Attach</value></data>
+  <data name="ChatNewSess" xml:space="preserve"><value>＋ New Session</value></data>
+  <data name="ChatStop" xml:space="preserve"><value>⏹ Stop</value></data>
+  <data name="ChatClear" xml:space="preserve"><value>🗑️ Clear</value></data>
+  <data name="ChatInputPlaceholder" xml:space="preserve"><value>Type a message...</value></data>
+  <data name="ChatCopy" xml:space="preserve"><value>Copy</value></data>
+  <data name="Copied" xml:space="preserve"><value>Copied</value></data>
+  <data name="Copy" xml:space="preserve"><value>Copy</value></data>
+  <data name="ChatThinking" xml:space="preserve"><value>🤔 Thinking</value></data>
+  <data name="ChatCommand" xml:space="preserve"><value>Cmd</value></data>
+  <data name="ChatRunning" xml:space="preserve"><value>Running</value></data>
+  <data name="ChatOutput" xml:space="preserve"><value>Output</value></data>
+  <data name="ChatResult" xml:space="preserve"><value>Result</value></data>
+  <data name="ChatSending" xml:space="preserve"><value>Sending...</value></data>
+  <data name="ChatSent" xml:space="preserve"><value>Sent</value></data>
+  <data name="ChatSendFailed" xml:space="preserve"><value>Send failed</value></data>
+  <data name="FilterOn" xml:space="preserve"><value>: On</value></data>
+  <data name="FilterOff" xml:space="preserve"><value>: Off</value></data>
+  <data name="Schedule" xml:space="preserve"><value>Schedule</value></data>
+  <data name="Tools" xml:space="preserve"><value>Tools</value></data>
+  <data name="Thinking" xml:space="preserve"><value>Thinking</value></data>
+  <data name="LogsTitle" xml:space="preserve"><value>Runtime Logs</value></data>
+  <data name="RefreshLog" xml:space="preserve"><value>Refresh</value></data>
+  <data name="AutoRefresh" xml:space="preserve"><value>Auto</value></data>
+  <data name="ClearLog" xml:space="preserve"><value>Clear</value></data>
+  <data name="LogDirectoryNotExist" xml:space="preserve"><value>Log dir not found</value></data>
+  <data name="PleaseEnsureGatewayRunning" xml:space="preserve"><value>Ensure gateway is running.</value></data>
+  <data name="NoGatewayLogs" xml:space="preserve"><value>No gateway logs.</value></data>
+  <data name="Pause" xml:space="preserve"><value>Pause</value></data>
+  <data name="SettingsTitle" xml:space="preserve"><value>Settings</value></data>
+  <data name="SaveConfig" xml:space="preserve"><value>Save Config</value></data>
+  <data name="RestartGateway" xml:space="preserve"><value>Restart Gateway</value></data>
+  <data name="StopGateway" xml:space="preserve"><value>Stop Gateway</value></data>
+  <data name="ConfigDiagnostic" xml:space="preserve"><value>Config Diag</value></data>
+  <data name="BindAddress" xml:space="preserve"><value>Bind Address</value></data>
+  <data name="Port" xml:space="preserve"><value>Port</value></data>
+  <data name="AuthMode" xml:space="preserve"><value>Auth Mode</value></data>
+  <data name="Token" xml:space="preserve"><value>Access Token</value></data>
+  <data name="LogLevel" xml:space="preserve"><value>Log Level</value></data>
+  <data name="HeartbeatMin" xml:space="preserve"><value>Heartbeat Minutes</value></data>
+  <data name="ContextWindow" xml:space="preserve"><value>Context Window</value></data>
+  <data name="MaxOutputLen" xml:space="preserve"><value>Max Output Length</value></data>
+  <data name="SessionLimit" xml:space="preserve"><value>Session Limit</value></data>
+  <data name="UpdateLicense" xml:space="preserve"><value>Update License</value></data>
+  <data name="EnterLicense" xml:space="preserve"><value>Enter License</value></data>
+  <data name="Update" xml:space="preserve"><value>Update</value></data>
+  <data name="Activate" xml:space="preserve"><value>Activate</value></data>
+  <data name="Cancel" xml:space="preserve"><value>Cancel</value></data>
+  <data name="Save" xml:space="preserve"><value>Save</value></data>
+  <data name="ConfigFix" xml:space="preserve"><value>Config Fix</value></data>
+  <data name="EnterLicensePrompt" xml:space="preserve"><value>Enter license key:</value></data>
+  <data name="Verifying" xml:space="preserve"><value>Verifying...</value></data>
+  <data name="ActivateSuccess" xml:space="preserve"><value>Activation Successful</value></data>
+  <data name="ActivateFailed" xml:space="preserve"><value>Activation Failed</value></data>
+  <data name="ConfigSavedRestart" xml:space="preserve"><value>Config saved, restart Gateway.</value></data>
+  <data name="SaveSuccess" xml:space="preserve"><value>Saved</value></data>
+  <data name="SaveFailed" xml:space="preserve"><value>Save Failed</value></data>
+  <data name="Error" xml:space="preserve"><value>Error</value></data>
+  <data name="Warning" xml:space="preserve"><value>Warning</value></data>
+  <data name="ChannelsProFeature" xml:space="preserve"><value>🔒 Channel Mgmt is a Pro Feature</value></data>
+  <data name="ChannelsActivatePro" xml:space="preserve"><value>Go to Settings → Enter License Key</value></data>
+  <data name="ChannelsManage" xml:space="preserve"><value>Channel Mgmt</value></data>
+  <data name="Channel" xml:space="preserve"><value>Channel</value></data>
+  <data name="ChannelsDesc" xml:space="preserve"><value>Description</value></data>
+  <data name="ChannelsPluginStatus" xml:space="preserve"><value>Plugin Status</value></data>
+  <data name="ChannelsSwitch" xml:space="preserve"><value>Switch</value></data>
+  <data name="ChannelsConfigure" xml:space="preserve"><value>Configure</value></data>
+  <data name="ChannelsStatus" xml:space="preserve"><value>Status</value></data>
+  <data name="NotEnabled" xml:space="preserve"><value>Not Enabled</value></data>
+  <data name="Configured" xml:space="preserve"><value>Configured</value></data>
+  <data name="PendingConfig" xml:space="preserve"><value>Pending Config</value></data>
+  <data name="Add" xml:space="preserve"><value>+ Add</value></data>
+  <data name="Delete" xml:space="preserve"><value>Delete</value></data>
+  <data name="FetchModels" xml:space="preserve"><value>Fetch Models</value></data>
+  <data name="SetAsDefault" xml:space="preserve"><value>Set as Default</value></data>
+  <data name="ManualAddModel" xml:space="preserve"><value>Add Model</value></data>
+  <data name="PleaseSelectItem" xml:space="preserve"><value>Select an item first</value></data>
+  <data name="ConfirmDeleteProvider" xml:space="preserve"><value>Delete all models under this provider?</value></data>
+  <data name="Confirm" xml:space="preserve"><value>Confirm</value></data>
+  <data name="Done" xml:space="preserve"><value>Done</value></data>
+  <data name="Prompt" xml:space="preserve"><value>Prompt</value></data>
+  <data name="ModelsTitle" xml:space="preserve"><value>Model Config</value></data>
+  <data name="ModelsSubtitle" xml:space="preserve"><value>Manage API providers, model lists and default model.</value></data>
+  <data name="ModelsProvCard" xml:space="preserve"><value>API Providers</value></data>
+  <data name="ModelsModelCard" xml:space="preserve"><value>Configured Models</value></data>
+  <data name="ModelsManualCard" xml:space="preserve"><value>Add Model</value></data>
+  <data name="ModelsManualProvHint" xml:space="preserve"><value>Provider ID (click provider above to fill)</value></data>
+  <data name="ModelsManualAliasHint" xml:space="preserve"><value>Alias (optional)</value></data>
+  <data name="ModelsAddProvTitle" xml:space="preserve"><value>Add Provider</value></data>
+  <data name="ModelsQuickFill" xml:space="preserve"><value>-- Quick Fill --</value></data>
+  <data name="ModelsApiType" xml:space="preserve"><value>API Type</value></data>
+  <data name="ModelsSetDefaultPrompt" xml:space="preserve"><value>Set as default model?
+</value></data>
+  <data name="ModelsSetDefaultTitle" xml:space="preserve"><value>Set Default</value></data>
+  <data name="ModelsSelectImport" xml:space="preserve"><value>Import Selection</value></data>
+  <data name="ModelsSelectAll" xml:space="preserve"><value>Select All</value></data>
+  <data name="ModelsSelectNone" xml:space="preserve"><value>Select None</value></data>
+  <data name="ModelsImportSelected" xml:space="preserve"><value>Import Selected</value></data>
+  <data name="ModelsImported" xml:space="preserve"><value>Imported {0} models</value></data>
+  <data name="ModelsNeedApiKey" xml:space="preserve"><value>Please set API Key first</value></data>
+  <data name="ModelsFetchFailed" xml:space="preserve"><value>Fetch failed</value></data>
+  <data name="ModelsProvNotFound" xml:space="preserve"><value>Provider not found, please add in the provider table first.</value></data>
+  <data name="SkillsTitle" xml:space="preserve"><value>Skill Mgmt</value></data>
+  <data name="SkillsRefresh" xml:space="preserve"><value>Refresh</value></data>
+  <data name="SkillsSearchPlaceholder" xml:space="preserve"><value>Search ClawHub marketplace...</value></data>
+  <data name="SkillsSearch" xml:space="preserve"><value>Search</value></data>
+  <data name="SkillsColName" xml:space="preserve"><value>Name</value></data>
+  <data name="SkillsColDesc" xml:space="preserve"><value>Description</value></data>
+  <data name="SkillsColType" xml:space="preserve"><value>Type</value></data>
+  <data name="SkillsColStatus" xml:space="preserve"><value>Status</value></data>
+  <data name="SkillsColSource" xml:space="preserve"><value>Source</value></data>
+  <data name="SkillsColAction" xml:space="preserve"><value>Action</value></data>
+  <data name="SkillsLoading" xml:space="preserve"><value>Loading...</value></data>
+  <data name="SkillsCancel" xml:space="preserve"><value>Cancel</value></data>
+  <data name="SkillsCancelled" xml:space="preserve"><value>Cancelled</value></data>
+  <data name="SkillsBusyLoading" xml:space="preserve"><value>Loading plugins &amp; skills...</value></data>
+  <data name="SkillsReady" xml:space="preserve"><value>Ready, {0} items</value></data>
+  <data name="SkillsTypeBundled" xml:space="preserve"><value>Built-in</value></data>
+  <data name="SkillsTypeInstalled" xml:space="preserve"><value>Installed</value></data>
+  <data name="SkillsStatusEnabled" xml:space="preserve"><value>Enabled</value></data>
+  <data name="SkillsStatusDisabled" xml:space="preserve"><value>Disabled</value></data>
+  <data name="SkillsActionEnable" xml:space="preserve"><value>Enable</value></data>
+  <data name="SkillsActionDisable" xml:space="preserve"><value>Disable</value></data>
+  <data name="SkillsSourceBundled" xml:space="preserve"><value>Official Built-in</value></data>
+  <data name="SkillsSourceExternal" xml:space="preserve"><value>External</value></data>
+  <data name="SkillsTypeSkill" xml:space="preserve"><value>Skill</value></data>
+  <data name="SkillsTypeUnavailable" xml:space="preserve"><value>Unavailable</value></data>
+  <data name="SkillsActionInstallDeps" xml:space="preserve"><value>Install Deps</value></data>
+  <data name="SkillsSourceWorkspace" xml:space="preserve"><value>Workspace</value></data>
+  <data name="SkillsTypeInstallable" xml:space="preserve"><value>Installable</value></data>
+  <data name="SkillsStatusNotInstalled" xml:space="preserve"><value>Not Installed</value></data>
+  <data name="SkillsActionInstall" xml:space="preserve"><value>Install</value></data>
+  <data name="SkillsInstalling" xml:space="preserve"><value>Installing {0}...</value></data>
+  <data name="SkillsInstallDone" xml:space="preserve"><value>{0} installed</value></data>
+  <data name="SkillsInstallFailed" xml:space="preserve"><value>Install failed</value></data>
+  <data name="SkillsInstallingDep" xml:space="preserve"><value>Installing {0} ...</value></data>
+  <data name="SkillsDepsDone" xml:space="preserve"><value>Deps done: {0} success, {1} failed</value></data>
+  <data name="SkillsNeedInstall" xml:space="preserve"><value>Need install</value></data>
+  <data name="SkillsNeedInstallOne" xml:space="preserve"><value>Need install one of</value></data>
+  <data name="SkillsUnavailable" xml:space="preserve"><value>Unavailable</value></data>
+  <data name="ChannelsSubtitle" xml:space="preserve"><value>Configure each channel's settings. Restart Gateway after changes.</value></data>
+  <data name="ChannelsBuiltInChannel" xml:space="preserve"><value>Built-in Channel</value></data>
+  <data name="ChannelsPluginBuiltIn" xml:space="preserve"><value>Built-in</value></data>
+  <data name="ChannelsPluginDownload" xml:space="preserve"><value>Download</value></data>
+  <data name="ChannelsPluginExternal" xml:space="preserve"><value>External</value></data>
+  <data name="ChannelsConfigTitle" xml:space="preserve"><value>Configure {0}</value></data>
+  <data name="ChannelsEnableChannel" xml:space="preserve"><value>Enable Channel</value></data>
+  <data name="ChannelsSave" xml:space="preserve"><value>Save</value></data>
+  <data name="ChannelsSaveConfig" xml:space="preserve"><value>Save Config</value></data>
+  <data name="ChannelsInstallPlugin" xml:space="preserve"><value>Install Plugin</value></data>
+  <data name="ChannelsSavedMsg" xml:space="preserve"><value>{0} config saved. Restart Gateway.</value></data>
+  <data name="ChannelsDisabledMsg" xml:space="preserve"><value>{0} disabled</value></data>
+  <data name="ChannelsEnabledMsg" xml:space="preserve"><value>{0} enabled</value></data>
+  <data name="ChannelsNeedExternal" xml:space="preserve"><value>⚠ This channel requires a manually installed external plugin!</value></data>
+  <data name="ChannelsNeedDownload" xml:space="preserve"><value>⚠ This channel requires downloading and installing the plugin first!</value></data>
+  <data name="ChannelsInstallManual" xml:space="preserve"><value>Please install manually: npm install -g &lt;package&gt;</value></data>
+  <data name="ChannelsInstalling" xml:space="preserve"><value>Installing</value></data>
+  <data name="ChannelsInstalledMsg" xml:space="preserve"><value>{0} plugin installation started.</value></data>
+  <data name="ChannelsInstallFailed" xml:space="preserve"><value>Install failed</value></data>
+  <data name="ChannelsQRGuide" xml:space="preserve"><value>{0} login via QR code scan — no manual config needed.
+
+Steps:
+1. Click Save below to enable
+2. Click Install Plugin (if not installed)
+3. Restart OpenClaw Gateway
+4. Check Gateway logs for QR code</value></data>
+  <data name="ChannelsWeixinGuide" xml:space="preserve"><value>WeChat personal plugin installer started.
+
+After install:
+1. Enable "WeChat (Personal)" in channel list
+2. Restart Gateway
+3. Check logs for QR code</value></data>
+  <data name="ChannelsWeixinStartFailed" xml:space="preserve"><value>Start failed</value></data>
+  <data name="ChannelsWeixinManual" xml:space="preserve"><value>Please run manually:
+npx -y @tencent-weixin/openclaw-weixin-cli@latest install</value></data>
+
+  <data name="SettingsSectionGateway" xml:space="preserve"><value>━ Gateway</value></data>
+  <data name="SettingsSectionAIModels" xml:space="preserve"><value>━ AI Models</value></data>
+  <data name="SettingsSectionWebSearch" xml:space="preserve"><value>━ Web Search (Brave)</value></data>
+  <data name="SettingsSectionStorage" xml:space="preserve"><value>━ Storage</value></data>
+  <data name="SettingsSectionLicense" xml:space="preserve"><value>━ License</value></data>
+  <data name="SettingsBindAddr" xml:space="preserve"><value>Bind Address</value></data>
+  <data name="SettingsPort" xml:space="preserve"><value>Port</value></data>
+  <data name="SettingsAuthMode" xml:space="preserve"><value>Auth Mode</value></data>
+  <data name="SettingsAuthToken" xml:space="preserve"><value>Access Token</value></data>
+  <data name="SettingsTokenPlaceholder" xml:space="preserve"><value>Auto-generated token</value></data>
+  <data name="SettingsLogLevel" xml:space="preserve"><value>Log Level</value></data>
+  <data name="SettingsHeartbeatMin" xml:space="preserve"><value>Heartbeat (min)</value></data>
+  <data name="SettingsDefaultModel" xml:space="preserve"><value>Default Model</value></data>
+  <data name="SettingsContextWindow" xml:space="preserve"><value>Context Window</value></data>
+  <data name="SettingsContextWindowPH" xml:space="preserve"><value>1M=1048576, default 200K</value></data>
+  <data name="SettingsMaxOutputLen" xml:space="preserve"><value>Max Output Length</value></data>
+  <data name="SettingsMaxOutputPH" xml:space="preserve"><value>0=default(8192)</value></data>
+  <data name="SettingsSessionLimit" xml:space="preserve"><value>Session Turn Limit</value></data>
+  <data name="SettingsWorkspaceDir" xml:space="preserve"><value>Workspace Dir</value></data>
+  <data name="SettingsBraveKeyPH" xml:space="preserve"><value>Fill to enable web search</value></data>
+  <data name="SettingsUpdateLicense" xml:space="preserve"><value>Update License</value></data>
+  <data name="SettingsEnterLicense" xml:space="preserve"><value>Enter License</value></data>
+  <data name="SettingsBindingType" xml:space="preserve"><value>Binding:</value></data>
+  <data name="SettingsBindingPC" xml:space="preserve"><value>PC</value></data>
+  <data name="SettingsBindingUSB" xml:space="preserve"><value>USB</value></data>
+  <data name="SettingsUSBBinding" xml:space="preserve"><value>USB Binding</value></data>
+  <data name="SettingsUSBCode" xml:space="preserve"><value>USB Code: </value></data>
+  <data name="SettingsMachineCode" xml:space="preserve"><value>Machine Code: </value></data>
+  <data name="SettingsCopied" xml:space="preserve"><value>✓ Copied</value></data>
+  <data name="SettingsCopy" xml:space="preserve"><value>📋 Copy</value></data>
+  <data name="SettingsLicensePrompt" xml:space="preserve"><value>Enter license key:</value></data>
+  <data name="SettingsUpdate" xml:space="preserve"><value>Update</value></data>
+  <data name="SettingsActivate" xml:space="preserve"><value>Activate</value></data>
+  <data name="SettingsVerifying" xml:space="preserve"><value>Verifying...</value></data>
+  <data name="SettingsActivateSuccess" xml:space="preserve"><value>Activation Successful</value></data>
+  <data name="SettingsActivateFailed" xml:space="preserve"><value>Activation Failed</value></data>
+  <data name="SettingsMigrateTitle" xml:space="preserve"><value>Migration Complete</value></data>
+  <data name="SettingsMigrateMsg" xml:space="preserve"><value>Migrated {0} files from old workspace.\n\nOld: {1}\nNew: {2}</value></data>
+  <data name="SettingsMigrateFailed" xml:space="preserve"><value>File migration failed: </value></data>
+  <data name="SettingsNodeNotFound" xml:space="preserve"><value>Node.js or OpenClaw entry not found.\nExpected: </value></data>
+  <data name="SettingsCmdExecuted" xml:space="preserve"><value> command executed.</value></data>
+  <data name="SettingsCmdFailed" xml:space="preserve"><value>Failed: </value></data>
+  <data name="SettingsPro" xml:space="preserve"><value> Pro</value></data>
+  <data name="SettingsTrial" xml:space="preserve"><value> Trial {0}d</value></data>
+
+  <data name="MainFormShow" xml:space="preserve"><value>Show</value></data>
+  <data name="MainFormExit" xml:space="preserve"><value>Exit</value></data>
+  <data name="MainFormExitTitle" xml:space="preserve"><value>Exit OpenClaw</value></data>
+  <data name="MainFormExitPrompt" xml:space="preserve"><value>Close gateway when exiting?</value></data>
+  <data name="MainFormExitSubPrompt" xml:space="preserve"><value>This will stop the gateway and disable the scheduled guardian task</value></data>
+  <data name="MainFormCloseGateway" xml:space="preserve"><value>Close Gateway</value></data>
+  <data name="MainFormExitOnly" xml:space="preserve"><value>Exit Console Only</value></data>
+  <data name="MainFormCloseWindow" xml:space="preserve"><value>Close Window</value></data>
+  <data name="MainFormMinimizeToTray" xml:space="preserve"><value>Minimize to Tray</value></data>
+  <data name="MainFormExitAndClose" xml:space="preserve"><value>Close &amp; Exit</value></data>
+  <data name="MainFormCancel" xml:space="preserve"><value>Cancel</value></data>
+  <data name="MainFormSwitchLight" xml:space="preserve"><value>Light Mode</value></data>
+  <data name="MainFormSwitchDark" xml:space="preserve"><value>Dark Mode</value></data>
+  <data name="MainFormMinimizedToTray" xml:space="preserve"><value>Minimized to taskbar tray</value></data>
+  <data name="MainFormPro" xml:space="preserve"><value> Pro</value></data>
+  <data name="MainFormTrialExpired" xml:space="preserve"><value> Trial Expired</value></data>
+  <data name="MainFormTrial" xml:space="preserve"><value> Trial {0}d</value></data>
+  <data name="GuardianProFeature" xml:space="preserve"><value>🔒 Guardian is a Pro Feature</value></data>
+  <data name="GuardianActivatePro" xml:space="preserve"><value>Go to Settings → Enter License Key to activate</value></data>
+  <data name="GuardianInstall" xml:space="preserve"><value>Install Guardian</value></data>
+  <data name="GuardianReinstall" xml:space="preserve"><value>Reinstall Guardian</value></data>
+  
+  <data name="LogsRefresh" xml:space="preserve"><value>Refresh</value></data>
+  <data name="LogsAutoRefresh" xml:space="preserve"><value>Auto</value></data>
+  <data name="LogsClear" xml:space="preserve"><value>Clear</value></data>
+  <data name="LogsPause" xml:space="preserve"><value>Pause</value></data>
+  <data name="LogsNotFound" xml:space="preserve"><value>Log directory not found</value></data>
+  <data name="LogsEnsureGateway" xml:space="preserve"><value>Please ensure gateway is running.</value></data>
+  <data name="LogsNone" xml:space="preserve"><value>No gateway logs.</value></data>
+  <data name="LogsReadFailed" xml:space="preserve"><value>Log read failed</value></data>
+  <data name="SetupTitle" xml:space="preserve"><value>Setup Wizard</value></data>
+  <data name="SetupSubtitleSystem" xml:space="preserve"><value>System Config</value></data>
+  <data name="SetupSubtitleRegister" xml:space="preserve"><value>Register &amp; Launch</value></data>
+  <data name="SetupNext" xml:space="preserve"><value>Next</value></data>
+  <data name="SetupPrev" xml:space="preserve"><value>Previous</value></data>
+  <data name="SetupGatewaySettings" xml:space="preserve"><value>Gateway Settings</value></data>
+  <data name="SetupPort" xml:space="preserve"><value>Port</value></data>
+  <data name="SetupAuth" xml:space="preserve"><value>Auth</value></data>
+  <data name="SetupTokenPlaceholder" xml:space="preserve"><value>Leave empty to auto-generate</value></data>
+  <data name="SetupPassword" xml:space="preserve"><value>Password</value></data>
+  <data name="SetupWorkspace" xml:space="preserve"><value>Workspace</value></data>
+  <data name="SetupProvider" xml:space="preserve"><value>Provider</value></data>
+  <data name="SetupCustom" xml:space="preserve"><value>Custom</value></data>
+  <data name="SetupProviderName" xml:space="preserve"><value>Name</value></data>
+  <data name="SetupProviderNameHint" xml:space="preserve"><value>Enter provider name</value></data>
+  <data name="SetupProviderType" xml:space="preserve"><value>Type</value></data>
+  <data name="SetupModelMgmt" xml:space="preserve"><value>Model Mgmt</value></data>
+  <data name="SetupManualAdd" xml:space="preserve"><value>Manual Add</value></data>
+  <data name="SetupFetch" xml:space="preserve"><value>Fetch</value></data>
+  <data name="SetupInputModelHint" xml:space="preserve"><value>Enter Model ID, Enter to add</value></data>
+  <data name="SetupAdd" xml:space="preserve"><value>Add</value></data>
+  <data name="SetupFetchModels" xml:space="preserve"><value>Fetch Models</value></data>
+  <data name="SetupDefaultModel" xml:space="preserve"><value>Default Model</value></data>
+  <data name="SetupFetching" xml:space="preserve"><value>Fetching...</value></data>
+  <data name="SetupSaveCurrent" xml:space="preserve"><value>Save Selected</value></data>
+  <data name="SetupSaveConfig" xml:space="preserve"><value>Save Config</value></data>
+  <data name="SetupUseFullPrefix" xml:space="preserve"><value>Use full provider/model prefix format</value></data>
+  <data name="SetupInitWorkspace" xml:space="preserve"><value>Create workspace and init marker</value></data>
+  <data name="SetupInitialized" xml:space="preserve"><value>Initialized</value></data>
+  <data name="SetupSaveSuccess" xml:space="preserve"><value>Saved</value></data>
+  <data name="SetupPermissionDenied" xml:space="preserve"><value>Permission denied, run as admin or check write permissions</value></data>
+  <data name="SetupFailed" xml:space="preserve"><value>Failed</value></data>
+  <data name="SetupStartGateway" xml:space="preserve"><value>Start Gateway</value></data>
+  <data name="SetupStartingGateway" xml:space="preserve"><value>Starting gateway...</value></data>
+  <data name="SetupStartFailed" xml:space="preserve"><value>Start failed</value></data>
+  <data name="SetupWaitForGateway" xml:space="preserve"><value>Waiting for gateway...</value></data>
+  <data name="SetupRunning" xml:space="preserve"><value>Running</value></data>
+  <data name="SetupGatewayRunning" xml:space="preserve"><value>Gateway running!</value></data>
+  <data name="SetupGatewayReady" xml:space="preserve"><value>Gateway ready!</value></data>
+  <data name="SetupRestart" xml:space="preserve"><value>Restart</value></data>
+  <data name="SetupStartTimeout" xml:space="preserve"><value>Start timeout, check logs</value></data>
+  <data name="SetupStartupTimeout" xml:space="preserve"><value>Startup Timeout</value></data>
+  <data name="SetupCheckStatus" xml:space="preserve"><value>Checking status...</value></data>
+  <data name="SetupChecking" xml:space="preserve"><value>Checking...</value></data>
+  <data name="SetupNotRunning" xml:space="preserve"><value>Not running</value></data>
+  <data name="SetupComplete" xml:space="preserve"><value>Setup complete!</value></data>
+  <data name="SetupOpenConsole" xml:space="preserve"><value>Open Web Console</value></data>
+  <data name="SetupDoneReturn" xml:space="preserve"><value>Done, return to Dashboard</value></data>
+  <data name="SetupRealTimePush" xml:space="preserve"><value>Push gateway logs to dashboard in real time</value></data>
+  <data name="SetupLocalNote" xml:space="preserve"><value>Gateway will start directly from USB, no scheduled task on this PC.</value></data>
+  <data name="SearchTitle" xml:space="preserve"><value>Skill Search</value></data>
+  <data name="SearchColSkill" xml:space="preserve"><value>Skill</value></data>
+  <data name="SearchColDesc" xml:space="preserve"><value>Description</value></data>
+  <data name="SearchColStatus" xml:space="preserve"><value>Status</value></data>
+  <data name="SearchColAction" xml:space="preserve"><value>Action</value></data>
+  <data name="SearchNotInstalled" xml:space="preserve"><value>Not Installed</value></data>
+  <data name="SearchInstall" xml:space="preserve"><value>Install</value></data>
+  <data name="SearchRemove" xml:space="preserve"><value>Remove</value></data>
+  <data name="SearchSearching" xml:space="preserve"><value>Searching...</value></data>
+  <data name="SearchCancel" xml:space="preserve"><value>Cancel</value></data>
+  <data name="SearchCancelled" xml:space="preserve"><value>Cancelled</value></data>
+  <data name="SearchInstalled" xml:space="preserve"><value>Installed</value></data>
+  <data name="SearchFailed" xml:space="preserve"><value>Failed</value></data>
+  <data name="SearchInstalling" xml:space="preserve"><value>Installing...</value></data>
+  <data name="SearchRemaining" xml:space="preserve"><value>Remaining</value></data>
+  <data name="SearchFound" xml:space="preserve"><value>Found {0} skills</value></data>
+  <data name="SearchNoResult" xml:space="preserve"><value>No results found</value></data>
+  <data name="SearchParseFailed" xml:space="preserve"><value>Parse failed</value></data>
+  <data name="SearchSearchFailed" xml:space="preserve"><value>Search failed</value></data>
+  <data name="SearchInstallingItem" xml:space="preserve"><value>Installing {0}...</value></data>
+  <data name="SearchInstallDone" xml:space="preserve"><value>{0} installed</value></data>
+  <data name="SearchInstallFailed" xml:space="preserve"><value>Install failed: </value></data>
+
+  <data name="GuardianDetectEnv" xml:space="preserve"><value>🔍 Detect Env</value></data>
+
+  <data name="GuardianUninstall" xml:space="preserve"><value>Uninstall Guardian</value></data>
+
+  <data name="GuardianStop" xml:space="preserve"><value>Stop Guardian &amp; Gateway</value></data>
+
+  <data name="GuardianStart" xml:space="preserve"><value>Start Gateway &amp; Guardian</value></data>
+
+  <data name="GuardianStarting" xml:space="preserve"><value>Starting...</value></data>
+
+  <data name="GuardianStopping" xml:space="preserve"><value>Stopping...</value></data>
+
+  <data name="LicenseProExpired" xml:space="preserve"><value>Pro Expired</value></data>
+  <data name="LicensePro" xml:space="preserve"><value>Pro</value></data>
+  <data name="LicenseUSB" xml:space="preserve"><value>USB</value></data>
+
+  <data name="LicenseExpiry" xml:space="preserve"><value>Expires</value></data>
+
+  <data name="LicenseBinding" xml:space="preserve"><value> Binding</value></data>
+
+  <data name="LicenseTrial" xml:space="preserve"><value>Trial</value></data>
+
+  <data name="LicenseRemaining" xml:space="preserve"><value>Remaining</value></data>
+
+  <data name="LicenseDays" xml:space="preserve"><value>d</value></data>
+
+  <data name="LicenseTrialExpired" xml:space="preserve"><value>Trial expired · Activate Pro</value></data>
+  <data name="LicenseBindingUSB" xml:space="preserve"><value>USB Binding</value></data>
+  <data name="LicenseBindingPC" xml:space="preserve"><value>PC Binding</value></data>
+  <data name="LicenseActivateSuccess" xml:space="preserve"><value>✓ Activated!
+
+Pro · {0}
+Expires: {1}</value></data>
+  <data name="LicenseProFeature" xml:space="preserve"><value>Trial expired. Activate Pro to use this feature.
+
+Settings → System Settings → Enter License</value></data>
+  <data name="LicenseProFeatureTrial" xml:space="preserve"><value>This is a Pro feature.
+
+{0} trial days remaining. Activate Pro to unlock.
+
+Settings → System Settings → Enter License</value></data>
+  <data name="LicenseSaveFailed" xml:space="preserve"><value>Save failed: </value></data>
+  <data name="LicenseProDialogTitle" xml:space="preserve"><value>🔒 Pro Feature</value></data>
+  <data name="SetupBind" xml:space="preserve"><value>Bind</value></data>
+  <data name="SetupApiKey" xml:space="preserve"><value>API Key</value></data>
+  <data name="SetupApiType" xml:space="preserve"><value>API Type</value></data>
+  <data name="SetupApiRegister" xml:space="preserve"><value>API Sign Up</value></data>
+  <data name="SetupNextSave" xml:space="preserve"><value>Next (Save Config) →</value></data>
+  <data name="SetupNeedKey" xml:space="preserve"><value>Need Key</value></data>
+  <data name="SetupConfigApi" xml:space="preserve"><value>API Provider</value></data>
+  <data name="SetupManualFetch" xml:space="preserve"><value>Manual Add / Fetch</value></data>
+</root>

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
@@ -33,7 +33,7 @@ public class ModelsPage
         int w = body.ClientSize.Width - pad * 2 - SystemInformation.VerticalScrollBarWidth;
 
         int y = pad;
-        AddTitle("模型配置", "管理 API 供应商、模型列表和默认模型。", pad, ref y, w);
+        AddTitle(OpenClawManager.Properties.LanguageManager.GetString("ModelsTitle"), OpenClawManager.Properties.LanguageManager.GetString("ModelsSubtitle"), pad, ref y, w);
 
         // ── 供应商卡片 ──
         y = BuildProviderCard(pad, y, w);
@@ -61,7 +61,7 @@ public class ModelsPage
     int BuildProviderCard(int x, int y, int w)
     {
         int cardH = Theme.S(178);
-        var card = Theme.Card(x, y, w, cardH, "API 供应商");
+        var card = Theme.Card(x, y, w, cardH, OpenClawManager.Properties.LanguageManager.GetString("ModelsProvCard"));
         body.Controls.Add(card);
 
         provGrid = Theme.Grid();
@@ -109,21 +109,21 @@ public class ModelsPage
             BackColor = Color.Transparent, WrapContents = false,
             FlowDirection = FlowDirection.LeftToRight
         };
-        btns.Controls.Add(MakeBtn("+ 添加", Theme.Acc, (_, _) => ShowAddProviderDialog()));
-        btns.Controls.Add(MakeBtn("删除", Theme.Red, (_, _) =>
+        btns.Controls.Add(MakeBtn(OpenClawManager.Properties.LanguageManager.GetString("Add"), Theme.Acc, (_, _) => ShowAddProviderDialog()));
+        btns.Controls.Add(MakeBtn(OpenClawManager.Properties.LanguageManager.GetString("Delete"), Theme.Red, (_, _) =>
         {
-            if (provGrid.SelectedRows.Count == 0) { MessageBox.Show("请先选择供应商", "提示"); return; }
+            if (provGrid.SelectedRows.Count == 0) { MessageBox.Show(OpenClawManager.Properties.LanguageManager.GetString("PleaseSelectItem"), OpenClawManager.Properties.LanguageManager.GetString("Prompt")); return; }
             var pid = provGrid.SelectedRows[0].Cells[0].Value?.ToString() ?? "";
-            if (MessageBox.Show("同时删除该供应商下所有模型？", "确认", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            if (MessageBox.Show(OpenClawManager.Properties.LanguageManager.GetString("ConfirmDeleteProvider"), OpenClawManager.Properties.LanguageManager.GetString("Confirm"), MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
                 DelProvAndModels(pid);
                 RefreshProviders();
                 RefreshModels();
             }
         }));
-        btns.Controls.Add(MakeBtn("拉取模型", Theme.Acc, (_, _) =>
+        btns.Controls.Add(MakeBtn(OpenClawManager.Properties.LanguageManager.GetString("FetchModels"), Theme.Acc, (_, _) =>
         {
-            if (provGrid.SelectedRows.Count == 0) { MessageBox.Show("请先选择供应商", "提示"); return; }
+            if (provGrid.SelectedRows.Count == 0) { MessageBox.Show(OpenClawManager.Properties.LanguageManager.GetString("PleaseSelectItem"), OpenClawManager.Properties.LanguageManager.GetString("Prompt")); return; }
             FetchModels(provGrid.SelectedRows[0].Cells[0].Value?.ToString() ?? "");
         }));
         card.Controls.Add(btns);
@@ -135,7 +135,7 @@ public class ModelsPage
     int BuildModelCard(int x, int y, int w)
     {
         int cardH = Theme.S(190);
-        var card = Theme.Card(x, y, w, cardH, "已配置模型");
+        var card = Theme.Card(x, y, w, cardH, OpenClawManager.Properties.LanguageManager.GetString("ModelsModelCard"));
         body.Controls.Add(card);
 
         modelGrid = Theme.Grid();
@@ -160,7 +160,7 @@ public class ModelsPage
             if (modelGrid.SelectedRows.Count == 0) return;
             var mid = modelGrid.SelectedRows[0].Cells[0].Value?.ToString() ?? "";
             var alias = modelGrid.SelectedRows[0].Cells[1].Value?.ToString() ?? "";
-            if (MessageBox.Show("设为默认模型？\n" + mid + "\n（双击切换到其他面板不会触发）", "设置默认", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            if (MessageBox.Show(OpenClawManager.Properties.LanguageManager.GetString("ModelsSetDefaultPrompt") + mid + "\n（双击切换到其他面板不会触发）", OpenClawManager.Properties.LanguageManager.GetString("ModelsSetDefaultTitle"), MessageBoxButtons.YesNo) == DialogResult.Yes)
                 SetDefault(mid);
         };
         card.Controls.Add(modelGrid);
@@ -172,16 +172,16 @@ public class ModelsPage
             BackColor = Color.Transparent, WrapContents = false,
             FlowDirection = FlowDirection.LeftToRight
         };
-        btns.Controls.Add(MakeBtn("设为默认", Theme.Acc, (_, _) =>
+        btns.Controls.Add(MakeBtn(OpenClawManager.Properties.LanguageManager.GetString("SetAsDefault"), Theme.Acc, (_, _) =>
         {
-            if (modelGrid.SelectedRows.Count == 0) { MessageBox.Show("请先选择模型", "提示"); return; }
+            if (modelGrid.SelectedRows.Count == 0) { MessageBox.Show(OpenClawManager.Properties.LanguageManager.GetString("PleaseSelectItem"), OpenClawManager.Properties.LanguageManager.GetString("Prompt")); return; }
             var mid = modelGrid.SelectedRows[0].Cells[0].Value?.ToString() ?? "";
-            if (MessageBox.Show("设为默认模型？\n" + mid, "确认", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            if (MessageBox.Show(OpenClawManager.Properties.LanguageManager.GetString("ModelsSetDefaultPrompt") + mid, OpenClawManager.Properties.LanguageManager.GetString("Confirm"), MessageBoxButtons.YesNo) == DialogResult.Yes)
                 SetDefault(mid);
         }));
-        btns.Controls.Add(MakeBtn("删除", Theme.Red, (_, _) =>
+        btns.Controls.Add(MakeBtn(OpenClawManager.Properties.LanguageManager.GetString("Delete"), Theme.Red, (_, _) =>
         {
-            if (modelGrid.SelectedRows.Count == 0) { MessageBox.Show("请先选择模型", "提示"); return; }
+            if (modelGrid.SelectedRows.Count == 0) { MessageBox.Show(OpenClawManager.Properties.LanguageManager.GetString("PleaseSelectItem"), OpenClawManager.Properties.LanguageManager.GetString("Prompt")); return; }
             DelModel(modelGrid.SelectedRows[0].Cells[0].Value?.ToString() ?? "");
             RefreshModels();
         }));
@@ -195,7 +195,7 @@ public class ModelsPage
     {
         int narrow = body.ClientSize.Width < 760 ? 1 : 0;
         int cardH = narrow == 1 ? Theme.S(176) : Theme.S(96);
-        var card = Theme.Card(x, y, w, cardH, "手动添加模型");
+        var card = Theme.Card(x, y, w, cardH, OpenClawManager.Properties.LanguageManager.GetString("ModelsManualCard"));
         body.Controls.Add(card);
 
         var form = new FlowLayoutPanel
@@ -205,11 +205,11 @@ public class ModelsPage
             BackColor = Color.Transparent, WrapContents = true
         };
 
-        providerBox = AddInput(form, "Provider ID（点击上方供应商自动填入）", narrow == 0 ? Theme.S(150) : card.Width - Theme.S(48));
+        providerBox = AddInput(form, OpenClawManager.Properties.LanguageManager.GetString("ModelsManualProvHint"), narrow == 0 ? Theme.S(150) : card.Width - Theme.S(48));
         modelBox = AddInput(form, "Model ID", narrow == 0 ? Theme.S(200) : card.Width - Theme.S(48));
-        aliasBox = AddInput(form, "Alias（可选）", narrow == 0 ? Theme.S(150) : card.Width - Theme.S(48));
+        aliasBox = AddInput(form, OpenClawManager.Properties.LanguageManager.GetString("ModelsManualAliasHint"), narrow == 0 ? Theme.S(150) : card.Width - Theme.S(48));
 
-        var addBtn = Theme.Btn("添加模型");
+        var addBtn = Theme.Btn(OpenClawManager.Properties.LanguageManager.GetString("ManualAddModel"));
         addBtn.Margin = new Padding(0, Theme.S(18), Theme.S(8), 0);
         addBtn.Click += (_, _) =>
         {
@@ -221,7 +221,7 @@ public class ModelsPage
             var providers = OpenClawRuntime.ReadConfig()?["models"]?["providers"]?.AsObject();
             if (providers == null || !providers.ContainsKey(prov))
             {
-                MessageBox.Show("供应商 \"" + prov + "\" 不存在，请先在供应商表中添加。", "提示");
+                MessageBox.Show(OpenClawManager.Properties.LanguageManager.GetString("ModelsProvNotFound"), OpenClawManager.Properties.LanguageManager.GetString("Prompt"));
                 return;
             }
             var fullId = prov + "/" + mod;
@@ -263,14 +263,14 @@ public class ModelsPage
     // ═══ 添加供应商对话框 ═══
     void ShowAddProviderDialog()
     {
-        var dlg = new Form { Text = "添加供应商", Size = new Size(470, 350), FormBorderStyle = FormBorderStyle.FixedDialog, MaximizeBox = false, MinimizeBox = false };
+        var dlg = new Form { Text = OpenClawManager.Properties.LanguageManager.GetString("ModelsAddProvTitle"), Size = new Size(470, 350), FormBorderStyle = FormBorderStyle.FixedDialog, MaximizeBox = false, MinimizeBox = false };
         Theme.ApplyDialog(dlg);
 
         int yy = Theme.S(12);
         var quick = Theme.ComboBox();
         quick.Location = new Point(Theme.S(16), yy);
         quick.Size = new Size(Theme.S(420), Theme.S(28));
-        quick.Items.AddRange(["-- 快速填入 --", "deepseek (DeepSeek)", "openai (OpenAI)", "anthropic (Anthropic)", "google (Google)", "xai (xAI Grok)", "mistral (Mistral)", "groq (Groq)", "ollama (本地Ollama)", "azure-openai (Azure OpenAI)", "together (Together AI)", "replicate (Replicate)", "huggingface (Hugging Face)"]);
+        quick.Items.AddRange([OpenClawManager.Properties.LanguageManager.GetString("ModelsQuickFill"), "deepseek (DeepSeek)", "openai (OpenAI)", "anthropic (Anthropic)", "google (Google)", "xai (xAI Grok)", "mistral (Mistral)", "groq (Groq)", "ollama (本地Ollama)", "azure-openai (Azure OpenAI)", "together (Together AI)", "replicate (Replicate)", "huggingface (Hugging Face)"]);
         quick.SelectedIndex = 0;
         dlg.Controls.Add(quick);
         yy += Theme.S(38);
@@ -279,7 +279,7 @@ public class ModelsPage
         var urlBox = DialogText(dlg, "Base URL", yy, Theme.S(80), "https://api.xxx.com/v1"); yy += Theme.S(40);
         var keyBox = DialogText(dlg, "API Key", yy, Theme.S(80), "", true); yy += Theme.S(40);
 
-        var apiLabel = Theme.Lbl("API 类型", Theme.Fc2);
+        var apiLabel = Theme.Lbl(OpenClawManager.Properties.LanguageManager.GetString("ModelsApiType"), Theme.Fc2);
         apiLabel.Location = new Point(Theme.S(16), yy + Theme.S(4));
         dlg.Controls.Add(apiLabel);
         var apiType = Theme.ComboBox();
@@ -309,7 +309,7 @@ public class ModelsPage
             };
         };
 
-        var ok = Theme.Btn("保存");
+        var ok = Theme.Btn(OpenClawManager.Properties.LanguageManager.GetString("Save"));
         ok.Location = new Point(Theme.S(340), yy - Theme.S(4));
         ok.Click += (_, _) =>
         {
@@ -346,7 +346,7 @@ public class ModelsPage
         // Ollama 不需要 key
         if (api != "ollama" && string.IsNullOrEmpty(key))
         {
-            MessageBox.Show("请先设置 API Key", "提示"); return;
+            MessageBox.Show(OpenClawManager.Properties.LanguageManager.GetString("ModelsNeedApiKey"), OpenClawManager.Properties.LanguageManager.GetString("Prompt")); return;
         }
 
         Task.Run(() =>
@@ -378,30 +378,30 @@ public class ModelsPage
 
                 body.Invoke(() => ShowFetchDialog(providerId, ids.Where(x => !string.IsNullOrWhiteSpace(x)).Distinct().OrderBy(x => x).ToList()));
             }
-            catch (Exception ex) { body.Invoke(() => MessageBox.Show("拉取失败: " + ex.Message, "错误")); }
+            catch (Exception ex) { body.Invoke(() => MessageBox.Show(OpenClawManager.Properties.LanguageManager.GetString("ModelsFetchFailed") + ": " + ex.Message, OpenClawManager.Properties.LanguageManager.GetString("Error"))); }
         });
     }
 
     void ShowFetchDialog(string providerId, List<string> models)
     {
-        var dlg = new Form { Text = "选择导入 - " + providerId, Size = new Size(540, 480), MinimizeBox = false, MaximizeBox = false };
+        var dlg = new Form { Text = OpenClawManager.Properties.LanguageManager.GetString("ModelsSelectImport") + " - " + providerId, Size = new Size(540, 480), MinimizeBox = false, MaximizeBox = false };
         Theme.ApplyDialog(dlg);
 
         var clb = new CheckedListBox { Location = new Point(Theme.S(10), Theme.S(10)), Size = new Size(Theme.S(500), Theme.S(370)), CheckOnClick = true };
         foreach (var m in models) clb.Items.Add(m, true);
         dlg.Controls.Add(clb);
 
-        var selAll = Theme.Btn("全选");
+        var selAll = Theme.Btn(OpenClawManager.Properties.LanguageManager.GetString("ModelsSelectAll"));
         selAll.Location = new Point(Theme.S(10), Theme.S(390));
         selAll.Click += (_, _) => { for (int i = 0; i < clb.Items.Count; i++) clb.SetItemChecked(i, true); };
         dlg.Controls.Add(selAll);
 
-        var selNone = Theme.Btn("全不选");
+        var selNone = Theme.Btn(OpenClawManager.Properties.LanguageManager.GetString("ModelsSelectNone"));
         selNone.Location = new Point(Theme.S(94), Theme.S(390));
         selNone.Click += (_, _) => { for (int i = 0; i < clb.Items.Count; i++) clb.SetItemChecked(i, false); };
         dlg.Controls.Add(selNone);
 
-        var importBtn = Theme.Btn("导入选中模型");
+        var importBtn = Theme.Btn(OpenClawManager.Properties.LanguageManager.GetString("ModelsImportSelected"));
         importBtn.Location = new Point(Theme.S(350), Theme.S(390));
         importBtn.Click += (_, _) =>
         {
@@ -415,7 +415,7 @@ public class ModelsPage
                 count++;
             }
             dlg.Close(); RefreshModels();
-            MessageBox.Show("已导入 " + count + " 个模型", "完成");
+            MessageBox.Show(string.Format(OpenClawManager.Properties.LanguageManager.GetString("ModelsImported"), count), OpenClawManager.Properties.LanguageManager.GetString("Done"));
         };
         dlg.Controls.Add(importBtn);
         dlg.ShowDialog(body.FindForm());
@@ -538,3 +538,4 @@ public class ModelsPage
         ["gateway"] = new JsonObject()
     };
 }
+
